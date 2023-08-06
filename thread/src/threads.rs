@@ -309,6 +309,9 @@ pub fn start_scoped_threads() {
     let mut a = vec![1, 2, 3];
     let mut x = 0;
 
+    // 在启动一个 Scoped Thread 时会返回一个 Guard 对象。
+    // 当 Guard 对象被析构时，它会等待线程完成。
+    // 这将保证子线程不会超过本地变量所在的当前栈帧。
     thread::scope(|s| {
         s.spawn(|| {
             println!("hello from the first scoped thread");
