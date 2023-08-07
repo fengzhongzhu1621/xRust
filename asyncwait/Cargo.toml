@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 async-std = "1.12.0"
 async-stream = "0.3.5"
+async-trait = "0.1.72"
 future-utils = "0.12.1"
 futures = { version = "0.3.28", features = ["thread-pool", "executor"] }
 futures-lite = "1.13.0"

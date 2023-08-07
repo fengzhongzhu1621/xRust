@@ -25,4 +25,7 @@ fn main() {
     // 执行select操作
     select();
     futures_select();
+
+    // 异步 trait
+    async_trait_example();
 }
