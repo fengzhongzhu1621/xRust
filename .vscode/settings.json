@@ -5,6 +5,7 @@
         "./thread/Cargo.toml",
         "./container_primitive/Cargo.toml",
         "./container_primitive/Cargo.toml",
+        "./container_primitive/Cargo.toml",
         "./container_primitive/Cargo.toml"
     ]
 }
