@@ -6,6 +6,8 @@
         "./container_primitive/Cargo.toml",
         "./container_primitive/Cargo.toml",
         "./container_primitive/Cargo.toml",
-        "./container_primitive/Cargo.toml"
+        "./container_primitive/Cargo.toml",
+        "./sync_primitive/Cargo.toml",
+        "./sync_primitive/Cargo.toml"
     ]
 }
