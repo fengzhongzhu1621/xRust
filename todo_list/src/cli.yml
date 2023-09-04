@@ -1,0 +1,22 @@
+name: MyApp
+version: "1.0"
+about: Learn use Rust Crate!
+author: Kayryu
+
+args:
+    - verbose:
+        help: verbosity level
+        short: v
+        multiple: true
+    - path:
+        help: Target file you want to change
+        short: p
+        takes_value: true
+
+subcommands:
+    - test:
+        about: does testing things
+        args:
+            - list:
+                help: lists test values
+                short: l

@@ -6,5 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [workspace]
-members = ["thread", "pool", "asyncwait", "container_primitive", "sync_primitive"]
+members = [
+    "thread", "pool", "asyncwait", "container_primitive", 
+    "sync_primitive", "collections", "process", "channel",
+    "timer_examples", "todo_list"]
 
