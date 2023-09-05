@@ -9,6 +9,7 @@ pub struct TodoTask {
     is_finish: bool,    // 任务是否完成
     created_at: String, // 任务创建时间，非引用类型
     updated_at: String, // 任务最新更新时间，非引用类型
+    index: String,      // 任务索引
 }
 
 #[derive(Serialize, Deserialize)]
@@ -31,7 +32,9 @@ impl TodoTaskList {
         let key = datetime::format_date();
         // 在vec中插入一条待办
         let created_at = datetime::format_datetime();
-        let updated_at = created_at.clone(); // 不能将created_at直接复制给updated_at，借用会导致created_at失效
+        // 不能将created_at直接复制给updated_at，借用会导致created_at失效
+        let updated_at = created_at.clone();
+        // 转换为可变引用
         let tasks = &mut self.tasks;
         let task_chunks = tasks.entry(key).or_insert(Vec::new());
         task_chunks.push(TodoTask {
@@ -39,7 +42,57 @@ impl TodoTaskList {
             is_finish: false,
             created_at: created_at,
             updated_at: updated_at,
+            index: task_chunks.len().to_string(),
         });
     }
-}
 
+    // 切换任务状态
+    pub fn toggle(&mut self, key: &str, index: &str) {
+        // 根据时间查找某一天的所有任务
+        let task_chunks = self.tasks.get_mut(key).unwrap();
+        // 根据任务自定义索引查找一天中的任务所在的数组索引
+        let task_index = task_chunks.iter().position(|x| x.index == index).unwrap();
+        // 根据数组索引获得任务的可变引用
+        let task_item = task_chunks.get_mut(task_index).unwrap();
+        // 修改数组的元素
+        *task_item = TodoTask {
+            content: task_item.content.to_string(),
+            is_finish: !task_item.is_finish,
+            created_at: task_item.created_at.to_string(),
+            updated_at: datetime::format_datetime(),
+            index: task_item.index.to_string(),
+        };
+    }
+
+    pub fn remove(&mut self, key: &str, index: &str) {
+        // 根据时间查找某一天的所有任务
+        let task_chunks = self.tasks.get_mut(key).unwrap();
+        // 根据任务自定义索引查找一天中的任务所在的数组索引
+        let target = task_chunks.iter().position(|x| x.index == index);
+        match target {
+            Some(i) => {
+                task_chunks.remove(i);
+            }
+            _ => println!("没有可删除的任务"),
+        }
+    }
+
+    pub fn print(&self, key: &str) {
+        println!("---------------------");
+        println!("{}:\n", key);
+        // 根据时间查找某一天的所有任务
+        match self.tasks.get(key) {
+            Some(task_chunks) => {
+                if task_chunks.len() == 0 {
+                    println!("没有待办事项");
+                    return;
+                }
+                for task in task_chunks {
+                    println!("{}: {} {}", task.index, task.is_finish, task.content)
+                }
+                println!();
+            }
+            _ => println!("没有待办事项"),
+        }
+    }
+}
