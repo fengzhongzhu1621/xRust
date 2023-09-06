@@ -79,7 +79,7 @@ impl TodoTaskList {
 
     pub fn print(&self, key: &String) {
         println!("---------------------");
-        println!("{}:\n", key);
+        println!("{}\n", key);
         // 根据时间查找某一天的所有任务
         match self.tasks.get(key) {
             Some(task_chunks) => {
@@ -88,7 +88,12 @@ impl TodoTaskList {
                     return;
                 }
                 for task in task_chunks {
-                    println!("{}: {} {}", task.index, task.is_finish, task.content)
+                    let state = if task.is_finish {
+                        "已完成"
+                    } else {
+                        "未完成"
+                    };
+                    println!("{}: {} {}", task.index, state, task.content)
                 }
                 println!();
             }

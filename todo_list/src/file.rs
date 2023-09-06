@@ -26,7 +26,8 @@ impl TodoStore {
         let mut file = match File::open(&self.path) {
             Ok(file) => file,
             Err(_err) => {
-                panic!("文件不存在！");
+                File::create(&self.path).unwrap();
+                return TodoTaskList::new();
             }
         };
         let mut s = String::new();
