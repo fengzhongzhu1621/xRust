@@ -27,7 +27,7 @@ impl TodoTaskList {
     }
 
     /// 添加一条待办
-    pub fn add(&mut self, content: &str) {
+    pub fn add(&mut self, content: &String) {
         // 以天分组并
         let key = datetime::format_date();
         // 在vec中插入一条待办
@@ -47,11 +47,11 @@ impl TodoTaskList {
     }
 
     // 切换任务状态
-    pub fn toggle(&mut self, key: &str, index: &str) {
+    pub fn toggle(&mut self, key: &String, index: &String) {
         // 根据时间查找某一天的所有任务
         let task_chunks = self.tasks.get_mut(key).unwrap();
         // 根据任务自定义索引查找一天中的任务所在的数组索引
-        let task_index = task_chunks.iter().position(|x| x.index == index).unwrap();
+        let task_index = task_chunks.iter().position(|x| x.index == *index).unwrap();
         // 根据数组索引获得任务的可变引用
         let task_item = task_chunks.get_mut(task_index).unwrap();
         // 修改数组的元素
@@ -64,11 +64,11 @@ impl TodoTaskList {
         };
     }
 
-    pub fn remove(&mut self, key: &str, index: &str) {
+    pub fn remove(&mut self, key: &String, index: &String) {
         // 根据时间查找某一天的所有任务
         let task_chunks = self.tasks.get_mut(key).unwrap();
         // 根据任务自定义索引查找一天中的任务所在的数组索引
-        let target = task_chunks.iter().position(|x| x.index == index);
+        let target = task_chunks.iter().position(|x| x.index == *index);
         match target {
             Some(i) => {
                 task_chunks.remove(i);
@@ -77,7 +77,7 @@ impl TodoTaskList {
         }
     }
 
-    pub fn print(&self, key: &str) {
+    pub fn print(&self, key: &String) {
         println!("---------------------");
         println!("{}:\n", key);
         // 根据时间查找某一天的所有任务
@@ -94,5 +94,20 @@ impl TodoTaskList {
             }
             _ => println!("没有待办事项"),
         }
+    }
+
+    pub fn print_all(&self) {
+        for key in self.tasks.keys() {
+            self.print(key)
+        }
+    }
+
+    pub fn count(&self) -> usize {
+        let mut sum = 0;
+        for tasks in self.tasks.values() {
+            sum += tasks.len();
+        }
+
+        sum
     }
 }
