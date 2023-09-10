@@ -1,4 +1,4 @@
-use demo::panic::*;
+use xtool::panic::*;
 
 #[test]
 fn test_record_code_position() {

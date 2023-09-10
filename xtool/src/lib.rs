@@ -1,6 +1,9 @@
 pub mod panic;
 pub mod proxy;
+pub mod stack;
+
 pub use panic::*;
+
 use std::env;
 use std::error::Error;
 use std::fs;
