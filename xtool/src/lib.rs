@@ -1,3 +1,4 @@
+pub mod numbers;
 pub mod panic;
 pub mod proxy;
 pub mod stack;
