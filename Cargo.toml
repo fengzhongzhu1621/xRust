@@ -9,5 +9,5 @@ edition = "2021"
 members = [
     "thread", "pool", "asyncwait", "container_primitive", 
     "sync_primitive", "collections", "process", "channel",
-    "timer_examples", "todo_list"]
+    "timer_examples", "todo_list", "xrust"]
 

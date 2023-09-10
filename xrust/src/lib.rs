@@ -1,3 +1,6 @@
+pub mod panic;
+pub mod proxy;
+pub use panic::*;
 use std::env;
 use std::error::Error;
 use std::fs;
@@ -70,7 +73,10 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
 
     // results
 
-    contents.lines().filter(|line| line.contains(query)).collect()
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
