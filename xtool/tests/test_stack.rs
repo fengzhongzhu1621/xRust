@@ -36,8 +36,8 @@ fn test_peek() {
 
     stack.peek_mut().map(|value| *value = 'd');
 
-    assert_eq!(stack.peek(), Some(&'c'));
-    assert_eq!(stack.pop(), Some('c'));
+    assert_eq!(stack.peek(), Some(&'d'));
+    assert_eq!(stack.pop(), Some('d'));
 }
 
 #[test]
