@@ -21,7 +21,6 @@ fn test_unsafe_link_pop() {
     assert_eq!(link.pop(), None);
 }
 
-
 #[test]
 fn test_unsafe_link_into_iter() {
     let mut link = UnSafeLink::new();
