@@ -1,5 +1,6 @@
 pub mod const_stack;
 pub mod link;
+pub mod linked_list;
 pub mod numbers;
 pub mod panic;
 pub mod proxy;
