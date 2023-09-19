@@ -19,4 +19,5 @@ members = [
     "todo_list",
     "xtool",
     "parking_lot_examples",
+    "crossbeam_examples",
 ]
