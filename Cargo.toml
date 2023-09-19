@@ -17,5 +17,6 @@ members = [
     "channel",
     "timer_examples",
     "todo_list",
-    "xtool"
+    "xtool",
+    "parking_lot_examples",
 ]
