@@ -20,4 +20,5 @@ members = [
     "xtool",
     "parking_lot_examples",
     "crossbeam_examples",
+    "hello-wasm",
 ]
