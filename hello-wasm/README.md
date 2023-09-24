@@ -10,8 +10,5 @@ docker buildx build --platform wasi/wasm32 -t hello-wasm .
 ```
 
 ```
-docker run \ 
-    --runtime=io.containerd.wasmedge.v1 \
-    --platform=wasi/wasm32 \
-    hello-wasm
+docker run --runtime=io.containerd.wasmedge.v1 --platform=wasi/wasm32 hello-wasm
 ``
