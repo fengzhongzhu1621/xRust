@@ -20,5 +20,7 @@ members = [
     "xtool",
     "parking_lot_examples",
     "crossbeam_examples",
+    "rayon_examples",
     "hello-wasm",
+    "wechat",
 ]
