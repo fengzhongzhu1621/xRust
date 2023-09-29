@@ -1,3 +1,4 @@
+use simple_mutex;
 use std::sync::{Arc, Mutex};
 use std::thread;
 
@@ -93,4 +94,22 @@ pub fn mutex_example3_drop() {
         "mutex_example3_drop Result: {:?}",
         res_mutex.lock().unwrap()
     );
+}
+
+pub fn simple_mutex_example() {
+    let m = Arc::new(simple_mutex::Mutex::new(0));
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        let m = m.clone();
+        handles.push(thread::spawn(move || {
+            *m.lock() += 1;
+        }));
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("m = {:?}", m);
 }

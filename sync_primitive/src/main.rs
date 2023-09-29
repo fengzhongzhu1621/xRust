@@ -7,6 +7,7 @@ fn main() {
     mutex_example1();
     // mutex_example2_poison();
     mutex_example3_drop();
+    simple_mutex_example();
 
     // atomic
     atomic_example();

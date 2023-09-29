@@ -12,4 +12,6 @@ atomig = "0.4.0"
 portable-atomic = { version = "1.4.3", features = ["float"] }
 rand = "0.8.5"
 sharded-slab = "0.1.6"
+simple-mutex = "1.1.5"
 slab = "0.4.9"
+try-lock = "0.2.4"
