@@ -28,4 +28,9 @@ fn main() {
 
     // 异步 trait
     async_trait_example();
+
+    // async_lock
+    async_lock_mutex();
+    async_lock_rwlock();
+    async_lock_barrier();
 }
