@@ -6,6 +6,7 @@ pub mod mpsc;
 pub mod mutex;
 pub mod once;
 pub mod rwlock;
+mod sharded_slab_example;
 
 pub use arc::*;
 pub use atomic::*;
@@ -15,3 +16,4 @@ pub use mpsc::*;
 pub use mutex::*;
 pub use once::*;
 pub use rwlock::*;
+pub use sharded_slab_example::*;

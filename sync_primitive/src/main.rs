@@ -29,4 +29,10 @@ fn main() {
     once_example();
 
     rwlock_example();
+
+    // sharded_slab
+    sharded_slab_read();
+    sharded_slab_write();
+    sharded_slab_pool();
+    slab_example();
 }
