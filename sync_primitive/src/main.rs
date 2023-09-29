@@ -43,4 +43,7 @@ fn main() {
     // waitgroup
     waitgroup_example();
     wg_example();
+
+    // arc_swap
+    arc_swap_example();
 }
