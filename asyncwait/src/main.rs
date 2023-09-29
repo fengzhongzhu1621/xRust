@@ -33,4 +33,7 @@ fn main() {
     async_lock_mutex();
     async_lock_rwlock();
     async_lock_barrier();
+
+    // awaitgroup
+    awaitgroup_example();
 }

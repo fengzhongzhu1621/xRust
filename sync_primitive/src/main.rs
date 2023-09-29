@@ -36,4 +36,11 @@ fn main() {
     sharded_slab_write();
     sharded_slab_pool();
     slab_example();
+
+    // try_lock
+    try_lock_example1();
+
+    // waitgroup
+    waitgroup_example();
+    wg_example();
 }
