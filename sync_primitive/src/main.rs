@@ -8,8 +8,16 @@ fn main() {
     // mutex_example2_poison();
     mutex_example3_drop();
 
+    // atomic
     atomic_example();
     atomic_example2();
+    portable_atomic_i128();
+    portable_atomic_u128();
+    portable_atomic_f32();
+    portable_atomic_f64();
+    atomic_float_example();
+    atomig_example();
+    atomicbox_examples();
 
     barrier_example();
 
