@@ -21,6 +21,7 @@ members = [
     "parking_lot_examples",
     "crossbeam_examples",
     "rayon_examples",
+    "tokio_examples",
     "hello-wasm",
     "wechat",
 ]
