@@ -45,5 +45,9 @@ fn main() {
     wg_example();
 
     // arc_swap
-    arc_swap_example();
+    arc_example();
+    arc_example2();
+
+    // notify
+    // event_listener_example();
 }

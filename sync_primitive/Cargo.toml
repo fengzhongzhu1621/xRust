@@ -10,6 +10,7 @@ arc-swap = "1.6.0"
 atomic_float = "0.1.0"
 atomicbox = "0.4.0"
 atomig = "0.4.0"
+event-listener = "3.0.0"
 portable-atomic = { version = "1.4.3", features = ["float"] }
 rand = "0.8.5"
 sharded-slab = "0.1.6"

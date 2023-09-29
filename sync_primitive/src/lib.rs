@@ -9,6 +9,7 @@ pub mod once;
 pub mod rwlock;
 mod sharded_slab_example;
 mod waitgroup_examples;
+mod notify;
 
 pub use arc::*;
 pub use atomic::*;
@@ -21,3 +22,4 @@ pub use once::*;
 pub use rwlock::*;
 pub use sharded_slab_example::*;
 pub use waitgroup_examples::*;
+pub use notify::*;
