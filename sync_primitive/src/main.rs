@@ -49,5 +49,5 @@ fn main() {
     arc_example2();
 
     // notify
-    // event_listener_example();
+    event_listener_example();
 }
