@@ -10,6 +10,9 @@ fn main() {
     async_process_example();
     process_control_example();
     easy_process_example();
+
+    // process_lock
+    process_lock();
 }
 
 fn spawn_a_process() {

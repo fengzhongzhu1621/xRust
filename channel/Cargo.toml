@@ -7,12 +7,18 @@ edition = "2021"
 
 [dependencies]
 async-channel = "1.9.0"
+async-oneshot = "0.5.0"
 async-priority-channel = "0.1.0"
 broadcaster = "1.0.0"
+catty = "0.1.5"
+concurrent-queue = "2.3.0"
 crossfire = "1.0.0"
 flume = "0.11.0"
 futures = "0.3.28"
 futures-channel = "0.3.28"
 futures-util = "0.3.28"
 kanal = "0.1.0-pre8"
+oneshot = "0.1.6"
+smol = "1.3.0"
 tokio = { version = "1.32.0", features = ["full"] }
+triple_buffer = "6.2.0"

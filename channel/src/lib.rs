@@ -1,5 +1,10 @@
+mod oneshots;
 pub mod others;
+mod queue;
+
+pub use oneshots::*;
 pub use others::*;
+pub use queue::*;
 
 use std::sync::mpsc;
 use std::sync::mpsc::sync_channel;

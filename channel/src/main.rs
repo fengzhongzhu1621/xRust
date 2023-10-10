@@ -20,4 +20,13 @@ fn main() {
 
     kanal_example();
     kanal_async_example();
+
+    // oneshot
+    oneshot_example();
+    async_oneshot_example();
+    catty_example();
+
+    // queue
+    concurrent_queue_example();
+    triple_buffer_example();
 }

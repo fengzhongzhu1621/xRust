@@ -1,3 +1,6 @@
+mod oslock;
+
+pub use oslock::*;
 use std::io;
 use std::process::Command;
 use std::process::Stdio;
@@ -39,7 +42,9 @@ pub fn process_control_example() {
         .terminate_for_timeout()
         .wait()
         .unwrap()
-        .ok_or_else(|| io::Error::new(io::ErrorKind::TimedOut, "Process timed out"))
+        .ok_or_else(|| {
+            io::Error::new(io::ErrorKind::TimedOut, "Process timed out")
+        })
         .unwrap();
 
     assert_eq!(b"hello", &output.stdout[..5]);
