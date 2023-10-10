@@ -36,4 +36,10 @@ fn main() {
 
     // awaitgroup
     awaitgroup_example();
+
+    // triggered
+    triggered_example();
+
+    // barrage
+    barrage_example();
 }
