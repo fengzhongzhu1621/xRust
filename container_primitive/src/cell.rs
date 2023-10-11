@@ -87,3 +87,89 @@ pub fn once_cell_example() {
     assert_eq!(value, "Hello, World!");
     assert!(cell.get().is_some());
 }
+
+pub fn lazy_cell_example() {
+    let lazy: LazyCell<i32> = LazyCell::new(|| {
+        println!("initializing");
+        92
+    });
+    println!("one_cell ready");
+    println!("{}", *lazy);
+    println!("{}", *lazy);
+}
+
+pub fn myrc_example() {
+    let s = example::Rc::new("hello world");
+    let s1 = s.clone();
+
+    let v = s1.value();
+    println!("myrc value: {}", v);
+}
+
+pub mod example {
+    use std::cell::Cell;
+    use std::marker::PhantomData;
+    use std::process::abort;
+    use std::ptr::NonNull;
+
+    pub struct Rc<T: ?Sized> {
+        ptr: NonNull<RcBox<T>>,
+        phantom: PhantomData<RcBox<T>>,
+    }
+
+    impl<T> Rc<T> {
+        pub fn new(t: T) -> Self {
+            let ptr = Box::new(RcBox {
+                strong: Cell::new(1),
+                refcount: Cell::new(1),
+                value: t,
+            });
+            let ptr = NonNull::new(Box::into_raw(ptr)).unwrap();
+            Self {
+                ptr: ptr,
+                phantom: PhantomData,
+            }
+        }
+
+        pub fn value(&self) -> &T {
+            &self.inner().value
+        }
+    }
+
+
+    struct RcBox<T: ?Sized> {
+        strong: Cell<usize>,
+        refcount: Cell<usize>,
+        value: T,
+    }
+
+    impl<T: ?Sized> Clone for Rc<T> {
+        fn clone(&self) -> Rc<T> {
+            self.inc_strong();
+            Rc {
+                ptr: self.ptr,
+                phantom: PhantomData,
+            }
+        }
+    }
+
+    trait RcBoxPtr<T: ?Sized> {
+        fn inner(&self) -> &RcBox<T>;
+
+        fn strong(&self) -> usize {
+            self.inner().strong.get()
+        }
+
+        fn inc_strong(&self) {
+            self.inner()
+                .strong
+                .set(self.strong().checked_add(1).unwrap_or_else(|| abort()));
+        }
+    }
+
+    impl<T: ?Sized> RcBoxPtr<T> for Rc<T> {
+        fn inner(&self) -> &RcBox<T> {
+            unsafe { self.ptr.as_ref() }
+        }
+    }
+}
