@@ -10,6 +10,7 @@ pub mod rwlock;
 mod sharded_slab_example;
 mod waitgroup_examples;
 mod notify;
+mod synccow;
 
 pub use arc::*;
 pub use atomic::*;
@@ -23,3 +24,4 @@ pub use rwlock::*;
 pub use sharded_slab_example::*;
 pub use waitgroup_examples::*;
 pub use notify::*;
+pub use synccow::*;

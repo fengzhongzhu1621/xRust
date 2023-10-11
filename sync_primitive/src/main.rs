@@ -50,4 +50,7 @@ fn main() {
 
     // notify
     event_listener_example();
+
+    // cow
+    sync_cow_example();
 }
