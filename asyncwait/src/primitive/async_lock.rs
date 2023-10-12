@@ -50,3 +50,14 @@ pub fn async_lock_barrier() {
         }
     });
 }
+
+pub fn async_lock_semaphore() {
+    let s = Arc::new(async_lock::Semaphore::new(2));
+
+    let _g1 = s.try_acquire_arc().unwrap();
+    let g2 = s.try_acquire_arc().unwrap();
+
+    assert!(s.try_acquire_arc().is_none());
+    drop(g2);
+    assert!(s.try_acquire_arc().is_some());
+}

@@ -13,8 +13,11 @@ fn main() {
     barrier_example();
     mutex_example();
     rwlock_example();
+
+    // sema
     semaphore_example();
     semaphore_example2();
+
     notify_example();
     notify_example2();
     

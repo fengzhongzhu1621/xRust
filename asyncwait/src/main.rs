@@ -33,6 +33,7 @@ fn main() {
     async_lock_mutex();
     async_lock_rwlock();
     async_lock_barrier();
+    async_lock_semaphore();
 
     // awaitgroup
     awaitgroup_example();
@@ -42,4 +43,11 @@ fn main() {
 
     // barrage
     barrage_example();
+
+    // sema
+    async_weighted_semaphore_example();
+
+    // singleflight
+    singleflight_example();
+    async_singleflight_example();
 }
