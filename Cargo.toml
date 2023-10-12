@@ -24,4 +24,5 @@ members = [
     "tokio_examples",
     "hello-wasm",
     "wechat",
+    "logger",
 ]
