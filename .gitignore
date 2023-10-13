@@ -15,9 +15,6 @@ Cargo.lock
 
 
 # Added by cargo
-
-/target
-
 .vscode/
 target/
 todo_list/todo_list.txt
