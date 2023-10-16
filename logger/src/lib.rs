@@ -1,8 +1,10 @@
 #[macro_use]
 mod messages;
-mod logger;
 mod level;
+mod logger;
+mod meta_data;
 
-pub use messages::*;
+pub use level::{Level, LevelFilter, ParseLevelError};
 pub use logger::*;
-pub use level::*;
+pub use messages::*;
+pub use meta_data::*;
