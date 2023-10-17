@@ -1,33 +1,19 @@
 use core::*;
 use std::cmp;
-use std::error;
+
 use std::fmt;
 use std::str::FromStr;
+
+use crate::ParseLevelError;
+
+#[cfg(target_has_atomic = "ptr")]
+use std::sync::atomic::{AtomicUsize, Ordering};
+
+static MAX_LOG_LEVEL_FILTER: AtomicUsize = AtomicUsize::new(0);
 
 /// 定义日志级别的名称
 static LOG_LEVEL_NAMES: [&str; 6] =
     ["OFF", "ERROR", "WARN", "INFO", "DEBUG", "TRACE"];
-
-/// 自定义日志级别解析错误
-/// missing_copy_implementations lint 检测潜在的忘记实现 Copy trait
-/// The type returned by [`from_str`] when the string doesn't match any of the log levels.
-///
-/// [`from_str`]: https://doc.rust-lang.org/std/str/trait.FromStr.html#tymethod.from_str
-#[allow(missing_copy_implementations)]
-#[derive(Debug, PartialEq, Eq)]
-pub struct ParseLevelError(pub ());
-
-impl error::Error for ParseLevelError {}
-
-/// 日志级别的名称错误时的提示信息
-static LEVEL_PARSE_ERROR: &str =
-    "attempted to convert a string that doesn't match an existing log level";
-
-impl fmt::Display for ParseLevelError {
-    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-        fmt.write_str(LEVEL_PARSE_ERROR)
-    }
-}
 
 /// An enum representing the available verbosity levels of the logger.
 /// repr: 内存对齐
@@ -274,4 +260,14 @@ impl PartialOrd<Level> for LevelFilter {
     fn partial_cmp(&self, other: &Level) -> Option<cmp::Ordering> {
         Some((*self as usize).cmp(&(*other as usize)))
     }
+}
+
+///
+/// Generally, this should only be called by the active logging implementation.
+///
+/// Note that `Trace` is the maximum level, because it provides the maximum amount of detail in the emitted logs.
+#[inline]
+#[cfg(target_has_atomic = "ptr")]
+pub fn set_max_level(level: LevelFilter) {
+    MAX_LOG_LEVEL_FILTER.store(level as usize, Ordering::Relaxed);
 }

@@ -1,18 +1,14 @@
 use log::{self, Log};
 
-
-
 ///定义一个 Logger，是空的元祖结构体，用于将日志输出到标准输出
 #[derive(Debug)]
 pub struct Logger(());
 
-
 // 定义一个全局日志对象
 const LOGGER: &'static Logger = &Logger(());
 
-
 /// set_logger(logger: &'static dyn Log) 需要的参数 logger，必须实现 Log trait 的方法
-/// Sync + Send 
+/// Sync + Send
 /// Sync: 允许多线程同时访问，标记了实现它的类型可以安全的在线程间共享访问
 /// Send: 允许线程间转移所有权，并发中需要安全传递值都需要被标记实现 Send，否则编译器会报错
 impl Log for Logger {

@@ -1,6 +1,4 @@
-extern crate logger;
-
-pub use logger::*;
+use logger::*;
 
 #[test]
 fn test_parse() {
