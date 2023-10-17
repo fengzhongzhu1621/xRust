@@ -1,4 +1,4 @@
-use core::*;
+use core::convert::ok_or;
 use std::cmp;
 
 use std::fmt;
@@ -14,6 +14,10 @@ static MAX_LOG_LEVEL_FILTER: AtomicUsize = AtomicUsize::new(0);
 /// 定义日志级别的名称
 static LOG_LEVEL_NAMES: [&str; 6] =
     ["OFF", "ERROR", "WARN", "INFO", "DEBUG", "TRACE"];
+
+pub const STATIC_MAX_LEVEL: LevelFilter = MAX_LEVEL_INNER;
+
+const MAX_LEVEL_INNER: LevelFilter = get_max_level_inner();
 
 /// An enum representing the available verbosity levels of the logger.
 /// repr: 内存对齐
@@ -124,7 +128,7 @@ impl FromStr for Level {
     type Err = ParseLevelError;
 
     fn from_str(level: &str) -> Result<Level, Self::Err> {
-        core::ok_or(
+        ok_or(
             LOG_LEVEL_NAMES
                 .iter()
                 .position(|&name| name.eq_ignore_ascii_case(level))
@@ -270,4 +274,75 @@ impl PartialOrd<Level> for LevelFilter {
 #[cfg(target_has_atomic = "ptr")]
 pub fn set_max_level(level: LevelFilter) {
     MAX_LOG_LEVEL_FILTER.store(level as usize, Ordering::Relaxed);
+}
+
+/// The statically resolved maximum log level.
+///
+/// See the crate level documentation for information on how to configure this.
+///
+/// This value is checked by the log macros, but not by the `Log`ger returned by
+/// the [`logger`] function. Code that manually calls functions on that value
+/// should compare the level against this value.
+///
+/// [`logger`]: fn.logger.html
+
+const fn get_max_level_inner() -> LevelFilter {
+    #[allow(unreachable_code)]
+    {
+        #[cfg(all(not(debug_assertions), feature = "release_max_level_off"))]
+        {
+            return LevelFilter::Off;
+        }
+        #[cfg(all(
+            not(debug_assertions),
+            feature = "release_max_level_error"
+        ))]
+        {
+            return LevelFilter::Error;
+        }
+        #[cfg(all(not(debug_assertions), feature = "release_max_level_warn"))]
+        {
+            return LevelFilter::Warn;
+        }
+        #[cfg(all(not(debug_assertions), feature = "release_max_level_info"))]
+        {
+            return LevelFilter::Info;
+        }
+        #[cfg(all(
+            not(debug_assertions),
+            feature = "release_max_level_debug"
+        ))]
+        {
+            return LevelFilter::Debug;
+        }
+        #[cfg(all(
+            not(debug_assertions),
+            feature = "release_max_level_trace"
+        ))]
+        {
+            return LevelFilter::Trace;
+        }
+        #[cfg(feature = "max_level_off")]
+        {
+            return LevelFilter::Off;
+        }
+        #[cfg(feature = "max_level_error")]
+        {
+            return LevelFilter::Error;
+        }
+        #[cfg(feature = "max_level_warn")]
+        {
+            return LevelFilter::Warn;
+        }
+        #[cfg(feature = "max_level_info")]
+        {
+            return LevelFilter::Info;
+        }
+        #[cfg(feature = "max_level_debug")]
+        {
+            return LevelFilter::Debug;
+        }
+
+        LevelFilter::Trace
+    }
 }

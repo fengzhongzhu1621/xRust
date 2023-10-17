@@ -14,7 +14,7 @@ static LEVEL_PARSE_ERROR: &str =
 /// [`set_logger`]: fn.set_logger.html
 #[allow(missing_copy_implementations)]
 #[derive(Debug)]
-pub struct SetLoggerError(());
+pub struct SetLoggerError(pub ());
 
 impl fmt::Display for SetLoggerError {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
