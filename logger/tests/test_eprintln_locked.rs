@@ -1,4 +1,4 @@
-use logger::*;
+use logger::eprintln_locked;
 
 /// cargo expand --test test_eprintln_locked
 #[test]

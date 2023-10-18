@@ -1,4 +1,4 @@
-use logger::*;
+use logger::{Level, LevelFilter, ParseLevelError};
 
 #[test]
 fn test_parse() {

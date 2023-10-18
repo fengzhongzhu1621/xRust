@@ -1,4 +1,4 @@
-use logger::{MetadataBuilder, RecordBuilder};
+use logger::{Level, Metadata, MetadataBuilder, Record, RecordBuilder};
 
 #[test]
 fn test_record_builder() {
@@ -20,7 +20,6 @@ fn test_record_builder() {
 
 #[test]
 fn test_record_convenience_builder() {
-    use super::{Metadata, Record};
     let target = "myApp";
     let metadata = Metadata::builder().target(target).build();
     let fmt_args = format_args!("hello");
@@ -39,7 +38,6 @@ fn test_record_convenience_builder() {
 
 #[test]
 fn test_record_complete_builder() {
-    use super::{Level, Record};
     let target = "myApp";
     let record_test = Record::builder()
         .module_path(Some("foo"))

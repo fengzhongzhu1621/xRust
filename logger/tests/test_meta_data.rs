@@ -1,4 +1,4 @@
-use logger::*;
+use logger::{Level, Metadata, MetadataBuilder};
 
 #[test]
 fn test_metadata_builder() {

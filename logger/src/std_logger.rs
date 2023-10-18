@@ -1,4 +1,6 @@
-use crate::{Metadata, Record};
+use crate::{Level, Metadata, Record};
+use core::kv::{KVs, Value};
+use std::fmt::Arguments;
 
 /// A trait encapsulating the operations required of a logger.
 pub trait Log: Sync + Send {
