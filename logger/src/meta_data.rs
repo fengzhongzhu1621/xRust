@@ -1,47 +1,14 @@
 use crate::Level;
 
+/// build编程模式是为了将读操作和写操作分离
+/// Metadata 用于读操作
+/// MetadataBuilder 用于写操作
+
 /// Metadata about a log message.
-///
-/// # Use
-///
-/// `Metadata` structs are created when users of the library use
-/// logging macros.
-///
-/// They are consumed by implementations of the `Log` trait in the
-/// `enabled` method.
-///
-/// `Record`s use `Metadata` to determine the log message's severity
-/// and target.
-///
-/// Users should use the `log_enabled!` macro in their code to avoid
-/// constructing expensive log messages.
-///
-/// # Examples
-///
-/// ```edition2018
-/// use log::{Record, Level, Metadata};
-///
-/// struct MyLogger;
-///
-/// impl log::Log for MyLogger {
-///     fn enabled(&self, metadata: &Metadata) -> bool {
-///         metadata.level() <= Level::Info
-///     }
-///
-///     fn log(&self, record: &Record) {
-///         if self.enabled(record.metadata()) {
-///             println!("{} - {}", record.level(), record.args());
-///         }
-///     }
-///     fn flush(&self) {}
-/// }
-///
-/// # fn main(){}
-/// ```
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub struct Metadata<'a> {
-    level: Level,    // 日志级别
-    target: &'a str, // 目标名
+    pub level: Level,    // 日志级别
+    pub target: &'a str, // 目标名
 }
 
 /// Metadata 方法
@@ -99,6 +66,7 @@ impl<'a> MetadataBuilder<'a> {
     /// - `target`: `""`
     #[inline]
     pub fn new() -> MetadataBuilder<'a> {
+        // 默认日志级别是 Info
         MetadataBuilder {
             metadata: Metadata { level: Level::Info, target: "" },
         }

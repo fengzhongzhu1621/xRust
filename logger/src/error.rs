@@ -16,6 +16,8 @@ static LEVEL_PARSE_ERROR: &str =
 #[derive(Debug)]
 pub struct SetLoggerError(pub ());
 
+impl error::Error for SetLoggerError {}
+
 impl fmt::Display for SetLoggerError {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         fmt.write_str(SET_LOGGER_ERROR)

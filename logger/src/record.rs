@@ -123,12 +123,105 @@ impl<'a> RecordBuilder<'a> {
     pub fn new() -> RecordBuilder<'a> {
         RecordBuilder {
             record: Record {
-                args: format_args!(""),
+                args: format_args!(""), // 构造参数
                 metadata: Metadata::builder().build(),
                 module_path: None,
                 file: None,
                 line: None,
             },
         }
+    }
+}
+
+impl<'a> Default for RecordBuilder<'a> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl<'a> RecordBuilder<'a> {
+    /// Set [`args`](struct.Record.html#method.args).
+    #[inline]
+    pub fn args(
+        &mut self,
+        args: fmt::Arguments<'a>,
+    ) -> &mut RecordBuilder<'a> {
+        self.record.args = args;
+        self
+    }
+
+    /// Set [`metadata`](struct.Record.html#method.metadata). Construct a `Metadata` object with [`MetadataBuilder`](struct.MetadataBuilder.html).
+    #[inline]
+    pub fn metadata(
+        &mut self,
+        metadata: Metadata<'a>,
+    ) -> &mut RecordBuilder<'a> {
+        self.record.metadata = metadata;
+        self
+    }
+
+    /// Set [`Metadata::level`](struct.Metadata.html#method.level).
+    #[inline]
+    pub fn level(&mut self, level: Level) -> &mut RecordBuilder<'a> {
+        self.record.metadata.level = level;
+        self
+    }
+
+    /// Set [`Metadata::target`](struct.Metadata.html#method.target)
+    #[inline]
+    pub fn target(&mut self, target: &'a str) -> &mut RecordBuilder<'a> {
+        self.record.metadata.target = target;
+        self
+    }
+
+    /// Set [`module_path`](struct.Record.html#method.module_path)
+    #[inline]
+    pub fn module_path(
+        &mut self,
+        path: Option<&'a str>,
+    ) -> &mut RecordBuilder<'a> {
+        // 将 Option 转换为枚举类型
+        self.record.module_path = path.map(MaybeStaticStr::Borrowed);
+        self
+    }
+
+    /// Set [`module_path`](struct.Record.html#method.module_path) to a `'static` string
+    #[inline]
+    pub fn module_path_static(
+        &mut self,
+        path: Option<&'static str>,
+    ) -> &mut RecordBuilder<'a> {
+        self.record.module_path = path.map(MaybeStaticStr::Static);
+        self
+    }
+
+    /// Set [`file`](struct.Record.html#method.file)
+    #[inline]
+    pub fn file(&mut self, file: Option<&'a str>) -> &mut RecordBuilder<'a> {
+        self.record.file = file.map(MaybeStaticStr::Borrowed);
+        self
+    }
+
+    /// Set [`file`](struct.Record.html#method.file) to a `'static` string.
+    #[inline]
+    pub fn file_static(
+        &mut self,
+        file: Option<&'static str>,
+    ) -> &mut RecordBuilder<'a> {
+        self.record.file = file.map(MaybeStaticStr::Static);
+        self
+    }
+
+    /// Set [`line`](struct.Record.html#method.line)
+    #[inline]
+    pub fn line(&mut self, line: Option<u32>) -> &mut RecordBuilder<'a> {
+        self.record.line = line;
+        self
+    }
+
+    /// Invoke the builder and return a `Record`
+    #[inline]
+    pub fn build(&self) -> Record<'a> {
+        self.record.clone()
     }
 }
