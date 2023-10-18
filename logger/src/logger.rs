@@ -1,11 +1,21 @@
 use log::{self, Log};
 
+// 定义一个全局日志对象
+const LOGGER: &'static Logger = &Logger(());
+
 ///定义一个 Logger，是空的元祖结构体，用于将日志输出到标准输出
 #[derive(Debug)]
 pub struct Logger(());
 
-// 定义一个全局日志对象
-const LOGGER: &'static Logger = &Logger(());
+/// Logger的构造函数
+impl Logger {
+    /// Create a new logger that logs to stderr and initialize it as the
+    /// global logger. If there was a problem setting the logger, then an
+    /// error is returned.
+    pub fn init() -> Result<(), log::SetLoggerError> {
+        log::set_logger(LOGGER)
+    }
+}
 
 /// set_logger(logger: &'static dyn Log) 需要的参数 logger，必须实现 Log trait 的方法
 /// Sync + Send
@@ -67,15 +77,5 @@ impl Log for Logger {
     /// Flushes any buffered records.
     fn flush(&self) {
         // We use eprintln_locked! which is flushed on every call.
-    }
-}
-
-/// Logger的构造函数
-impl Logger {
-    /// Create a new logger that logs to stderr and initialize it as the
-    /// global logger. If there was a problem setting the logger, then an
-    /// error is returned.
-    pub fn init() -> Result<(), log::SetLoggerError> {
-        log::set_logger(LOGGER)
     }
 }
