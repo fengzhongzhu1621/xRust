@@ -26,7 +26,7 @@ fn spawn_a_process() {
 
 fn process_io() {
     let echo_child = Command::new("echo")
-        .arg("Oh no, a tpyo!")
+        .arg("Oh no, a typo!")
         .stdout(Stdio::piped())
         .spawn()
         .expect("Failed to start echo process");

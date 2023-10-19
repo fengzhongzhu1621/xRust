@@ -8,7 +8,7 @@ async fn fetch_access_token(app_id: &str, app_secret: &str) -> Result<String> {
         "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={}&secret={}",
         app_id, app_secret
     );
-    // 异步请求获取acess_token
+    // 异步请求获取access_token
     let resp = reqwest::get(url).await?;
     let body = resp.text().await?;
     let json_data: Value = serde_json::from_str(&body)?;

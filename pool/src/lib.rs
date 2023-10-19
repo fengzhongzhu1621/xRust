@@ -208,7 +208,7 @@ pub fn scoped_threadpool_examples() {
     pool.scoped(|s| {
         // Create references to each element in the vector ...
         for e in &mut vec {
-            // ... and add 1 to it in a seperate thread
+            // ... and add 1 to it in a separate thread
             s.execute(move || {
                 *e += 1;
             });
@@ -344,7 +344,7 @@ pub fn threadpool_executor_example() {
         .core_pool_size(1)
         .maximum_pool_size(3)
         .keep_alive_time(std::time::Duration::from_secs(300))
-        .exeed_limit_policy(
+        .exceed_limit_policy(
             threadpool_executor::threadpool::ExceedLimitPolicy::Wait,
         )
         .build();

@@ -19,7 +19,7 @@ fn test_log_lever_fn() {
 
     let (err_info, port) = ("No connection", 22);
     error!("Error: {} on port {}", err_info, port);
-    warn!("Waring: {} on port {}", err_info, port);
+    warn!("Warning: {} on port {}", err_info, port);
     info!("Info: {} on port {}", err_info, port);
     debug!("Debug: {} on port {}", err_info, port);
     trace!("Trace: {} on port {}", err_info, port);

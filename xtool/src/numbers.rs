@@ -21,7 +21,7 @@ impl<'data> Numbers<'data> {
         None
     }
 
-    /// 根据索引返回向量的值，注意Numers的生命周期和返回结果的生命周期不一样
+    /// 根据索引返回向量的值，注意Numbers的生命周期和返回结果的生命周期不一样
     fn get<'numbers>(&'numbers self, idx: usize) -> Option<&'data i32> {
         if idx < self.data.len() {
             Some(&self.data[idx])
