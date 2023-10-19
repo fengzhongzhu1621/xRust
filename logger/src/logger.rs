@@ -30,7 +30,7 @@ impl Log for Logger {
     /// This method isn't called automatically by the `log!` macros.
     /// It's up to an implementation of the `Log` trait to call `enabled` in its own
     /// `log` method implementation to guarantee that filtering is applied.
-    fn enabled(&self, metadata: &log::Metadata) -> bool {
+    fn enabled(&self, _: &log::Metadata) -> bool {
         // We set the log level via log::set_max_level, so we don't need to
         // implement filtering here.
         true

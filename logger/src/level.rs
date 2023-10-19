@@ -9,6 +9,7 @@ use crate::ParseLevelError;
 #[cfg(target_has_atomic = "ptr")]
 use std::sync::atomic::{AtomicUsize, Ordering};
 
+#[allow(dead_code)]
 static MAX_LOG_LEVEL_FILTER: AtomicUsize = AtomicUsize::new(0);
 
 /// 定义日志级别的名称
@@ -270,6 +271,7 @@ impl PartialOrd<Level> for LevelFilter {
 /// Generally, this should only be called by the active logging implementation.
 ///
 /// Note that `Trace` is the maximum level, because it provides the maximum amount of detail in the emitted logs.
+#[allow(dead_code)]
 #[inline]
 #[cfg(target_has_atomic = "ptr")]
 pub fn set_max_level(level: LevelFilter) {

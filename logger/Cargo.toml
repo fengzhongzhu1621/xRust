@@ -9,3 +9,7 @@ edition = "2021"
 core = { path = "../core" }
 env_logger = "0.10.0"
 log = "0.4.20"
+regex = { version = "1.10.2", features = ["std", "perf"], default-features = false, optional = true }
+
+[feature]
+default=["regex"]
