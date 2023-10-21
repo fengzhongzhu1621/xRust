@@ -1,6 +1,7 @@
 #[macro_use]
 mod messages;
 mod error;
+pub mod filter;
 mod level;
 mod meta_data;
 mod record;

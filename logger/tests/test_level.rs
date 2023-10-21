@@ -121,3 +121,15 @@ fn test_level_filter_as_str() {
         assert_eq!(*expected, input.as_str());
     }
 }
+
+#[test]
+fn ensure_tests_cover_level_universe() {
+    let level_universe: Level = Level::Trace; // use of trace variant is arbitrary
+    match level_universe {
+        Level::Error
+        | Level::Warn
+        | Level::Info
+        | Level::Debug
+        | Level::Trace => (),
+    }
+}

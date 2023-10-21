@@ -1,4 +1,4 @@
-use core::*;
+use core::convert::*;
 
 fn main() {
     println!("Hello, world!");

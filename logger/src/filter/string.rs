@@ -1,0 +1,23 @@
+use std::fmt;
+
+#[derive(Debug)]
+pub struct Filter {
+    inner: String,
+}
+
+impl Filter {
+    pub fn new(spec: &str) -> Result<Filter, String> {
+        Ok(Filter { inner: spec.to_string() })
+    }
+
+    pub fn is_match(&self, s: &str) -> bool {
+        // 字符串匹配
+        s.contains(&self.inner)
+    }
+}
+
+impl fmt::Display for Filter {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.inner.fmt(f)
+    }
+}
