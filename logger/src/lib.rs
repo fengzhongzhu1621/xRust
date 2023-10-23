@@ -2,11 +2,11 @@
 mod messages;
 mod error;
 pub mod filter;
+pub mod fmt;
 mod level;
+pub mod logger;
 mod meta_data;
 mod record;
-
-pub mod logger;
 
 pub use error::{ParseLevelError, SetLoggerError};
 pub use level::{Level, LevelFilter, STATIC_MAX_LEVEL};

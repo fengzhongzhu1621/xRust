@@ -1,27 +1,8 @@
-use self::writer::{Buffer, Writer};
+use crate::fmt::{Buffer, WriteStyle};
+use std::cell::RefCell;
+use std::rc::Rc;
 
 pub struct Formatter {
-    buf: Rc<RefCell<Buffer>>,
-    write_style: WriteStyle,
-}
-
-impl Formatter {
-    pub(crate) fn new(writer: &Writer) -> Self {
-        Formatter {
-            buf: Rc::new(RefCell::new(writer.buffer())),
-            write_style: writer.write_style(),
-        }
-    }
-
-    pub(crate) fn write_style(&self) -> WriteStyle {
-        self.write_style
-    }
-
-    pub(crate) fn print(&self, writer: &Writer) -> io::Result<()> {
-        writer.print(&self.buf.borrow())
-    }
-
-    pub(crate) fn clear(&mut self) {
-        self.buf.borrow_mut().clear()
-    }
+    pub buf: Rc<RefCell<Buffer>>, // 运行时可写缓存
+    write_style: WriteStyle,      // 日志输出的风格
 }
