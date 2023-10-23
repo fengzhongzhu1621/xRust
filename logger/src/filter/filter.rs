@@ -73,11 +73,11 @@ pub fn enabled(directives: &[Directive], level: Level, target: &str) -> bool {
     let rev_directives = directives.iter().rev();
     for directive in rev_directives {
         match directive.name {
-            // name : &String>
-            // *name: String
-            // **name: 解引用调用 deref() 转换为 str
-            // &**name: 转换为&str
-            // 如果 target 匹配,则继续判断级别的大小
+            // 匹配 log 的 target
+            // name: 类型是 &String
+            // *name: 类型是 String
+            // **name: 定价于 *std::ops::Deref::deref(&s)，因为deref()返回 &str，所以**name 返回 str
+            // &**name: 类型是 &str
             Some(ref name) if !target.starts_with(&**name) => {}
             // 根据日志级别过滤
             // 例如 directives 配置了 Info级别的日志, 也就是说最高的日志级别是 Info,
