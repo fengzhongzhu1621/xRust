@@ -3,7 +3,7 @@
 #[cfg_attr(not(feature = "color"), path = "shim_impl.rs")]
 mod imp;
 
-pub(in crate::fmt) use self::imp::{Buffer, BufferWriter};
+pub(in crate::fmt) use self::imp::*;
 
 use std::{fmt, io};
 
