@@ -7,7 +7,8 @@ pub mod proxy;
 pub mod random;
 pub mod stack;
 pub mod unsafe_link;
-pub mod borrow;
+mod borrow;
+mod to_owned;
 
 pub use panic::*;
 pub use random::*;
