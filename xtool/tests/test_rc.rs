@@ -1,5 +1,5 @@
-use std::rc::Rc;
 use std::any::Any;
+use std::rc::Rc;
 
 #[test]
 fn test_print_rc() {
@@ -44,11 +44,10 @@ fn test_drop() {
     assert_eq!(Rc::strong_count(&rc_b), 1);
 }
 
-
 /// 获得 Rc 内部的值的属性
 #[test]
 fn get_rc_innter_item_attribute() {
-    // Rc<T> 自动取消对 T 的引用 (通过 Deref trait)，因此您可以在 Rc<T> 类型的值上调用 T 的方法。 
+    // Rc<T> 自动取消对 T 的引用 (通过 Deref trait)，因此您可以在 Rc<T> 类型的值上调用 T 的方法。
     // 为了避免与 T 方法的名称冲突，Rc<T> 本身的方法是关联函数，使用 fully qualified syntax 进行调用
 
     struct Owner {
@@ -57,11 +56,11 @@ fn get_rc_innter_item_attribute() {
     }
 
     impl Owner {
-        fn print_address(&self){
+        fn print_address(&self) {
             println!("name is {:p}", &self);
         }
     }
-    
+
     struct Gadget {
         id: i32,
         owner: Rc<Owner>,
@@ -69,19 +68,13 @@ fn get_rc_innter_item_attribute() {
     }
 
     // 创建一个引用计数的 `Owner`。
-    let gadget_owner: Rc<Owner> = Rc::new(
-        Owner {
-            name: "Gadget Man".to_string(),
-        }
-    );
+    let gadget_owner: Rc<Owner> =
+        Rc::new(Owner { name: "Gadget Man".to_string() });
 
     // 创建属于 `gadget_owner` 的 `Gadget`。
     // 克隆 `Rc<Owner>` 为我们提供了指向同一个 `Owner` 分配的新指针，从而增加了该进程中的引用计数。
     //
-    let gadget1 = Gadget {
-        id: 1,
-        owner: Rc::clone(&gadget_owner),
-    };
+    let gadget1 = Gadget { id: 1, owner: Rc::clone(&gadget_owner) };
 
     // 获取 Rc 内部对象的属性
     assert_eq!(gadget1.owner.name, "Gadget Man".to_string());
@@ -96,7 +89,6 @@ fn test_pin() {
     // 构建一个新的 Pin<Rc<T>>。如果 T 没有实现 Unpin，那么 value 将会固定在内存中不可移动。
 }
 
-
 /// pub fn try_unwrap(this: Self) -> Result<T, Self>
 /// 如果 Rc 有且只有1个强引用，则返回包含的值，否则返回 Err<T>。
 /// 不管 Rc 有多少弱引用，只要符合上述条件，该函数都将成功。
@@ -109,12 +101,11 @@ fn test_try_unwrap() {
     let x = Rc::new(4);
     assert_eq!(Rc::try_unwrap(x).unwrap(), 4);
 
-    // 有多个强引用
+    // 有多个强引用,返回 Err
     let x = Rc::new(5);
     let _y = Rc::clone(&x);
     assert_eq!(*Rc::try_unwrap(x).unwrap_err(), 5); // Rc::try_unwrap(x) 返回 Err(4)
 }
-
 
 /// pub fn into_raw(this: Self) -> *const T
 /// 消费 Rc, 返回被包装的指针。
@@ -134,17 +125,16 @@ fn test_into_raw() {
 fn test_from_raw() {
     let x = Rc::new(10);
     let x_ptr = Rc::into_raw(x); // x_ptr 为裸指针
-    
+
     unsafe {
         // 必须使用 from_raw 转换成 Rc 避免内存泄漏
         let x = Rc::from_raw(x_ptr);
         assert_eq!(*x, 10);
-    
+
         // 再次调用 `Rc::from_row(x_ptr)` 会导致内存不安全
     }
-    
+
     // `x` 的内存将会在离开作用域后释放，所以 `x_ptr` 不是悬吊指针
-    
 }
 
 /// 判断两个指针是否指向同一个值
@@ -153,7 +143,7 @@ fn test_ptr_eq() {
     let five = Rc::new(5);
     let same_five = Rc::clone(&five);
     let other_five = Rc::new(5);
-    
+
     assert!(Rc::ptr_eq(&five, &same_five));
     assert!(!Rc::ptr_eq(&five, &other_five));
 }
@@ -224,7 +214,7 @@ fn test_downgrade() {
     let rc_b: Rc<String> = rc_a.clone();
 
     // 创建一个被包裹值的弱引用指针
-    // 但是如果已经丢弃了分配中存储的值，则它将返回 None。 
+    // 但是如果已经丢弃了分配中存储的值，则它将返回 None。
     // 换句话说，Weak 指针不会使分配内部的值保持活动状态。但是，它们确实使分配 (内部值的后备存储) 保持活动状态。
     let _weak = Rc::downgrade(&rc_a);
 
@@ -233,7 +223,6 @@ fn test_downgrade() {
     assert_eq!(Rc::weak_count(&rc_a), 1);
     assert_eq!(Rc::weak_count(&rc_b), 1);
 }
-
 
 #[test]
 fn test_weak_upgrade() {

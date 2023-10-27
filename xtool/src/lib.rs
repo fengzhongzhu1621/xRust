@@ -1,3 +1,4 @@
+mod borrow;
 pub mod const_stack;
 pub mod link;
 pub mod linked_list;
@@ -7,8 +8,6 @@ pub mod proxy;
 pub mod random;
 pub mod stack;
 pub mod unsafe_link;
-mod borrow;
-mod to_owned;
 
 pub use panic::*;
 pub use random::*;
@@ -65,11 +64,7 @@ impl Config {
         let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
 
         // 成功返回Ok枚举
-        Ok(Config {
-            query,
-            filename,
-            case_sensitive,
-        })
+        Ok(Config { query, filename, case_sensitive })
     }
 }
 
@@ -85,13 +80,13 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
 
     // results
 
-    contents
-        .lines()
-        .filter(|line| line.contains(query))
-        .collect()
+    contents.lines().filter(|line| line.contains(query)).collect()
 }
 
-pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+pub fn search_case_insensitive<'a>(
+    query: &str,
+    contents: &'a str,
+) -> Vec<&'a str> {
     let mut results = Vec::new();
     let query = query.to_lowercase();
 
@@ -118,10 +113,7 @@ where
 {
     // 构造函数，参数是一个闭包
     pub fn new(calculation: T) -> Cacher<T> {
-        Cacher {
-            calculation,
-            value: None,
-        }
+        Cacher { calculation, value: None }
     }
 
     pub fn value(&mut self, arg: u32) -> u32 {
@@ -150,23 +142,14 @@ fn shoes_in_my_size(shoes: Vec<Shoe>, shoe_size: u32) -> Vec<Shoe> {
 #[test]
 fn filter_by_size() {
     let shoes = vec![
-        Shoe {
-            size: 10,
-            style: String::from("sneaker"),
-        },
-        Shoe {
-            size: 12,
-            style: String::from("boot"),
-        },
+        Shoe { size: 10, style: String::from("sneaker") },
+        Shoe { size: 12, style: String::from("boot") },
     ];
 
     let in_my_size = shoes_in_my_size(shoes, 10);
     assert_eq!(
         in_my_size,
-        vec![Shoe {
-            size: 10,
-            style: String::from("sneaker"),
-        },]
+        vec![Shoe { size: 10, style: String::from("sneaker") },]
     );
 }
 
