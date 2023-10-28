@@ -14,7 +14,7 @@ fn test_rc_borrow() {
 
     #[derive(Debug)]
     struct Student {
-        no: Rc<StudentNo>,               // 学生编号
+        no: StudentNo,                   // 学生编号
         name: String,                    // 学生名称
         age: u8,                         // 学生年纪
         class: Rc<RefCell<SchoolClass>>, // 学生所在的班级
@@ -23,6 +23,12 @@ fn test_rc_borrow() {
     impl fmt::Display for Student {
         fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
             fmt.pad(self.name.as_str())
+        }
+    }
+
+    impl Borrow<StudentNo> for Student {
+        fn borrow(&self) -> &StudentNo {
+            &self.no
         }
     }
 
@@ -64,9 +70,8 @@ fn test_rc_borrow() {
     // 创建一个学生对象
     let student_name = "bob";
     let no = "A001";
-    let student_no = Rc::new(StudentNo{no: no.to_string(), class: Rc::clone(&class)});
     let student = Student {
-        no: student_no,
+        no: StudentNo{no: no.to_string(), class: Rc::clone(&class)},
         name: student_name.to_string(),
         age: 18,
         class: Rc::clone(&class),
@@ -84,4 +89,11 @@ fn test_rc_borrow() {
     let class_a= class.try_borrow().unwrap();
     let student_bob = class_a.fetch_student(student_name.to_string()).unwrap();
     assert_eq!(student_bob.name, student_name.to_string());
+
+
+    // 使用 Borrow trait 获得学生的学号
+    let student= student_bob.as_ref();
+    let student_no: &StudentNo = student.borrow(); // 必须显示标注类型，否则会与默认的 Borrow Trait 冲突
+    assert_eq!(student_no.no, no.to_string());
+    
 }
