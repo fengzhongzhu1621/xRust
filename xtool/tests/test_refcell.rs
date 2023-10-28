@@ -1,4 +1,3 @@
-use core::cell::Ref;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fmt;
@@ -17,6 +16,14 @@ fn test_borrow() {
     let s1 = s.borrow();
     assert_eq!(*s1, "hello, world");
 }
+
+#[test]
+fn test_try_borrow() {
+    let s = RefCell::new(String::from("hello, world"));
+    let s1 = s.try_borrow().unwrap();
+    assert_eq!(*s1, "hello, world");
+}
+
 
 /// 获得RefCell内部数据的可变引用
 #[test]
