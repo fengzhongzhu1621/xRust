@@ -152,6 +152,7 @@ fn test_rc_borrow() {
         name: String,
     }
 
+    /// 班级类
     impl SchoolClass {
         fn new(name: String) -> Rc<RefCell<SchoolClass>> {
             Rc::new(RefCell::new(SchoolClass {
