@@ -37,6 +37,16 @@ impl Borrow<StudentNo> for Student {
     }
 }
 
+
+impl<'a> From<Student> for Cow<'a, StudentNo> {
+    #[inline]
+    fn from(s: Student) -> Cow<'a, StudentNo> {
+        let cow: Cow<'_, StudentNo> = Cow::Owned(s);
+        cow
+    }
+}
+
+
 lazy_static! {
     static ref STUDENT_NO: String = "A0001".to_string();
     static ref STUDENTS: HashMap<String, Student> = {
@@ -107,7 +117,87 @@ fn test_from() {
     let cow: Cow<'_, StudentNo> = Cow::from(&student_no);
     let student = cow.into_owned();
     assert_eq!(student.name, "bob");
+
+    let cow: Cow<'_, StudentNo> = Cow::from(student);
+    let student = cow.into_owned();
+    assert_eq!(student.name, "bob");
+}
+
+/// 测试接引用
+/// ```
+/// impl<B: ?Sized + ToOwned> const Deref for Cow<'_, B>
+/// where
+/// B::Owned: ~const Borrow<B>,
+/// {
+/// type Target = B;
+/// 
+/// fn deref(&self) -> &B {
+///     match *self {
+///         Borrowed(borrowed) => borrowed,
+///          Owned(ref owned) => owned.borrow(),
+///    }
+/// }
+/// }
+/// ```
+/// 
+#[test]
+fn test_deref() {
+    let student_no = StudentNo(STUDENT_NO.clone());
+    let cow_1 = Cow::Borrowed(&student_no);
+    assert_eq!(cow_1.0, "A0001");
+
+    let student_1 = cow_1.into_owned();
+    let cow_2: Cow<'_, StudentNo> = Cow::Owned(student_1);
+    assert_eq!(cow_2.0, "A0001");
+}
+
+
+#[test]
+fn test_borrowed() {
+    let s = "Hello world!";
+
+    // 输入参数是 s 的不可变引用, s 必须实现 ToOwned
+    let _x = Cow::Borrowed(s);
 }
 
 #[test]
-fn test_deref() {}
+fn test_borrowed_into_owned() {
+    let s = "Hello world!";
+    let cow = Cow::Borrowed(s);
+    // into_owned() 执行 borrowed.to_owned()，将&str 复制为 String，通常会执行克隆操作
+    // borrowed： <str as ToOwned>::Owned，即 Borrow<str> 类型
+    let t = cow.into_owned();
+    assert_eq!(t, s);
+    
+    let t = "Hello world!".to_string();
+    let cow = Cow::Borrowed(&t);
+    let _x = cow.into_owned();
+}
+
+
+#[test]
+fn test_string_from() {
+    fn abs_all(input: &mut Cow<[i32]>) {
+        for i in 0..input.len() {
+            let v = input[i];
+            if v < 0 {
+                // Clones into a vector if not already owned.
+                input.to_mut()[i] = -v;
+            }
+        }
+    }
+
+    // No clone occurs because `input` doesn't need to be mutated.
+    let slice = [0, 1, 2];
+    let mut input = Cow::from(&slice[..]);
+    abs_all(&mut input);
+
+    // Clone occurs because `input` needs to be mutated.
+    let slice = [-1, 0, 1];
+    let mut input = Cow::from(&slice[..]);
+    abs_all(&mut input);
+
+    // No clone occurs because `input` is already owned.
+    let mut input = Cow::from(vec![-1, 0, 1]);
+    abs_all(&mut input);
+}
