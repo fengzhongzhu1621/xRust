@@ -1,5 +1,6 @@
 use log::{Level, LevelFilter};
 use logger::filter::{enabled, Builder, Directive, Filter};
+use logger::fmt::{is_stderr, is_stdout};
 
 fn make_logger_filter(dirs: Vec<Directive>) -> Filter {
     let mut logger = Builder::new().build();
@@ -68,3 +69,4 @@ fn parse_default_bare_level_error_lc() {
     assert!(!enabled(&logger.directives, Level::Debug, ""));
     assert!(!enabled(&logger.directives, Level::Trace, ""));
 }
+

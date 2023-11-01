@@ -1,12 +1,8 @@
 mod atty;
-mod builder;
 mod formatter;
-mod humantime;
-mod target;
-mod writer;
+pub mod writer;
 
-use atty::{is_stderr, is_stdout};
-use builder::Builder;
-use formatter::Formatter;
-use target::{Target, WritableTarget};
-use writer::{parse_write_style, Buffer, BufferWriter, WriteStyle, Writer};
+// 根据特性引入不同的方法
+pub use atty::{is_stderr, is_stdout};
+
+pub use formatter::Formatter;

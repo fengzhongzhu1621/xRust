@@ -1,6 +1,7 @@
 use std::sync::Mutex;
 use std::{fmt, io};
 
+// 日志输出的目标地址
 /// Log target, either `stdout`, `stderr` or a custom pipe.
 #[non_exhaustive]
 pub enum Target {
@@ -13,6 +14,7 @@ pub enum Target {
 }
 
 impl Default for Target {
+    // 默认输出到 Stderr
     fn default() -> Self {
         Target::Stderr
     }
@@ -41,6 +43,7 @@ pub enum WritableTarget {
     /// Logs will be sent to standard error.
     Stderr,
     /// Logs will be sent to a custom pipe.
+    /// 支持并发写
     Pipe(Box<Mutex<dyn io::Write + Send + 'static>>),
 }
 

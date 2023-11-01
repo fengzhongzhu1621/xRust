@@ -10,18 +10,20 @@ printed.
 mod imp {
     use is_terminal::IsTerminal;
 
-    pub(in crate::fmt) fn is_stdout() -> bool {
+    /// 判断是否是一个标准输出终端
+    pub fn is_stdout() -> bool {
         std::io::stdout().is_terminal()
     }
 
-    pub(in crate::fmt) fn is_stderr() -> bool {
+    /// 判断是否是一个标准错误终端
+    pub fn is_stderr() -> bool {
         std::io::stderr().is_terminal()
     }
 }
 
 #[cfg(not(feature = "auto-color"))]
 mod imp {
-    pub(in crate::fmt) fn is_stdout() -> bool {
+    pub fn is_stdout() -> bool {
         false
     }
 
@@ -31,4 +33,19 @@ mod imp {
 }
 
 // 采用 use self:: 的方式根据特性引入不同的方法
-pub(in crate::fmt) use self::imp::*;
+pub use self::imp::*;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_is_stdout() {
+        assert_eq!(is_stdout(), true);
+    }
+
+    #[test]
+    fn test_is_stderr() {
+        assert_eq!(is_stderr(), true);
+    }
+}
