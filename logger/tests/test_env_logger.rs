@@ -1,6 +1,8 @@
 use log::{Level, LevelFilter};
 use logger::filter::{enabled, Builder, Directive, Filter};
-use logger::fmt::{is_stderr, is_stdout, Buffer};
+use logger::fmt::{
+    is_stderr, is_stdout, Buffer, BufferWriter, WritableTarget,
+};
 
 fn make_logger_filter(dirs: Vec<Directive>) -> Filter {
     let mut logger = Builder::new().build();
@@ -109,4 +111,10 @@ fn test_buffer() {
 
 #[test]
 #[cfg(not(feature = "auto-color"))]
-fn test_buffer_writer() {}
+fn test_buffer_writer() {
+    let buffer_writer = BufferWriter { target: WritableTarget::Stdout };
+    let sparkle_heart = vec![240, 159, 146, 150];
+    let buffer = Buffer(sparkle_heart);
+    let _x = buffer_writer.print(&buffer);
+    println!("{:?}", WritableTarget::Stdout);
+}

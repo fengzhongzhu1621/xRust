@@ -3,7 +3,7 @@ use crate::fmt::{WritableTarget, WriteStyle};
 use std::{io, sync::Mutex};
 
 pub struct BufferWriter {
-    target: WritableTarget,
+    pub target: WritableTarget,
 }
 
 impl BufferWriter {
