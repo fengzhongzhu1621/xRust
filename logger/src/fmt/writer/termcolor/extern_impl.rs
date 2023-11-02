@@ -1,4 +1,4 @@
-mod entry;
+mod extern_entry;
 
-pub use entry::buffer::Buffer;
-pub use entry::buffer_writer::BufferWriter;
+pub use extern_entry::Buffer;
+pub use extern_entry::BufferWriter;

@@ -1,10 +1,8 @@
 use std::io;
 
-/// 使用 Vec 实现一个 Buffer
 pub struct Buffer(pub Vec<u8>);
 
 impl Buffer {
-
     pub fn clear(&mut self) {
         self.0.clear();
     }

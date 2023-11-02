@@ -3,8 +3,8 @@ use std::io::Write;
 use termcolor::{self, ColorSpec, WriteColor};
 
 pub struct Buffer {
-    inner: termcolor::Buffer,
-    has_uncolored_target: bool,
+    pub inner: termcolor::Buffer,
+    pub has_uncolored_target: bool,
 }
 
 impl Buffer {

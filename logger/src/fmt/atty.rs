@@ -27,7 +27,7 @@ mod imp {
         false
     }
 
-    pub(in crate::fmt) fn is_stderr() -> bool {
+    pub fn is_stderr() -> bool {
         false
     }
 }
@@ -36,6 +36,7 @@ mod imp {
 pub use self::imp::*;
 
 #[cfg(test)]
+#[cfg(feature = "auto-color")]
 mod tests {
     use super::*;
 

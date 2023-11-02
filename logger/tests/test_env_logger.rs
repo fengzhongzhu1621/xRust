@@ -1,6 +1,6 @@
 use log::{Level, LevelFilter};
 use logger::filter::{enabled, Builder, Directive, Filter};
-use logger::fmt::{is_stderr, is_stdout};
+use logger::fmt::{is_stderr, is_stdout, Buffer};
 
 fn make_logger_filter(dirs: Vec<Directive>) -> Filter {
     let mut logger = Builder::new().build();
@@ -70,3 +70,43 @@ fn parse_default_bare_level_error_lc() {
     assert!(!enabled(&logger.directives, Level::Trace, ""));
 }
 
+#[test]
+#[cfg(feature = "auto-color")]
+fn test_is_stdout() {
+    assert_eq!(is_stdout(), true);
+}
+
+#[test]
+#[cfg(feature = "auto-color")]
+fn test_is_stderr() {
+    assert_eq!(is_stderr(), true);
+}
+
+#[test]
+#[cfg(not(feature = "auto-color"))]
+fn test_is_stdout() {
+    assert_eq!(is_stdout(), false);
+}
+
+#[test]
+#[cfg(not(feature = "auto-color"))]
+fn test_is_stderr() {
+    assert_eq!(is_stderr(), false);
+}
+
+#[test]
+#[cfg(not(feature = "auto-color"))]
+fn test_buffer() {
+    let mut buffer = Buffer(vec![1, 2, 3]);
+    assert_eq!(buffer.flush().unwrap(), ());
+
+    assert_eq!(buffer.write(&[4, 5]).unwrap(), 2);
+    assert_eq!(buffer.bytes().len(), 5);
+
+    buffer.clear();
+    assert_eq!(buffer.bytes().len(), 0);
+}
+
+#[test]
+#[cfg(not(feature = "auto-color"))]
+fn test_buffer_writer() {}
