@@ -7,6 +7,8 @@ mod sys;
 mod buffer;
 mod clipboard;
 mod raw;
+mod data;
+mod utils;
 
 pub use error_code::ErrorCode;
 ///Alias to result used by this crate
