@@ -1,5 +1,5 @@
 use crate::{Level, Metadata, Record};
-use core::kv::{KVs, Value};
+use core_utils::kv::{KVs, Value};
 use std::fmt::Arguments;
 
 /// A trait encapsulating the operations required of a logger.

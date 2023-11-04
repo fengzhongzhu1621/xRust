@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-core = { path = "../core" }
+core_utils = { path = "../core_utils" }
 env_logger = "0.10.0"
 humantime = { version = "2.1.0", optional = true }
 is-terminal = { version = "0.4.9", optional = true }

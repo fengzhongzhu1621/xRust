@@ -1,6 +1,6 @@
 use crate::Level;
 use crate::Metadata;
-use core::maybe_static::MaybeStaticStr;
+use core_utils::maybe_static::MaybeStaticStr;
 use std::fmt;
 
 #[derive(Clone, Debug)]
