@@ -10,6 +10,7 @@ extern "system" {
     // 释放内存块。必须传给该函数一个内存句柄
     pub fn GlobalFree(hmem: HGLOBAL) -> HGLOBAL;
     // 分配的实际内存大小可以大于请求的大小。 获取实际分配的字节数
+    // 如果指定的句柄无效或对象已被丢弃，则返回值为零
     pub fn GlobalSize(hMem: HGLOBAL) -> SIZE_T;
     // 从堆中分配指定的字节数。返回一个指针，调用进程可以立即使用该指针来访问内存。
     pub fn GlobalAlloc(uflags: c_uint, dwbytes: SIZE_T) -> HGLOBAL;
@@ -86,6 +87,7 @@ extern "system" {
     // 如果剪贴板呈现延迟，则在呈现更改之前，序列号不会递增。
     pub fn GetClipboardSequenceNumber() -> DWORD;
     // 确定剪贴板是否包含指定格式的数据。
+    // 返回值为剪贴板序列号。 如果没有 WINSTA_ACCESSCLIPBOARD 访问窗口工作站，该函数将返回零。
     // https://learn.microsoft.com/zh-cn/windows/win32/dataxchg/standard-clipboard-formats
     pub fn IsClipboardFormatAvailable(format: c_uint) -> BOOL;
     // 检索剪贴板上当前不同数据格式的数量。

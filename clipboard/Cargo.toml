@@ -5,5 +5,16 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+include = [
+    "**/*.rs",
+    "Cargo.toml",
+    "README.md"
+]
+
 [dependencies]
 core_utils = { path = "../core_utils" }
+error-code = "3.0.0"
+
+[features]
+# 启动子包的std特性
+std = ["error-code/std"]
