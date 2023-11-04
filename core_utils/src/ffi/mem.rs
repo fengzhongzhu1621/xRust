@@ -1,7 +1,5 @@
-use super::utils::*;
-use super::types::*;
-use super::SysResult;
-use super::sys;
+use crate::ffi::win::*;
+use crate::ffi::types::*;
 use error_code::ErrorCode;
 use core::{mem, ptr};
 
@@ -35,7 +33,7 @@ impl RawMem {
     #[inline(always)]
     pub fn new_global_mem(size: usize) -> SysResult<Self> {
         unsafe {
-            let mem = sys::GlobalAlloc(GHND, size as _);
+            let mem = GlobalAlloc(GHND, size as _);
             if mem.is_null() {
                 Err(unlikely_last_error())
             } else {
@@ -45,6 +43,7 @@ impl RawMem {
     }
 
     #[inline(always)]
+    /// 内存借用，drop时不释放空间
     pub fn from_borrowed(ptr: ptr::NonNull<c_void>) -> Self {
         Self(Scope(ptr.as_ptr(), noop))
     }
@@ -65,7 +64,7 @@ impl RawMem {
 
     pub fn lock(&self) -> SysResult<(ptr::NonNull<c_void>, Scope<*mut c_void>)> {
         let ptr = unsafe {
-            sys::GlobalLock(self.get())
+            GlobalLock(self.get())
         };
 
         match ptr::NonNull::new(ptr) {

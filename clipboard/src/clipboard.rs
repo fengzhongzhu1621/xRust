@@ -1,6 +1,4 @@
-use crate::SysResult;
-use core_utils::ffi::types::HWND;
-use crate::sys::*;
+use core_utils::ffi::win::SysResult;
 use error_code::ErrorCode;
 use core::{slice, mem, ptr, cmp};
 use core::num::{NonZeroUsize, NonZeroU32};

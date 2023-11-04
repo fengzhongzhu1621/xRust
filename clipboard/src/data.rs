@@ -1,5 +1,7 @@
-use crate::SysResult;
-use crate::utils::{unlikely_empty_size_result};
+use core_utils::ffi::win::SysResult;
+use core_utils::ffi::win::{unlikely_empty_size_result, RawMem};
+
+use core::{mem, ptr, cmp};
 
 ///Copies raw bytes from clipboard with specified `format`
 ///

@@ -1,9 +1,11 @@
-use crate::SysResult;
-use core_utils::ffi::types::*;
-use crate::sys::*;
+use crate::ffi::types::*;
+use crate::ffi::win::SysResult;
+use crate::ffi::win::sys::*;
 use error_code::ErrorCode;
-use core::{slice, mem, ptr, cmp};
-use core::num::{NonZeroUsize, NonZeroU32};
+use core::ptr;
+use core::num::NonZeroU32;
+use core::num::NonZeroUsize;
+
 
 #[allow(clippy::not_unsafe_ptr_arg_deref)]
 #[inline]
@@ -136,11 +138,4 @@ pub fn get_owner() -> Option<ptr::NonNull::<c_void>> {
     ptr::NonNull::new(unsafe {
         GetClipboardOwner()
     })
-}
-
-#[inline(always)]
-fn free_dc(data: HDC) {
-    unsafe {
-        ReleaseDC(ptr::null_mut(), data);
-    }
 }
