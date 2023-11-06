@@ -1,7 +1,7 @@
 use log::{Level, LevelFilter};
 use logger::filter::{enabled, Builder, Directive, Filter};
 use logger::fmt::{
-    is_stderr, is_stdout, Buffer, BufferWriter, WritableTarget,
+    is_stderr, is_stdout, BufferWriter, WritableTarget, WriteStyle,
 };
 
 fn make_logger_filter(dirs: Vec<Directive>) -> Filter {

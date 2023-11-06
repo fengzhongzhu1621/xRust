@@ -24,7 +24,7 @@ impl Buffer {
         self.inner.as_slice()
     }
 
-    fn set_color(&mut self, spec: &ColorSpec) -> io::Result<()> {
+    pub fn set_color(&mut self, spec: &ColorSpec) -> io::Result<()> {
         // Ignore styles for test captured logs because they can't be printed
         if !self.has_uncolored_target {
             // 终端支持颜色
@@ -35,7 +35,7 @@ impl Buffer {
         }
     }
 
-    fn reset(&mut self) -> io::Result<()> {
+    pub fn reset(&mut self) -> io::Result<()> {
         // Ignore styles for test captured logs because they can't be printed
         if !self.has_uncolored_target {
             // 终端支持颜色

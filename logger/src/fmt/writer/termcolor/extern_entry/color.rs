@@ -17,7 +17,7 @@ pub enum Color {
 }
 
 impl Color {
-    fn into_termcolor(self) -> termcolor::Color {
+    pub fn into_termcolor(self) -> termcolor::Color {
         match self {
             Color::Black => termcolor::Color::Black,
             Color::Blue => termcolor::Color::Blue,
