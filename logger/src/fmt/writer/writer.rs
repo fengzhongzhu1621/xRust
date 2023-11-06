@@ -1,10 +1,11 @@
 use crate::fmt::writer::{Buffer, BufferWriter, WriteStyle};
+use std::fmt;
 use std::io;
 
 /// A terminal target with color awareness.
 pub struct Writer {
-    inner: BufferWriter,
-    write_style: WriteStyle,
+    pub inner: BufferWriter,
+    pub write_style: WriteStyle,
 }
 
 impl Writer {
@@ -18,5 +19,11 @@ impl Writer {
 
     pub fn print(&self, buf: &Buffer) -> io::Result<()> {
         self.inner.print(buf)
+    }
+}
+
+impl fmt::Debug for Writer {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.debug_struct("Writer").finish()
     }
 }

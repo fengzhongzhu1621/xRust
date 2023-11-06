@@ -2,6 +2,7 @@ use std::sync::Mutex;
 use std::{fmt, io};
 
 // 日志输出的目标地址
+// non_exhaustive属性表示类型或变体将来可能会添加更多字段或变体。
 /// Log target, either `stdout`, `stderr` or a custom pipe.
 #[non_exhaustive]
 pub enum Target {
