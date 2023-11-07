@@ -19,8 +19,8 @@ impl WriteStyle {
 /// A set of styles to apply to the terminal output.
 #[derive(Clone)]
 pub struct Style {
-    buf: Rc<RefCell<Buffer>>,
-    spec: ColorSpec,
+    pub buf: Rc<RefCell<Buffer>>,
+    pub spec: ColorSpec,
 }
 
 impl fmt::Debug for Style {

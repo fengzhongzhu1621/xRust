@@ -5,8 +5,8 @@ use std::io;
 use std::rc::Rc;
 
 pub struct Formatter {
-    buf: Rc<RefCell<Buffer>>,
-    write_style: WriteStyle,
+    pub buf: Rc<RefCell<Buffer>>,
+    pub write_style: WriteStyle,
 }
 
 impl Formatter {

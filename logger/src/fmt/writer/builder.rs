@@ -1,5 +1,5 @@
+use super::{is_stderr, is_stdout, BufferWriter, Writer};
 use super::{parse_write_style, Target, WritableTarget, WriteStyle};
-use super::{is_stderr, is_stdout, Writer, BufferWriter};
 use std::mem;
 
 /// A builder for a terminal writer.
@@ -52,7 +52,7 @@ impl Builder {
     }
 
     /// Build a terminal writer.
-    pub(crate) fn build(&mut self) -> Writer {
+    pub fn build(&mut self) -> Writer {
         assert!(!self.built, "attempt to re-use consumed builder");
         self.built = true;
 

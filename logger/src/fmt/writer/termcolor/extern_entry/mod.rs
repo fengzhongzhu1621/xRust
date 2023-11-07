@@ -1,6 +1,7 @@
 mod buffer;
 mod buffer_writer;
 mod color;
+mod formatter;
 mod style;
 
 use color::Color;
