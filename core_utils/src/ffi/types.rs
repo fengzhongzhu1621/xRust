@@ -41,6 +41,7 @@ pub type HDC = *mut c_void;
 pub type HDROP = *mut c_void;
 pub type HBITMAP = *mut c_void;
 
+
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct POINT {
@@ -51,17 +52,17 @@ pub struct POINT {
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct BITMAPINFOHEADER {
-    pub biSize: DWORD,
-    pub biWidth: LONG,
-    pub biHeight: LONG,
-    pub biPlanes: WORD,
-    pub biBitCount: WORD,
-    pub biCompression: DWORD,
-    pub biSizeImage: DWORD,
-    pub biXPelsPerMeter: LONG,
-    pub biYPelsPerMeter: LONG,
-    pub biClrUsed: DWORD,
-    pub biClrImportant: DWORD,
+    pub biSize: DWORD, // 指定这个结构的长度，为40。 
+    pub biWidth: LONG, // 指定图象的宽度，单位是象素。
+    pub biHeight: LONG, // 指定图象的高度，单位是象素。
+    pub biPlanes: WORD, // 必须是1
+    pub biBitCount: WORD, // 指定表示颜色时要用到的位数，常用的值为1(黑白二色图), 4(16色图), 8(256色), 24(真彩色图)(新的.bmp格式支持32位色)。
+    pub biCompression: DWORD, // 指定位图是否压缩，有效的值为BI_RGB，BI_RLE8，BI_RLE4，BI_BITFIELDS(都是一些Windows定义好的常量)。
+    pub biSizeImage: DWORD, // 指定实际的位图数据占用的字节数，其实也可以从以下的公式中计算出来： biSizeImage=biWidth × biHeight 
+    pub biXPelsPerMeter: LONG, // 指定目标设备的水平分辨率，单位是每米的象素个数
+    pub biYPelsPerMeter: LONG, // 指定目标设备的垂直分辨率，单位同上。 
+    pub biClrUsed: DWORD,  // 指定本图象实际用到的颜色数，如果该值为零，则用到的颜色数为2biBitCount。
+    pub biClrImportant: DWORD,  // 指定本图象中重要的颜色数，如果该值为零，则认为所有的颜色都是重要的。
 }
 
 #[repr(C)]
@@ -75,21 +76,23 @@ pub struct RGBQUAD {
 
 #[repr(C)]
 #[derive(Copy, Clone)]
+// 定义了DIB(设备无关位图)的大小和颜色信息。
 pub struct BITMAPINFO {
-    pub bmiHeader: BITMAPINFOHEADER,
-    pub bmiColors: [RGBQUAD; 1],
+    pub bmiHeader: BITMAPINFOHEADER, // 包含了关于大小尺寸和颜色格式信息
+    pub bmiColors: [RGBQUAD; 1], // 1、RGBQUAD数组，每个项组成了颜色表 2、16位无符号整型数组，指定了当前以实现的逻辑调色板的索引
 }
 
 #[repr(C)]
 #[derive(Copy, Clone)]
+// 定义了逻辑位图的高度、宽度、颜色格式和位值。
 pub struct BITMAP {
-    pub bmType: LONG,
-    pub bmWidth: LONG,
-    pub bmHeight: LONG,
-    pub bmWidthBytes: LONG,
-    pub bmPlanes: WORD,
-    pub bmBitsPixel: WORD,
-    pub bmBits: LPVOID,
+    pub bmType: LONG, // 指定了位图的类型，对于逻辑位图该参数必须为0
+    pub bmWidth: LONG, // 指定了位图的宽度(以字节为单位)，必须大于0
+    pub bmHeight: LONG, // 指定了位图的高度(以字节为单位)，必须大于0
+    pub bmWidthBytes: LONG, // 每行字节数，4位对齐
+    pub bmPlanes: WORD, // 指定了颜色平面数
+    pub bmBitsPixel: WORD, // 指定了每个像素的位数，比如RGB每个像素占3个字节，即24位
+    pub bmBits: LPVOID, // 指向位图数据内存的地址
 }
 
 #[repr(C)]
