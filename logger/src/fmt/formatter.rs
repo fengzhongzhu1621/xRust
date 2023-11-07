@@ -1,7 +1,10 @@
 use crate::fmt::writer::WriteStyle;
 use crate::fmt::writer::{Buffer, Writer};
+use log::Record;
 use std::cell::RefCell;
+use std::fmt;
 use std::io;
+use std::io::prelude::*;
 use std::rc::Rc;
 
 pub struct Formatter {
@@ -29,3 +32,22 @@ impl Formatter {
         self.buf.borrow_mut().clear()
     }
 }
+
+impl Write for Formatter {
+    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+        self.buf.borrow_mut().write(buf)
+    }
+
+    fn flush(&mut self) -> io::Result<()> {
+        self.buf.borrow_mut().flush()
+    }
+}
+
+impl fmt::Debug for Formatter {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.debug_struct("Formatter").finish()
+    }
+}
+
+pub type FormatFn =
+    Box<dyn Fn(&mut Formatter, &Record) -> io::Result<()> + Sync + Send>;

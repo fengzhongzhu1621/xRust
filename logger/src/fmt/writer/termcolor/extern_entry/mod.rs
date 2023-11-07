@@ -4,7 +4,7 @@ mod color;
 mod formatter;
 mod style;
 
-use color::Color;
-
 pub use buffer::Buffer;
 pub use buffer_writer::BufferWriter;
+pub use color::Color;
+pub use style::StyledValue;

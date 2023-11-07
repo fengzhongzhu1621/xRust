@@ -16,6 +16,42 @@ impl Formatter {
             precision: TimestampPrecision::Seconds,
         }
     }
+
+    /// Get a [`Timestamp`] for the current date and time in UTC with full
+    /// second precision.
+    pub fn timestamp_seconds(&self) -> Timestamp {
+        Timestamp {
+            time: SystemTime::now(),
+            precision: TimestampPrecision::Seconds,
+        }
+    }
+
+    /// Get a [`Timestamp`] for the current date and time in UTC with
+    /// millisecond precision.
+    pub fn timestamp_millis(&self) -> Timestamp {
+        Timestamp {
+            time: SystemTime::now(),
+            precision: TimestampPrecision::Millis,
+        }
+    }
+
+    /// Get a [`Timestamp`] for the current date and time in UTC with
+    /// microsecond precision.
+    pub fn timestamp_micros(&self) -> Timestamp {
+        Timestamp {
+            time: SystemTime::now(),
+            precision: TimestampPrecision::Micros,
+        }
+    }
+
+    /// Get a [`Timestamp`] for the current date and time in UTC with
+    /// nanosecond precision.
+    pub fn timestamp_nanos(&self) -> Timestamp {
+        Timestamp {
+            time: SystemTime::now(),
+            precision: TimestampPrecision::Nanos,
+        }
+    }
 }
 
 /// An [RFC3339] formatted timestamp.

@@ -1,7 +1,7 @@
 use super::color::Color;
 use super::style::{Style, StyledValue};
 use crate::fmt::Formatter;
-use crate::Level;
+use log::Level;
 
 use termcolor::{self, ColorSpec, WriteColor};
 

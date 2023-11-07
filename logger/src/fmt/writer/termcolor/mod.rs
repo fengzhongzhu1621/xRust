@@ -10,3 +10,8 @@ The terminal printing is shimmed when the `termcolor` crate is not available.
 mod imp;
 
 pub use self::imp::*;
+
+#[cfg(feature = "color")]
+pub type SubtleStyle = StyledValue<'static, &'static str>;
+#[cfg(not(feature = "color"))]
+pub type SubtleStyle = &'static str;

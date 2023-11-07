@@ -1,8 +1,10 @@
+mod builder;
 mod formatter;
 mod humantime;
-mod writer;
 mod time;
+mod writer;
 
+pub use builder::{Builder, DefaultFormat};
 pub use formatter::Formatter;
-pub use writer::*;
 pub use time::TimestampPrecision;
+pub use writer::*;

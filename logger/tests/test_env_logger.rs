@@ -1,8 +1,11 @@
-use log::{Level, LevelFilter};
+use log::{Level, LevelFilter, Record};
+use logger;
 use logger::filter::{enabled, Builder, Directive, Filter};
 use logger::fmt::{
-    is_stderr, is_stdout, BufferWriter, WritableTarget, WriteStyle,
+    is_stderr, is_stdout, BufferWriter, DefaultFormat, Formatter,
+    WritableTarget, WriteStyle,
 };
+use std::fmt;
 
 fn make_logger_filter(dirs: Vec<Directive>) -> Filter {
     let mut logger = Builder::new().build();
@@ -117,4 +120,57 @@ fn test_buffer_writer() {
     let buffer = Buffer(sparkle_heart);
     let _x = buffer_writer.print(&buffer);
     println!("{:?}", WritableTarget::Stdout);
+}
+
+fn write_record(record: Record, fmt: DefaultFormat) -> String {
+    let buf = fmt.buf.buf.clone();
+
+    fmt.write(&record).expect("failed to write record");
+
+    let buf = buf.borrow();
+    String::from_utf8(buf.bytes().to_vec()).expect("failed to read record")
+}
+
+fn write_target(target: &str, fmt: DefaultFormat) -> String {
+    write_record(
+        Record::builder()
+            .args(format_args!("log\nmessage"))
+            .level(Level::Info)
+            .file(Some("test.rs"))
+            .line(Some(144))
+            .module_path(Some("test::path"))
+            .target(target)
+            .build(),
+        fmt,
+    )
+}
+
+fn write(fmt: DefaultFormat) -> String {
+    write_target("", fmt)
+}
+
+#[test]
+fn test_format_with_header() {
+    // 使用 Builder 创建 Writer
+    // 设置 print styles 为 Never
+    // target 默认为 Stderr
+    let writer = logger::fmt::WriteBuilder::new()
+        .write_style(WriteStyle::Never)
+        .build();
+
+    // 根据 Writer 创建格式化器 Formatter
+    let mut f = Formatter::new(&writer);
+
+    let written = write(DefaultFormat {
+        timestamp: None,
+        module_path: true,
+        target: false,
+        level: true,
+        written_header_value: false,
+        indent: None,
+        suffix: "\n",
+        buf: &mut f,
+    });
+
+    assert_eq!("[INFO  test::path] log\nmessage\n", written);
 }
