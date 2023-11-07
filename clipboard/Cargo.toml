@@ -11,9 +11,14 @@ include = [
     "README.md"
 ]
 
+build = "build.rs"
+
 [dependencies]
 core_utils = { path = "../core_utils" }
+
+[target.'cfg(windows)'.dependencies]
 error-code = "3.0.0"
+windows = "0.51.1"
 
 [features]
 # 启动子包的std特性
