@@ -1,1 +1,3 @@
 # xRust
+
+Rust Study Notes
