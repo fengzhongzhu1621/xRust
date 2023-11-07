@@ -273,7 +273,7 @@ macro_rules! match_format_name_big {
                 let mut format_buff = [0u16; 256];
                 unsafe {
                     let buff_p = format_buff.as_mut_ptr() as *mut u16;
-
+                    // 从剪贴板检索指定注册格式的名称, 将名称复制到指定的缓冲区。
                     match GetClipboardFormatNameW($name, buff_p, format_buff.len() as c_int) {
                         0 => None,
                         size => Some(String::from_utf16_lossy(&format_buff[..size as usize])),
@@ -342,6 +342,33 @@ pub fn format_name(format: u32, mut out: Buffer<'_>) -> Option<&'_ str> {
                        CF_WAVE,
                        CF_TIFF,
                        CF_UNICODETEXT);
+}
+
+///Returns format name based on it's code (allocating variant suitable for big names)
+pub fn format_name_big(format: u32) -> Option<String> {
+    match_format_name_big!(format,
+                           CF_BITMAP,
+                           CF_DIB,
+                           CF_DIBV5,
+                           CF_DIF,
+                           CF_DSPBITMAP,
+                           CF_DSPENHMETAFILE,
+                           CF_DSPMETAFILEPICT,
+                           CF_DSPTEXT,
+                           CF_ENHMETAFILE,
+                           CF_HDROP,
+                           CF_LOCALE,
+                           CF_METAFILEPICT,
+                           CF_OEMTEXT,
+                           CF_OWNERDISPLAY,
+                           CF_PALETTE,
+                           CF_PENDATA,
+                           CF_RIFF,
+                           CF_SYLK,
+                           CF_TEXT,
+                           CF_WAVE,
+                           CF_TIFF,
+                           CF_UNICODETEXT)
 }
 
 

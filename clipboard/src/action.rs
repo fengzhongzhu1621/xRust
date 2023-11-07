@@ -17,7 +17,7 @@ pub fn get(format: u32, out: &mut [u8]) -> SysResult<usize> {
     let out_ptr = out.as_mut_ptr();
 
     // 返回指向剪贴板数据的指针
-    let ptr = RawMem::from_borrowed(get_clipboard_data(format)?);
+    let ptr = RawMem::from_borrowed(clipboard::get_clipboard_data(format)?);
 
     let result = unsafe {
         // 加锁，返回一个指向被锁定的内存块的指针
@@ -38,7 +38,7 @@ pub fn get(format: u32, out: &mut [u8]) -> SysResult<usize> {
 ///
 ///Returns number of copied bytes on success, otherwise 0.
 pub fn get_vec(format: u32, out: &mut alloc::vec::Vec<u8>) -> SysResult<usize> {
-    let ptr = RawMem::from_borrowed(get_clipboard_data(format)?);
+    let ptr = RawMem::from_borrowed(clipboard::get_clipboard_data(format)?);
 
     let result = unsafe {
         // 加锁，返回一个指向被锁定的内存块的指针
@@ -70,7 +70,7 @@ pub fn get_vec(format: u32, out: &mut alloc::vec::Vec<u8>) -> SysResult<usize> {
 ///Returns number of copied bytes on success, otherwise 0.
 pub fn get_string(out: &mut alloc::vec::Vec<u8>) -> SysResult<usize> {
     //获取 Unicode 文本格式的剪贴板数据。 每行以回车符/换行符 (CR-LF) 组合结束。 null 字符表示数据结束。
-    let ptr = RawMem::from_borrowed(get_clipboard_data(CF_UNICODETEXT)?);
+    let ptr = RawMem::from_borrowed(clipboard::get_clipboard_data(clipboard::CF_UNICODETEXT)?);
 
     let result = unsafe {
         let (data_ptr, _lock) = ptr.lock()?;
@@ -110,7 +110,7 @@ pub fn get_string(out: &mut alloc::vec::Vec<u8>) -> SysResult<usize> {
 pub fn get_file_list_path(out: &mut alloc::vec::Vec<std::path::PathBuf>) -> SysResult<usize> {
     use std::os::windows::ffi::OsStringExt;
 
-    let clipboard_data = RawMem::from_borrowed(get_clipboard_data(CF_HDROP)?);
+    let clipboard_data = RawMem::from_borrowed(clipboard::get_clipboard_data(clipboard::CF_HDROP)?);
 
     let (_data_ptr, _lock) = clipboard_data.lock()?;
 
@@ -153,7 +153,7 @@ pub fn get_file_list_path(out: &mut alloc::vec::Vec<std::path::PathBuf>) -> SysR
 ///
 ///Returns number of appended file names.
 pub fn get_file_list(out: &mut alloc::vec::Vec<alloc::string::String>) -> SysResult<usize> {
-    let clipboard_data = RawMem::from_borrowed(get_clipboard_data(CF_HDROP)?);
+    let clipboard_data = RawMem::from_borrowed(clipboard::get_clipboard_data(clipboard::CF_HDROP)?);
 
     let (_data_ptr, _lock) = clipboard_data.lock()?;
 
@@ -191,7 +191,7 @@ pub fn get_file_list(out: &mut alloc::vec::Vec<alloc::string::String>) -> SysRes
 ///
 ///Output will contain header following by RGB
 pub fn get_bitmap(out: &mut alloc::vec::Vec<u8>) -> SysResult<usize> {
-    let clipboard_data = get_clipboard_data(CF_BITMAP)?;
+    let clipboard_data = clipboard::get_clipboard_data(clipboard::CF_BITMAP)?;
 
     //Thanks @matheuslessarodrigues
     let mut bitmap = BITMAP {
@@ -368,7 +368,7 @@ pub fn set_string(data: &str) -> SysResult<()> {
 
         let _ = empty();
 
-        if unsafe { !SetClipboardData(CF_UNICODETEXT, mem.get()).is_null() } {
+        if unsafe { !SetClipboardData(clipboard::CF_UNICODETEXT, mem.get()).is_null() } {
             //SetClipboardData takes ownership
             mem.release();
             return Ok(());
@@ -425,7 +425,7 @@ pub fn set_bitmap(data: &[u8]) -> SysResult<()> {
     }
 
     let _ = empty();
-    if unsafe { SetClipboardData(CF_BITMAP, handle as _).is_null() } {
+    if unsafe { SetClipboardData(clipboard::CF_BITMAP, handle as _).is_null() } {
         return Err(ErrorCode::last_system());
     }
 
@@ -490,7 +490,7 @@ pub fn set_file_list(paths: &[impl AsRef<str>]) -> SysResult<()> {
 
     let _ = empty();
 
-    if unsafe { !SetClipboardData(CF_HDROP, mem.get()).is_null() } {
+    if unsafe { !SetClipboardData(clipboard::CF_HDROP, mem.get()).is_null() } {
         //SetClipboardData now has ownership of `mem`.
         mem.release();
         return Ok(());

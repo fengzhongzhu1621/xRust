@@ -6,6 +6,8 @@ extern crate alloc;
 
 mod clipboard;
 mod action;
+mod formats;
 
 pub use error_code::ErrorCode;
 pub use clipboard::Clipboard;
+pub use action::*;
