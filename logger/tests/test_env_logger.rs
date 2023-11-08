@@ -122,12 +122,17 @@ fn test_buffer_writer() {
     println!("{:?}", WritableTarget::Stdout);
 }
 
+// 使用默认格式化器写 Record
 fn write_record(record: Record, fmt: DefaultFormat) -> String {
+    // 获得 Formatter 的缓存
     let buf = fmt.buf.buf.clone();
 
+    // 写数据到默认格式化起的 buf 中
     fmt.write(&record).expect("failed to write record");
 
     let buf = buf.borrow();
+
+    // &[u8]  -> Vec<u8> -> Result<String, FromUtf8Error>
     String::from_utf8(buf.bytes().to_vec()).expect("failed to read record")
 }
 
@@ -173,4 +178,127 @@ fn test_format_with_header() {
     });
 
     assert_eq!("[INFO  test::path] log\nmessage\n", written);
+}
+
+#[test]
+fn format_no_header() {
+    let writer = writer::Builder::new().write_style(WriteStyle::Never).build();
+
+    let mut f = Formatter::new(&writer);
+
+    let written = write(DefaultFormat {
+        timestamp: None,
+        module_path: false,
+        target: false,
+        level: false,
+        written_header_value: false,
+        indent: None,
+        suffix: "\n",
+        buf: &mut f,
+    });
+
+    assert_eq!("log\nmessage\n", written);
+}
+
+#[test]
+fn format_indent_spaces() {
+    let writer = writer::Builder::new().write_style(WriteStyle::Never).build();
+
+    let mut f = Formatter::new(&writer);
+
+    let written = write(DefaultFormat {
+        timestamp: None,
+        module_path: true,
+        target: false,
+        level: true,
+        written_header_value: false,
+        indent: Some(4),
+        suffix: "\n",
+        buf: &mut f,
+    });
+
+    assert_eq!("[INFO  test::path] log\n    message\n", written);
+}
+
+#[test]
+fn format_indent_zero_spaces() {
+    let writer = writer::Builder::new().write_style(WriteStyle::Never).build();
+
+    let mut f = Formatter::new(&writer);
+
+    let written = write(DefaultFormat {
+        timestamp: None,
+        module_path: true,
+        target: false,
+        level: true,
+        written_header_value: false,
+        indent: Some(0),
+        suffix: "\n",
+        buf: &mut f,
+    });
+
+    assert_eq!("[INFO  test::path] log\nmessage\n", written);
+}
+
+#[test]
+fn format_suffix() {
+    let writer = writer::Builder::new().write_style(WriteStyle::Never).build();
+
+    let mut f = Formatter::new(&writer);
+
+    let written = write(DefaultFormat {
+        timestamp: None,
+        module_path: false,
+        target: false,
+        level: false,
+        written_header_value: false,
+        indent: None,
+        suffix: "\n\n",
+        buf: &mut f,
+    });
+
+    assert_eq!("log\nmessage\n\n", written);
+}
+
+#[test]
+fn format_suffix_with_indent() {
+    let writer = writer::Builder::new().write_style(WriteStyle::Never).build();
+
+    let mut f = Formatter::new(&writer);
+
+    let written = write(DefaultFormat {
+        timestamp: None,
+        module_path: false,
+        target: false,
+        level: false,
+        written_header_value: false,
+        indent: Some(4),
+        suffix: "\n\n",
+        buf: &mut f,
+    });
+
+    assert_eq!("log\n\n    message\n\n", written);
+}
+
+#[test]
+fn format_target() {
+    let writer = writer::Builder::new().write_style(WriteStyle::Never).build();
+
+    let mut f = Formatter::new(&writer);
+
+    let written = write_target(
+        "target",
+        DefaultFormat {
+            timestamp: None,
+            module_path: true,
+            target: true,
+            level: true,
+            written_header_value: false,
+            indent: None,
+            suffix: "\n",
+            buf: &mut f,
+        },
+    );
+
+    assert_eq!("[INFO  test::path target] log\nmessage\n", written);
 }

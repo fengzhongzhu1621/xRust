@@ -117,9 +117,11 @@ impl<'a> DefaultFormat<'a> {
     where
         T: Display,
     {
+        // 头部信息只写入一次
         if !self.written_header_value {
             self.written_header_value = true;
 
+            // 获得只需要打印的 Style 类型
             let open_brace = self.subtle_style("[");
             write!(self.buf, "{}{}", open_brace, value)
         } else {
@@ -149,7 +151,7 @@ impl<'a> DefaultFormat<'a> {
     pub fn write_timestamp(&mut self) -> io::Result<()> {
         #[cfg(feature = "humantime")]
         {
-            use self::TimestampPrecision::*;
+            use super::TimestampPrecision::*;
             let ts = match self.timestamp {
                 None => return Ok(()),
                 Some(Seconds) => self.buf.timestamp_seconds(),

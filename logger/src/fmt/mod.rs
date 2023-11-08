@@ -2,7 +2,7 @@ mod builder;
 mod formatter;
 mod humantime;
 mod time;
-mod writer;
+pub mod writer;
 
 pub use builder::{Builder, DefaultFormat};
 pub use formatter::Formatter;
