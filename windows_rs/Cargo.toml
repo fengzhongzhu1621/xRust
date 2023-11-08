@@ -11,14 +11,26 @@ edition = "2021"
 [dependencies.windows]
 version = "0.51"
 features = [
-    "implement",
+    "ApplicationModel_Core",
     "Data_Xml_Dom",
+    "Foundation",
+    "implement",
+    "Security_Credentials_UI",
+    "Security_Cryptography_DataProtection",
+    "Storage_Streams",
+    "UI_Core",
     "Win32_Foundation",
-    "Win32_Security",
-    "Win32_System_Threading",
-    "Win32_UI_WindowsAndMessaging",
-    "Win32_System_Com",
+    "Win32_Graphics_Gdi",
     "Win32_Networking_BackgroundIntelligentTransferService",
+    "Win32_Security",
+    "Win32_Security_Credentials",
+    "Win32_Storage_Packaging_Appx",
+    "Win32_System_Threading",
+    "Win32_System_Com",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Performance",
+    "Win32_System_WinRT",
+    "Win32_UI_WindowsAndMessaging",
 ]
 
 [dependencies.windows-sys]
