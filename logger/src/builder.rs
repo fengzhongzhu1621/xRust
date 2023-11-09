@@ -8,9 +8,41 @@ pub struct Builder {
     built: bool,
 }
 
+pub struct Logger {
+    writer: fmt::Writer,
+    filter: filter::Filter,
+    format: fmt::FormatFn,
+}
+
 impl Builder {
     pub fn new() -> Builder {
         Default::default()
+    }
+
+    pub fn from_env<'a, E>(env: E) -> Self
+    where
+        E: Into<Env<'a>>,
+    {
+        let mut builder = Builder::new();
+        builder.parse_env(env);
+        builder
+    }
+
+    pub fn parse_env<'a, E>(&mut self, env: E) -> &mut Self
+    where
+        E: Into<Env<'a>>,
+    {
+        let env = env.into();
+
+        if let Some(s) = env.get_filter() {
+            self.parse_filters(&s);
+        }
+
+        if let Some(s) = env.get_write_style() {
+            self.parse_write_style(&s);
+        }
+
+        self
     }
 
     pub fn from_default_env() -> Self {

@@ -37,7 +37,6 @@ impl Borrow<StudentNo> for Student {
     }
 }
 
-
 impl<'a> From<Student> for Cow<'a, StudentNo> {
     #[inline]
     fn from(s: Student) -> Cow<'a, StudentNo> {
@@ -45,7 +44,6 @@ impl<'a> From<Student> for Cow<'a, StudentNo> {
         cow
     }
 }
-
 
 lazy_static! {
     static ref STUDENT_NO: String = "A0001".to_string();
@@ -78,6 +76,25 @@ fn test_into_owned() {
     let cow_2: Cow<'_, StudentNo> = Cow::Owned(student_1);
     let student_2 = cow_2.into_owned();
     assert_eq!(student_2.name, "bob");
+}
+
+#[test]
+fn test_to_owned() {
+    let student_no = StudentNo(STUDENT_NO.clone());
+
+    // 复制一个 Student 类型
+    let cow_1 = Cow::Borrowed(&student_no);
+    let student_1 = cow_1.to_owned();
+    let student_2 = student_1.into_owned();
+    assert_eq!(student_2.name, "bob");
+
+    // Student 类型作为参数传入,返回结果就是输入参数
+    // B 类型是 StudentNo
+    // <B as ToOwned>::Owned 类型是 Student
+    let cow_2: Cow<'_, StudentNo> = Cow::Owned(student_2);
+    let student_3 = cow_2.to_owned();
+    let student_4 = student_3.into_owned();
+    assert_eq!(student_4.name, "bob");
 }
 
 #[test]
@@ -123,14 +140,14 @@ fn test_from() {
     assert_eq!(student.name, "bob");
 }
 
-/// 测试接引用
+/// 测试解引用
 /// ```
 /// impl<B: ?Sized + ToOwned> const Deref for Cow<'_, B>
 /// where
 /// B::Owned: ~const Borrow<B>,
 /// {
 /// type Target = B;
-/// 
+///
 /// fn deref(&self) -> &B {
 ///     match *self {
 ///         Borrowed(borrowed) => borrowed,
@@ -139,7 +156,7 @@ fn test_from() {
 /// }
 /// }
 /// ```
-/// 
+///
 #[test]
 fn test_deref() {
     let student_no = StudentNo(STUDENT_NO.clone());
@@ -150,7 +167,6 @@ fn test_deref() {
     let cow_2: Cow<'_, StudentNo> = Cow::Owned(student_1);
     assert_eq!(cow_2.0, "A0001");
 }
-
 
 #[test]
 fn test_borrowed() {
@@ -168,12 +184,11 @@ fn test_borrowed_into_owned() {
     // borrowed： <str as ToOwned>::Owned，即 Borrow<str> 类型
     let t = cow.into_owned();
     assert_eq!(t, s);
-    
+
     let t = "Hello world!".to_string();
     let cow = Cow::Borrowed(&t);
     let _x = cow.into_owned();
 }
-
 
 #[test]
 fn test_string_from() {
