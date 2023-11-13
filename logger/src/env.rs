@@ -11,7 +11,7 @@ pub const DEFAULT_WRITE_STYLE_ENV: &str = "RUST_LOG_STYLE";
 #[derive(Debug)]
 pub struct Env<'a> {
     filter: Var<'a>,
-    write_style: Var<'a>,
+    write_style: Var<'a>,   // 
 }
 
 impl<'a> Env<'a> {
