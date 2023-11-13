@@ -1,11 +1,13 @@
+//! From和Into实现的转换不允许出现错误，即转换过程不能抛出异常。如果转换过程允许抛出异常请使用：TryFrom和TryInto。
+//! Into 不提供 From 实现（ From 却提供 Into）。因此，应该始终尝试先实现 From，如果 From 无法实现，则再尝试使用 Into。
 use std::convert::From;
+use std::borrow::Cow;
 
 #[derive(Debug)]
 struct Number {
     value: i32,
 }
 
-// Into 不提供 From 实现（ From 却提供 Into）。因此，应该始终尝试先实现 From，如果 From 无法实现，则再尝试使用 Into。
 struct Wrapper<T>(Vec<T>);
 
 // Wrapper -> Vec<T>
@@ -50,4 +52,13 @@ fn test_string_into() {
     let s = "hello".to_string();
     let v: Vec<u8> = s.into();
     assert_eq!(v, vec![104, 101, 108, 108, 111]);
+}
+
+#[test]
+fn test_str_into_cow() {
+    let s = "hello";
+
+    // 调用 Cow::From => Cow::Borrowed(s)
+    let v: Cow<'_, str> = s.into();
+    println!("{:?}", v);
 }
