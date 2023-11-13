@@ -55,7 +55,8 @@ impl<'a> Env<'a> {
         self
     }
 
-    fn get_filter(&self) -> Option<String> {
+    /// 从环境变量获取 name 的值
+    pub fn get_filter(&self) -> Option<String> {
         self.filter.get()
     }
 
@@ -99,7 +100,7 @@ impl<'a> Env<'a> {
         self
     }
 
-    fn get_write_style(&self) -> Option<String> {
+    pub fn get_write_style(&self) -> Option<String> {
         self.write_style.get()
     }
 }
@@ -120,5 +121,55 @@ where
 {
     fn from(filter_env: T) -> Self {
         Env::default().filter(filter_env.into())
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::env;
+
+    #[test]
+    fn env_get_filter_reads_from_var_if_set() {
+        env::set_var("env_get_filter_reads_from_var_if_set", "from var");
+
+        let env = Env::new().filter_or("env_get_filter_reads_from_var_if_set", "from default");
+
+        assert_eq!(Some("from var".to_owned()), env.get_filter());
+    }
+
+    #[test]
+    fn env_get_filter_reads_from_default_if_var_not_set() {
+        env::remove_var("env_get_filter_reads_from_default_if_var_not_set");
+
+        let env = Env::new().filter_or(
+            "env_get_filter_reads_from_default_if_var_not_set",
+            "from default",
+        );
+
+        assert_eq!(Some("from default".to_owned()), env.get_filter());
+    }
+
+    #[test]
+    fn env_get_write_style_reads_from_var_if_set() {
+        env::set_var("env_get_write_style_reads_from_var_if_set", "from var");
+
+        let env =
+            Env::new().write_style_or("env_get_write_style_reads_from_var_if_set", "from default");
+
+        assert_eq!(Some("from var".to_owned()), env.get_write_style());
+    }
+
+    #[test]
+    fn env_get_write_style_reads_from_default_if_var_not_set() {
+        env::remove_var("env_get_write_style_reads_from_default_if_var_not_set");
+
+        let env = Env::new().write_style_or(
+            "env_get_write_style_reads_from_default_if_var_not_set",
+            "from default",
+        );
+
+        assert_eq!(Some("from default".to_owned()), env.get_write_style());
     }
 }

@@ -3,8 +3,9 @@ use logger;
 use logger::filter::{enabled, Builder, Directive, Filter};
 use logger::fmt::{
     is_stderr, is_stdout, BufferWriter, DefaultFormat, Formatter,
-    WritableTarget, WriteStyle,
+    WritableTarget, WriteStyle
 };
+use logger::fmt::writer::WriteBuilder;
 use std::fmt;
 
 fn make_logger_filter(dirs: Vec<Directive>) -> Filter {
@@ -182,7 +183,7 @@ fn test_format_with_header() {
 
 #[test]
 fn format_no_header() {
-    let writer = writer::Builder::new().write_style(WriteStyle::Never).build();
+    let writer = WriteBuilder::new().write_style(WriteStyle::Never).build();
 
     let mut f = Formatter::new(&writer);
 
@@ -202,7 +203,7 @@ fn format_no_header() {
 
 #[test]
 fn format_indent_spaces() {
-    let writer = writer::Builder::new().write_style(WriteStyle::Never).build();
+    let writer = WriteBuilder::new().write_style(WriteStyle::Never).build();
 
     let mut f = Formatter::new(&writer);
 
@@ -222,7 +223,7 @@ fn format_indent_spaces() {
 
 #[test]
 fn format_indent_zero_spaces() {
-    let writer = writer::Builder::new().write_style(WriteStyle::Never).build();
+    let writer = WriteBuilder::new().write_style(WriteStyle::Never).build();
 
     let mut f = Formatter::new(&writer);
 
@@ -242,7 +243,7 @@ fn format_indent_zero_spaces() {
 
 #[test]
 fn format_suffix() {
-    let writer = writer::Builder::new().write_style(WriteStyle::Never).build();
+    let writer =WriteBuilder::new().write_style(WriteStyle::Never).build();
 
     let mut f = Formatter::new(&writer);
 
@@ -262,7 +263,7 @@ fn format_suffix() {
 
 #[test]
 fn format_suffix_with_indent() {
-    let writer = writer::Builder::new().write_style(WriteStyle::Never).build();
+    let writer = WriteBuilder::new().write_style(WriteStyle::Never).build();
 
     let mut f = Formatter::new(&writer);
 
@@ -282,7 +283,7 @@ fn format_suffix_with_indent() {
 
 #[test]
 fn format_target() {
-    let writer = writer::Builder::new().write_style(WriteStyle::Never).build();
+    let writer = WriteBuilder::new().write_style(WriteStyle::Never).build();
 
     let mut f = Formatter::new(&writer);
 

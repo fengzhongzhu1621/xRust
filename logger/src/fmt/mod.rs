@@ -4,7 +4,7 @@ mod humantime;
 mod time;
 pub mod writer;
 
-pub use builder::{Builder, DefaultFormat, FormatFn};
-pub use formatter::Formatter;
+pub use builder::{Builder, DefaultFormat};
+pub use formatter::{FormatFn, Formatter};
 pub use time::TimestampPrecision;
 pub use writer::*;
