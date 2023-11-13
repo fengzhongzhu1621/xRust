@@ -10,8 +10,8 @@ pub const DEFAULT_WRITE_STYLE_ENV: &str = "RUST_LOG_STYLE";
 /// Set of environment variables to configure from.
 #[derive(Debug)]
 pub struct Env<'a> {
-    filter: Var<'a>,
-    write_style: Var<'a>,   // 
+    filter: Var<'a>, // 日志的过滤级别，从环境变了获取
+    write_style: Var<'a>,   // 日志类型，从环境变了获取
 }
 
 impl<'a> Env<'a> {
