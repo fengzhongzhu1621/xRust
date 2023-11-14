@@ -29,4 +29,5 @@ members = [
     "core_utils",
     "clipboard",
     "windows_rs",
+    "crypto_examples",
 ]
