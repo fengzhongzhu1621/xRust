@@ -7,6 +7,7 @@ use std::io;
 use std::io::prelude::*;
 use std::rc::Rc;
 
+// 格式化器缓存，用于写数据到缓存对象
 pub struct Formatter {
     pub buf: Rc<RefCell<Buffer>>,
     pub write_style: WriteStyle,

@@ -11,7 +11,7 @@ members = [
     "thread",
     "pool",
     "asyncwait",
-    "container_primitive", 
+    "container_primitive",
     "sync_primitive",
     "collections",
     "process",
@@ -30,4 +30,5 @@ members = [
     "clipboard",
     "windows_rs",
     "crypto_examples",
+    "fs_examples",
 ]

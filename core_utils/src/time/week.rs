@@ -1,4 +1,5 @@
-enum Week {
+#[derive(Copy, Clone)]
+pub enum Week {
     Monday = 1, // 1
     Tuesday,    // 2
     Wednesday,  // 3
@@ -9,7 +10,7 @@ enum Week {
 }
 
 impl Week {
-    fn is_weekend(&self) -> bool {
+    pub fn is_weekend(&self) -> bool {
         if (*self as u8) > 5 {
             return true;
         }

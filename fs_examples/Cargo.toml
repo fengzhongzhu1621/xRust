@@ -1,5 +1,5 @@
 [package]
-name = "xtool"
+name = "fs_examples"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,7 +7,3 @@ edition = "2021"
 
 [dependencies]
 chrono = "0.4.31"
-hyper = { version = "0.14.27", features = ["full"] }
-lazy_static = "1.4.0"
-rand = "0.8.5"
-tokio = { version = "1.32.0", features = ["full"] }

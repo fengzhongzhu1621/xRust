@@ -4,6 +4,7 @@ pub mod maybe_static;
 // pub use convert::*;
 //pub use maybe_static::*;
 pub mod ffi;
+pub mod time;
 pub mod var;
 
 extern crate alloc;

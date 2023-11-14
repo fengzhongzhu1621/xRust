@@ -1,4 +1,4 @@
-use super::formatter::Formatter;
+use super::formatter::{FormatFn, Formatter};
 use super::time::TimestampPrecision;
 use crate::fmt::SubtleStyle;
 use std::fmt::Display;
@@ -9,9 +9,6 @@ use crate::fmt::termcolor::Color;
 
 use log::Record;
 use std::{io, mem};
-
-pub type FormatFn =
-    Box<dyn Fn(&mut Formatter, &Record) -> io::Result<()> + Sync + Send>;
 
 pub struct Builder {
     pub format_timestamp: Option<TimestampPrecision>,
