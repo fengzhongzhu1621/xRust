@@ -1,9 +1,12 @@
+use chrono::{DateTime, Local};
 use std::env;
 use std::ffi::OsStr;
 use std::fs;
 use std::os::windows::fs::MetadataExt;
 use std::path::Path;
 use std::time::{Duration, SystemTime};
+
+pub const DATETIME_FORMAT: &str = "%Y-%m-%d %H:%M:%S";
 
 #[test]
 fn test_read_dir() {
@@ -97,7 +100,10 @@ fn test_creation_time() {
 
     // 获得文件创建时间
     if let Ok(metadata) = absolute_path.metadata() {
-        let _x: SystemTime = SystemTime::UNIX_EPOCH
-            + Duration::from_nanos(metadata.creation_time());
+        let creation_time = metadata.created().unwrap();
+        let local_datetime: DateTime<Local> = creation_time.clone().into();
+        let datetime_str = local_datetime.format(DATETIME_FORMAT).to_string();
+
+        println!("{}", datetime_str);
     }
 }
