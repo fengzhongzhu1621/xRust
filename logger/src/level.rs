@@ -1,8 +1,6 @@
 use core_utils::convert::ok_or;
-use std::cmp;
-
-use std::fmt;
 use std::str::FromStr;
+use std::{cmp, fmt, mem};
 
 use crate::ParseLevelError;
 
@@ -276,6 +274,17 @@ impl PartialOrd<Level> for LevelFilter {
 #[cfg(target_has_atomic = "ptr")]
 pub fn set_max_level(level: LevelFilter) {
     MAX_LOG_LEVEL_FILTER.store(level as usize, Ordering::Relaxed);
+}
+
+#[inline(always)]
+pub fn max_level() -> LevelFilter {
+    // Since `LevelFilter` is `repr(usize)`,
+    // this transmute is sound if and only if `MAX_LOG_LEVEL_FILTER`
+    // is set to a usize that is a valid discriminant for `LevelFilter`.
+    // Since `MAX_LOG_LEVEL_FILTER` is private, the only time it's set
+    // is by `set_max_level` above, i.e. by casting a `LevelFilter` to `usize`.
+    // So any usize stored in `MAX_LOG_LEVEL_FILTER` is a valid discriminant.
+    unsafe { mem::transmute(MAX_LOG_LEVEL_FILTER.load(Ordering::Relaxed)) }
 }
 
 /// The statically resolved maximum log level.
