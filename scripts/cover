@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -euo pipefail
+
+if ! cargo tarpaulin --version; then
+  cargo install cargo-tarpaulin --force
+fi
+
+// Tarpaulin 是 Cargo 构建系统的代码覆盖率报告工具。
+// cargo tarpaulin --ignore-tests用于计算应用程序的代码覆盖率，同时忽略测试功能。
+cargo tarpaulin --out html
