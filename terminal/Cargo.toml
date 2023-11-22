@@ -5,6 +5,9 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[package.metadata.docs.rs]
+all-features = true
+
 [dependencies]
 
 [target.'cfg(not(any(windows, target_os = "hermit", target_os = "unknown")))'.dependencies]
@@ -20,3 +23,12 @@ features = [
 
 [target.'cfg(windows)'.dev-dependencies]
 tempfile  = "3"
+
+
+[features]
+default = ["std"]
+std = []
+alloc = []
+
+# hidden feature to enable nightly doc cfg
+_nightly = []

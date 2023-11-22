@@ -21,11 +21,11 @@ extern "system" {
     // 映射一个unicode字符串到一个多字节字符串
     // 将 UTF-16 (宽字符) 字符串映射到新的字符串。 新字符串不一定来自多字节字符集。
     // 从 UTF-16 转换为非 Unicode 编码的数据可能会丢失数据，因为代码页可能无法表示特定 Unicode 数据中使用的每个字符。
-    // 
-    // Note: 谨慎 错误地使用 WideCharToMultiByte 函数可能会危及应用程序的安全性。 
+    //
+    // Note: 谨慎 错误地使用 WideCharToMultiByte 函数可能会危及应用程序的安全性。
     // 调用此函数很容易导致缓冲区溢出，因为 lpWideCharStr 指示的输入缓冲区的大小等于 Unicode 字符串中的字符数，
     // 而 lpMultiByteStr 指示的输出缓冲区的大小等于字节数。 若要避免缓冲区溢出，应用程序必须指定适合缓冲区接收的数据类型的缓冲区大小。
-    // 
+    //
     // int WideCharToMultiByte(
     // [in]            UINT                               CodePage,
     // [in]            DWORD                              dwFlags,
@@ -36,14 +36,21 @@ extern "system" {
     // [in, optional]  LPCCH                              lpDefaultChar,
     // [out, optional] LPBOOL                             lpUsedDefaultChar
     // );
-    pub fn WideCharToMultiByte(page: c_uint, flags: c_ulong, wide_str: *const u16, wide_str_len: c_int,
-                               multi_str: *mut i8, multi_str_len: c_int,
-                               default_char: *const i8, used_default_char: *mut bool) -> c_int;
+    pub fn WideCharToMultiByte(
+        page: c_uint,
+        flags: c_ulong,
+        wide_str: *const u16,
+        wide_str_len: c_int,
+        multi_str: *mut i8,
+        multi_str_len: c_int,
+        default_char: *const i8,
+        used_default_char: *mut bool,
+    ) -> c_int;
     // 将字符串映射到 UTF-16 (宽字符) 字符串。 字符串不一定来自多字节字符集。
     //
-    // Note: 谨慎 错误地使用 MultiByteToWideChar 函数可能会危及应用程序的安全性。 
+    // Note: 谨慎 错误地使用 MultiByteToWideChar 函数可能会危及应用程序的安全性。
     // 调用此函数很容易导致缓冲区溢出，因为 lpMultiByteStr 指示的输入缓冲区的大小等于字符串中的字节数，
-    // 而 lpWideCharStr 指示的输出缓冲区的大小等于字符数。 
+    // 而 lpWideCharStr 指示的输出缓冲区的大小等于字符数。
     // 若要避免缓冲区溢出，应用程序必须指定适合缓冲区接收的数据类型的缓冲区大小。
     //
     // int MultiByteToWideChar(
@@ -54,7 +61,14 @@ extern "system" {
     //     [out, optional] LPWSTR                            lpWideCharStr,
     //     [in]            int                               cchWideChar
     //   );
-    pub fn MultiByteToWideChar(CodePage: c_uint, dwFlags: DWORD, lpMultiByteStr: *const u8, cbMultiByte: c_int, lpWideCharStr: *mut u16, cchWideChar: c_int) -> c_int;
+    pub fn MultiByteToWideChar(
+        CodePage: c_uint,
+        dwFlags: DWORD,
+        lpMultiByteStr: *const u8,
+        cbMultiByte: c_int,
+        lpWideCharStr: *mut u16,
+        cchWideChar: c_int,
+    ) -> c_int;
 }
 
 extern "system" {
@@ -63,8 +77,8 @@ extern "system" {
     // 当使用公共DC绘制后，必须调用ReleaseDC函数来释放DC。
     // ReleaseDC必须和GetDC同属于同一个线程。DC的数量仅局限于可用的内存大小。
     pub fn ReleaseDC(hWnd: HWND, hDC: HDC) -> c_int;
-    // 检索指定窗口的工作区或整个屏幕的设备上下文 (DC) 的句柄。 
-    // 可以在后续 GDI 函数中使用返回的句柄在 DC 中绘制。 
+    // 检索指定窗口的工作区或整个屏幕的设备上下文 (DC) 的句柄。
+    // 可以在后续 GDI 函数中使用返回的句柄在 DC 中绘制。
     // 设备上下文是一种不透明的数据结构，其值由 GDI 在内部使用。
     pub fn GetDC(hWnd: HWND) -> HDC;
 
@@ -77,13 +91,13 @@ extern "system" {
     // 调用 CloseClipboard 后，不要将对象放在剪贴板上。
     pub fn CloseClipboard() -> BOOL;
     // 清空剪贴板并释放剪贴板中数据的句柄。 然后， 函数将剪贴板的所有权分配给当前已打开剪贴板的窗口。
-    // 在调用 EmptyClipboard 之前，应用程序必须使用 OpenClipboard 函数打开剪贴板。 
-    // 如果应用程序在打开剪贴板时指定 NULL 窗口句柄， EmptyClipboard 将成功，但将剪贴板所有者设置为 NULL。 
+    // 在调用 EmptyClipboard 之前，应用程序必须使用 OpenClipboard 函数打开剪贴板。
+    // 如果应用程序在打开剪贴板时指定 NULL 窗口句柄， EmptyClipboard 将成功，但将剪贴板所有者设置为 NULL。
     // 请注意，这会导致 SetClipboardData 失败。
     pub fn EmptyClipboard() -> BOOL;
     // 检索当前窗口工作站的剪贴板序列号。
-    // 系统为每个窗口工作站保留剪贴板的序列号。 每当剪贴板的内容更改或剪贴板被清空时，此数字将递增。 
-    // 可以跟踪此值以确定剪贴板内容是否已更改并优化创建 DataObject。 
+    // 系统为每个窗口工作站保留剪贴板的序列号。 每当剪贴板的内容更改或剪贴板被清空时，此数字将递增。
+    // 可以跟踪此值以确定剪贴板内容是否已更改并优化创建 DataObject。
     // 如果剪贴板呈现延迟，则在呈现更改之前，序列号不会递增。
     pub fn GetClipboardSequenceNumber() -> DWORD;
     // 确定剪贴板是否包含指定格式的数据。
@@ -93,21 +107,25 @@ extern "system" {
     // 检索剪贴板上当前不同数据格式的数量。
     pub fn CountClipboardFormats() -> c_int;
     // 枚举剪贴板上当前可用的数据格式。
-    // 剪贴板数据格式存储在有序列表中。 若要执行剪贴板数据格式的枚举，需要对 EnumClipboardFormats 函数进行一系列调用。 
+    // 剪贴板数据格式存储在有序列表中。 若要执行剪贴板数据格式的枚举，需要对 EnumClipboardFormats 函数进行一系列调用。
     // 对于每次调用， format 参数指定可用的剪贴板格式，函数返回下一个可用的剪贴板格式。
     pub fn EnumClipboardFormats(format: c_uint) -> c_uint;
     // 从剪贴板检索指定注册格式的名称。 函数将名称复制到指定的缓冲区。
-    pub fn GetClipboardFormatNameW(format: c_uint, lpszFormatName: *mut u16, cchMaxCount: c_int) -> c_int;
+    pub fn GetClipboardFormatNameW(
+        format: c_uint,
+        lpszFormatName: *mut u16,
+        cchMaxCount: c_int,
+    ) -> c_int;
     // 注册新的剪贴板格式。 然后，可以将此格式用作有效的剪贴板格式。
-    // 如果已存在具有指定名称的已注册格式，则不会注册新格式，并且返回值标识现有格式。 
+    // 如果已存在具有指定名称的已注册格式，则不会注册新格式，并且返回值标识现有格式。
     // 这使多个应用程序能够使用相同的注册剪贴板格式复制和粘贴数据。 请注意，格式名称比较不区分大小写。
     pub fn RegisterClipboardFormatW(lpszFormat: *const u16) -> c_uint;
     // 从剪贴板中检索指定格式的数据。 剪贴板之前必须已打开。
     // Note: 剪贴板数据不受信任。 在应用程序中使用数据之前，请仔细分析数据。
-    // 剪贴板控制 GetClipboardData 函数返回的句柄，而不是应用程序。 应用程序应立即复制数据。 
+    // 剪贴板控制 GetClipboardData 函数返回的句柄，而不是应用程序。 应用程序应立即复制数据。
     // 应用程序不得释放句柄，也不能将其保持锁定状态。
     // 在调用 EmptyClipboard 或 CloseClipboard 函数后，或者在使用相同的剪贴板格式调用 SetClipboardData 函数之后，应用程序不得使用句柄。
-    // 当应用程序调用 GetClipboardData 函数时，系统会在某些剪贴板格式之间执行隐式数据格式转换。 
+    // 当应用程序调用 GetClipboardData 函数时，系统会在某些剪贴板格式之间执行隐式数据格式转换。
     // 例如，如果 CF_OEMTEXT 格式位于剪贴板上，则窗口可以检索 CF_TEXT 格式的数据。 剪贴板上的格式将按需转换为请求的格式。
     // https://learn.microsoft.com/zh-cn/windows/win32/dataxchg/clipboard-formats
     pub fn GetClipboardData(uFormat: c_uint) -> HANDLE;
@@ -118,15 +136,51 @@ extern "system" {
     pub fn GetClipboardOwner() -> HWND;
 
     // 检索由成功拖放操作生成的已删除文件的名称。
-    pub fn DragQueryFileW(hDrop: HDROP, iFile: c_uint, lpszFile: *mut u16, cch: c_uint) -> c_uint;
+    pub fn DragQueryFileW(
+        hDrop: HDROP,
+        iFile: c_uint,
+        lpszFile: *mut u16,
+        cch: c_uint,
+    ) -> c_uint;
 
 }
 
 extern "system" {
     // 从 DIB 创建兼容的位图 (DDB) ，并选择性地设置位图位。
-    pub fn CreateDIBitmap(hdc: HDC, pbmih: *const BITMAPINFOHEADER, flInit: DWORD, pjBits: *const c_void, pbmi: *const BITMAPINFO, iUsage: c_uint) -> HBITMAP;
+    pub fn CreateDIBitmap(
+        hdc: HDC,
+        pbmih: *const BITMAPINFOHEADER,
+        flInit: DWORD,
+        pjBits: *const c_void,
+        pbmi: *const BITMAPINFO,
+        iUsage: c_uint,
+    ) -> HBITMAP;
     // 检索指定兼容位图的位，并使用指定格式将其作为 DIB 复制到缓冲区中。
-    pub fn GetDIBits(hdc: HDC, hbm: HBITMAP, start: c_uint, cLines: c_uint, lpvBits: *mut c_void, lpbmi: *mut BITMAPINFO, usage: c_uint) -> c_int;
+    pub fn GetDIBits(
+        hdc: HDC,
+        hbm: HBITMAP,
+        start: c_uint,
+        cLines: c_uint,
+        lpvBits: *mut c_void,
+        lpbmi: *mut BITMAPINFO,
+        usage: c_uint,
+    ) -> c_int;
     // 检索指定图形对象的信息。
     pub fn GetObjectW(h: HANDLE, c: c_int, pv: *mut c_void) -> c_int;
+}
+
+extern "system" {
+    pub fn CreateFileW(
+        lpFileName: LPCWSTR,
+        dwDesiredAccess: DWORD,
+        dwShareMode: DWORD,
+        lpSecurityAttributes: LPSECURITY_ATTRIBUTES,
+        dwCreationDisposition: DWORD,
+        dwFlagsAndAttributes: DWORD,
+        hTemplateFile: HANDLE,
+    ) -> HANDLE;
+
+    pub fn GetLastError() -> DWORD;
+    pub fn GetConsoleMode(hConsoleHandle: HANDLE, lpMode: LPDWORD) -> BOOL;
+    pub fn SetConsoleMode(hConsoleHandle: HANDLE, dwMode: DWORD) -> BOOL;
 }

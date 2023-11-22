@@ -1,21 +1,20 @@
 #![cfg(windows)]
-mod dc;
 pub mod clipboard;
-mod sys;
-mod utils;
+mod dc;
 mod lock;
 mod mem;
+mod sys;
+mod utils;
 
-pub use sys::*;
 pub use dc::*;
-pub use utils::*;
 pub use lock::*;
 pub use mem::*;
+pub use sys::*;
+pub use utils::*;
 
 pub use error_code::ErrorCode;
 ///Alias to result used by this crate
 pub type SysResult<T> = Result<T, ErrorCode>;
-
 
 use super::types::DWORD;
 
