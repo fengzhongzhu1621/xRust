@@ -3,6 +3,7 @@
 mod windows_console {
     use crate::ffi::types::*;
 
+    // 获得标准输出的句柄
     fn get_output_handle() -> Result<HANDLE, DWORD> {
         // This is "CONOUT$\0" UTF-16 encoded.
         const CONOUT: &[u16] =
@@ -27,6 +28,7 @@ mod windows_console {
         Ok(raw_handle)
     }
 
+    // 给标准输出设置颜色
     unsafe fn enable_vt(handle: HANDLE) -> Result<(), DWORD> {
         let mut dw_mode: DWORD = 0;
         if GetConsoleMode(handle, &mut dw_mode) == FALSE {
