@@ -54,8 +54,9 @@ mod windows_console {
 
     // Try to enable colors on Windows, and try to do it at most once.
     pub fn cache_enable() -> bool {
-        use crate::condition::CachedBool;
+        use crate::cached_bool::CachedBool;
 
+        // 确保 enable 闭包只执行一次
         static ENABLED: CachedBool = CachedBool::new();
         ENABLED.get_or_init(enable)
     }

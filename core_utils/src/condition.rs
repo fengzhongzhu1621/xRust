@@ -1,4 +1,5 @@
-use core::sync::atomic::AtomicPtr;
+use core::sync::atomic::{AtomicPtr, Ordering};
+use std::fmt;
 
 // #[repr(transparent)]只能在只有一个字段的结构体(struct)上或只有一个变体的枚举(enum)上使用。
 // 目标是使单个成员字段和结构体之间的转换成为可能。
@@ -42,7 +43,8 @@ impl Condition {
     /// the first call to this function attempts to enable support and returns
     /// whether it was successful every time thereafter.
     pub fn os_support() -> bool {
-        crate::ffi::console::cache_enable()
+        // windows 开启终端颜色支持
+        crate::console::cache_enable()
     }
 }
 
@@ -52,5 +54,53 @@ impl Default for Condition {
     }
 }
 
+/// 解引用取第一个值
+impl core::ops::Deref for Condition {
+    type Target = fn() -> bool;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl fmt::Debug for Condition {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if *self == Condition::DEFAULT {
+            f.write_str("Condition::DEFAULT")
+        } else if *self == Condition::ALWAYS {
+            f.write_str("Condition::ALWAYS")
+        } else if *self == Condition::NEVER {
+            f.write_str("Condition::NEVER")
+        } else {
+            // 打印函数的地址，e.g. "Condition(0x100521a90)"
+            f.debug_tuple("Condition").field(&self.0).finish()
+        }
+    }
+}
+
 #[repr(transparent)]
 pub struct AtomicCondition(AtomicPtr<()>);
+
+impl AtomicCondition {
+    pub const DEFAULT: AtomicCondition =
+        AtomicCondition::from(Condition::DEFAULT);
+
+    pub const fn from(cond: Condition) -> Self {
+        AtomicCondition(AtomicPtr::new(cond.0 as *mut ()))
+    }
+
+    pub fn store(&self, cond: Condition) {
+        // Release 任何读和写操作（不限于对当前原子变量）都不能被reorder到该写操作之后。并且所有当前线程中在该原子操作之前的所有写操作（不限于对当前原子变量）都对另一个对同一个原子变量使用Acquire Ordering读操作的线程可见。
+        self.0.store(cond.0 as *mut (), Ordering::Release)
+    }
+
+    pub fn read(&self) -> bool {
+        // Acquire 任何读和写操作（不限于对当前原子变量）都不能被reorder到该读操作之前。并且当前线程可以看到另一个线程对同一个原子变量使用Release Ordering写操作之前的所有写操作（不限于对当前原子变量）。
+        let condition = unsafe {
+            // *mut () => fn() -> bool
+            Condition(core::mem::transmute(self.0.load(Ordering::Acquire)))
+        };
+
+        condition()
+    }
+}
