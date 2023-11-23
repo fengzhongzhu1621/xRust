@@ -7,7 +7,10 @@ edition = "2021"
 
 [dependencies]
 error-code = "3.0.0"
+is-terminal = { version = "0.4.7", optional = true }
 
 [features]
-default = ["std"]
+default = ["detect-tty", "detect-env"]
 std = []
+detect-env = ["std"]
+detect-tty = ["is-terminal", "std"]
