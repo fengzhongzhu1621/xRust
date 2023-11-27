@@ -3,7 +3,7 @@ use std::env;
 use std::ffi::OsStr;
 use std::fs;
 use std::os::windows::fs::MetadataExt;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::time::{Duration, SystemTime};
 
 pub const DATETIME_FORMAT: &str = "%Y-%m-%d %H:%M:%S";
@@ -54,7 +54,7 @@ fn test_path_display() {
 }
 
 #[test]
-fn test_path_parent() {
+fn test_parent() {
     // Note: 这个例子可以在 Windows 上使用
     let path = Path::new("./foo/bar.txt");
 
@@ -63,11 +63,42 @@ fn test_path_parent() {
 }
 
 #[test]
-fn test_path_file_stem() {
+fn test_file_stem() {
     // Note: 这个例子可以在 Windows 上使用
     let path = Path::new("./foo/bar.txt");
     let file_stem = path.file_stem();
     assert_eq!(file_stem, Some(OsStr::new("bar")));
+
+    let path = Path::new("./foo/bar");
+    let file_stem = path.file_stem();
+    assert_eq!(file_stem, Some(OsStr::new("bar")));
+
+    let path = Path::new("./");
+    let file_stem = path.file_stem();
+    assert_eq!(file_stem, None);
+
+    let path = Path::new(r"C:\");
+    let file_stem = path.file_stem();
+    assert_eq!(file_stem, None);
+}
+
+#[test]
+fn test_file_name() {
+    let path = Path::new("./foo/bar.txt");
+    let file_stem = path.file_name();
+    assert_eq!(file_stem, Some(OsStr::new("bar.txt")));
+
+    let path = Path::new("./foo/bar");
+    let file_stem = path.file_name();
+    assert_eq!(file_stem, Some(OsStr::new("bar")));
+
+    let path = Path::new("./");
+    let file_stem = path.file_name();
+    assert_eq!(file_stem, None);
+
+    let path = Path::new(r"C:\");
+    let file_stem = path.file_name();
+    assert_eq!(file_stem, None);
 }
 
 #[test]
@@ -76,6 +107,10 @@ fn test_extension() {
     let path = Path::new("./foo/bar.txt");
     let extension = path.extension();
     assert_eq!(extension, Some(OsStr::new("txt")));
+
+    let path = Path::new("./foo/bar");
+    let extension = path.extension();
+    assert_eq!(extension, None);
 }
 
 #[test]
@@ -106,4 +141,12 @@ fn test_creation_time() {
 
         println!("{}", datetime_str);
     }
+}
+
+#[test]
+fn test_path_push() {
+    let mut path = PathBuf::from("./foo/");
+    path.push("a");
+    path.push("b");
+    assert_eq!(path, PathBuf::from(r"./foo/a\\b"));
 }
