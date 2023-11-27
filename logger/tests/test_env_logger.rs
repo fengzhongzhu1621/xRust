@@ -1,18 +1,8 @@
-use log::{Level, LevelFilter, Record};
-use logger;
-use logger::filter::{enabled, Builder, Directive, Filter};
-use logger::fmt::{
-    is_stderr, is_stdout, BufferWriter, DefaultFormat, Formatter,
-    WritableTarget, WriteStyle
-};
-use logger::fmt::writer::WriteBuilder;
-use std::fmt;
+use log::{Level, LevelFilter, Record, info};
+use logger::{self ,filter::{enabled, Builder}, fmt::{
+    is_stderr, is_stdout, DefaultFormat, Formatter, WriteStyle, writer::WriteBuilder
+}};
 
-fn make_logger_filter(dirs: Vec<Directive>) -> Filter {
-    let mut logger = Builder::new().build();
-    logger.directives = dirs;
-    logger
-}
 
 #[test]
 fn filter_info() {
@@ -302,4 +292,25 @@ fn format_target() {
     );
 
     assert_eq!("[INFO  test::path target] log\nmessage\n", written);
+}
+
+#[test]
+fn test_init() {
+    env_logger::init();
+
+    info!("starting up");
+
+    // $ RUST_LOG=info ./main
+}
+
+#[test]
+fn test_is_test() {
+    fn add_one(num: i32) -> i32 {
+        info!("add_one called with {}", num);
+        num + 1
+    }
+
+    let _ = env_logger::builder().is_test(true).try_init();
+    info!("can log from the test too");
+        assert_eq!(3, add_one(2));
 }

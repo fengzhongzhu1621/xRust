@@ -112,7 +112,7 @@ macro_rules! impl_styled_value_fmt {
     };
 }
 
-/// 下面的fmt操作只对 self.value 生效
+// 下面的fmt操作只对 self.value 生效
 impl_styled_value_fmt!(
     fmt::Debug,
     fmt::Display,
