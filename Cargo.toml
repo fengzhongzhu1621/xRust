@@ -32,4 +32,5 @@ members = [
     "crypto_examples",
     "fs_examples",
     "terminal",
+    "str_examples",
 ]

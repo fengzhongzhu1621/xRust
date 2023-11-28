@@ -1,3 +1,5 @@
+use std::str;
+
 #[test]
 fn test_find() {
     // create some strings
@@ -73,4 +75,13 @@ fn test_split_one() {
     let (left, right) = value.split_once(":").unwrap();
     assert_eq!(left, "left");
     assert_eq!(right, "right");
+}
+
+#[test]
+fn test_replace() {
+    let result = str::replace("Hello World!", "!", "?");
+    assert_eq!(result, "Hello World?");
+
+    let result = str::replace("Hello\tWorld!", '\t', "\\t");
+    assert_eq!(result, r"Hello\tWorld!");
 }
