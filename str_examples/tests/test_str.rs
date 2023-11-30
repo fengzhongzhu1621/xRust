@@ -84,4 +84,22 @@ fn test_replace() {
 
     let result = str::replace("Hello\tWorld!", '\t', "\\t");
     assert_eq!(result, r"Hello\tWorld!");
+
+    let result: String = "Hello, world!"
+        .chars()
+        .map(|x| match x {
+            '!' => '?',
+            'A'..='Z' => 'X',
+            'a'..='z' => 'x',
+            _ => x,
+        })
+        .collect();
+    assert_eq!(result, "Xxxxx, xxxxx?");
+}
+
+#[test]
+fn test_print() {
+    println!("{}", "'Hello' 'World!'");
+    println!("{}", r#"'Hello' 'World!'"#);
+    println!("{}", r#"'{{}}'"#);
 }
