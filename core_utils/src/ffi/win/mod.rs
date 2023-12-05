@@ -3,7 +3,7 @@ pub mod clipboard;
 mod dc;
 mod lock;
 mod mem;
-mod sys;
+pub mod sys;
 mod utils;
 
 pub use dc::*;

@@ -186,7 +186,7 @@
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
-   Copyright [yyyy] [name of copyright owner]
+   Copyright (c) Microsoft Corporation.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -199,38 +199,3 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
-============================================================================
-   XRUST SUBCOMPONENTS:
-
-   The Apache Airflow project contains subcomponents with separate copyright
-   notices and license terms. Your use of the source code for the these
-   subcomponents is subject to the terms and conditions of the following
-   licenses.
-
-
-========================================================================
-Third party Apache 2.0 licenses
-========================================================================
-
-The following components are provided under the Apache 2.0 License.
-See project link for details. The text of each license is also included
-at licenses/LICENSE-[project].txt.
-
-    (ALv2 License) concurrency-programming-via-rust (https://github.com/smallnest/concurrency-programming-via-rust)
-    (ALv2 License) windows-rs 0.51.1 (https://github.com/microsoft/windows-rs)
-    (ALv2 License) is-terminal v0.4.9 (https://github.com/sunfishcode/is-terminal)
-    (ALv2 License) tempfile v3.8.1 (https://github.com/Stebalien/tempfile)
-    
-
-
-========================================================================
-Third party Boost Software License - Version 1.0
-========================================================================
-
-The following components are provided under the Boost Software License - Version 1.0.
-See project link for details. The text of each license is also included
-at licenses/LICENSE-[project].txt.
-
-    (BSL-1.0 License) clipboard-win 5.0.0-beta.1 (https://github.com/DoumanAsh/clipboard-win)
-
