@@ -5,4 +5,11 @@
 #[cfg(all(not(feature = "std"), feature = "alloc"))]
 extern crate alloc;
 
+#[macro_use]
+mod macros;
+
+pub mod attr;
+pub mod color;
+pub mod quirk;
+pub mod style;
 pub mod terminal;

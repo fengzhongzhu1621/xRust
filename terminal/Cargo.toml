@@ -9,6 +9,7 @@ edition = "2021"
 all-features = true
 
 [dependencies]
+core_utils = { path = "../core_utils" }
 
 [target.'cfg(not(any(windows, target_os = "hermit", target_os = "unknown")))'.dependencies]
 rustix = { version = "0.38.0", features = ["termios"] }
@@ -23,7 +24,6 @@ features = [
 
 [target.'cfg(windows)'.dev-dependencies]
 tempfile  = "3"
-
 
 [features]
 default = ["std"]
