@@ -2,11 +2,14 @@
 name = "core_utils"
 version = "0.1.0"
 edition = "2021"
+publish = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+cfg-if = "1.0.0"
 error-code = "3.0.0"
+fastrand = "2.0.1"
 is-terminal = { version = "0.4.7", optional = true }
 
 [features]
@@ -14,3 +17,10 @@ default = ["detect-tty", "detect-env"]
 std = []
 detect-env = ["std"]
 detect-tty = ["is-terminal", "std"]
+
+[target.'cfg(windows)'.dependencies.windows-sys]
+version = "0.48"
+features = ["Win32_Storage_FileSystem", "Win32_Foundation"]
+
+[target.'cfg(any(unix, target_os = "wasi"))'.dependencies]
+rustix = { version = "0.38.21", features = ["fs"] }

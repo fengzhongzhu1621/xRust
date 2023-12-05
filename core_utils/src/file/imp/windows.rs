@@ -14,6 +14,8 @@ use windows_sys::Win32::Storage::FileSystem::{
     MOVEFILE_REPLACE_EXISTING,
 };
 
+use crate::file::util;
+
 /// 将路径添加\0结束符
 fn to_utf16(s: &Path) -> Vec<u16> {
     // 两个迭代器合并
@@ -116,4 +118,25 @@ pub fn persist(
             Ok(())
         }
     }
+}
+
+/// 创建临时文件，文件对象的最后一个句柄被删除之后，文件将被删除
+pub fn create(dir: &Path) -> io::Result<File> {
+    util::create_helper(
+        dir,
+        OsStr::new(".tmp"),
+        OsStr::new(""),
+        util::NUM_RAND_CHARS, // 随机字符的大小
+        |path| {
+            OpenOptions::new()
+                .create_new(true)
+                .read(true)
+                .write(true)
+                .share_mode(0)
+                .custom_flags(
+                    FILE_ATTRIBUTE_TEMPORARY | FILE_FLAG_DELETE_ON_CLOSE,
+                )
+                .open(path)
+        },
+    )
 }
