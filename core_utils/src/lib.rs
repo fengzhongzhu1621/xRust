@@ -1,4 +1,6 @@
 #[macro_use]
+pub mod macros;
+#[macro_use]
 pub mod condition;
 
 pub mod convert;
@@ -10,6 +12,7 @@ pub mod cached_bool;
 pub mod console;
 pub mod error;
 pub mod ffi;
+pub mod set;
 pub mod time;
 pub mod var;
 

@@ -12,6 +12,8 @@ pub struct Condition(
 );
 
 impl Condition {
+    /// windows 开启终端颜色支持
+    ///
     /// A condition that evaluates to `true` if the OS supports coloring.
     ///
     /// Uses [`Condition::os_support()`]. On Windows, this condition tries to
@@ -83,6 +85,7 @@ impl fmt::Debug for Condition {
 pub struct AtomicCondition(AtomicPtr<()>);
 
 impl AtomicCondition {
+    /// 默认 windows 开启终端颜色支持
     pub const DEFAULT: AtomicCondition =
         AtomicCondition::from(Condition::DEFAULT);
 
@@ -90,11 +93,13 @@ impl AtomicCondition {
         AtomicCondition(AtomicPtr::new(cond.0 as *mut ()))
     }
 
+    /// 修改条件
     pub fn store(&self, cond: Condition) {
         // Release 任何读和写操作（不限于对当前原子变量）都不能被reorder到该写操作之后。并且所有当前线程中在该原子操作之前的所有写操作（不限于对当前原子变量）都对另一个对同一个原子变量使用Acquire Ordering读操作的线程可见。
         self.0.store(cond.0 as *mut (), Ordering::Release)
     }
 
+    /// 读取最新的条件
     pub fn read(&self) -> bool {
         // Acquire 任何读和写操作（不限于对当前原子变量）都不能被reorder到该读操作之前。并且当前线程可以看到另一个线程对同一个原子变量使用Release Ordering写操作之前的所有写操作（不限于对当前原子变量）。
         let condition = unsafe {
