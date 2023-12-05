@@ -20,7 +20,7 @@ use {
 
 /// 根据路径创建文件
 pub fn create_named(
-    path: &Path,
+    file_path: &Path,
     open_options: &mut OpenOptions,
 ) -> io::Result<File> {
     open_options.read(true).write(true).create_new(true);
@@ -30,26 +30,28 @@ pub fn create_named(
         open_options.mode(0o600); // 仅读写权限
     }
 
-    open_options.open(path)
+    open_options.open(file_path)
 }
 
-fn create_unlinked(path: &Path) -> io::Result<File> {
+fn create_unlinked(file_path: &Path) -> io::Result<File> {
     let tmp;
     // shadow this to decrease the lifetime. It can't live longer than `tmp`.
-    let mut path = path;
-    if !path.is_absolute() {
+    let mut file_path = file_path;
+    if !file_path.is_absolute() {
         let cur_dir = env::current_dir()?;
-        tmp = cur_dir.join(path);
-        path = &tmp;
+        tmp = cur_dir.join(file_path);
+        file_path = &tmp;
     }
 
-    let f = create_named(path, &mut OpenOptions::new())?;
+    let f = create_named(file_path, &mut OpenOptions::new())?;
     // don't care whether the path has already been unlinked,
     // but perhaps there are some IO error conditions we should send up?
-    let _ = fs::remove_file(path);
+    let _ = fs::remove_file(file_path);
+
     Ok(f)
 }
 
+#[cfg(target_os = "linux")]
 pub fn create(dir: &Path) -> io::Result<File> {
     use rustix::{fs::OFlags, io::Errno};
     OpenOptions::new()
@@ -68,7 +70,13 @@ pub fn create(dir: &Path) -> io::Result<File> {
         })
 }
 
+#[cfg(not(target_os = "linux"))]
+pub fn create(dir: &Path) -> io::Result<File> {
+    create_unix(dir)
+}
+
 fn create_unix(dir: &Path) -> io::Result<File> {
+    // 创建临时文件，支持重试直到成功为止
     util::create_helper(
         dir,
         OsStr::new(".tmp"),
@@ -78,10 +86,13 @@ fn create_unix(dir: &Path) -> io::Result<File> {
     )
 }
 
+/// 重新打开同一个文件
+#[cfg(any(not(target_os = "wasi"), feature = "nightly"))]
 pub fn reopen(file: &File, path: &Path) -> io::Result<File> {
     let new_file = OpenOptions::new().read(true).write(true).open(path)?;
     let old_meta = file.metadata()?;
     let new_meta = new_file.metadata()?;
+    // 判断是同一个文件
     if old_meta.dev() != new_meta.dev() || old_meta.ino() != new_meta.ino() {
         return Err(io::Error::new(
             io::ErrorKind::NotFound,
@@ -91,6 +102,15 @@ pub fn reopen(file: &File, path: &Path) -> io::Result<File> {
     Ok(new_file)
 }
 
+#[cfg(all(target_os = "wasi", not(feature = "nightly")))]
+pub fn reopen(_file: &File, _path: &Path) -> io::Result<File> {
+    return Err(io::Error::new(
+        io::ErrorKind::Other,
+        "this operation is supported on WASI only on nightly Rust (with `nightly` feature enabled)",
+    ));
+}
+
+/// 移动文件
 pub fn persist(
     old_path: &Path,
     new_path: &Path,

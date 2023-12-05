@@ -122,6 +122,7 @@ pub fn persist(
 
 /// 创建临时文件，文件对象的最后一个句柄被删除之后，文件将被删除
 pub fn create(dir: &Path) -> io::Result<File> {
+    // 创建临时文件，支持重试直到成功为止
     util::create_helper(
         dir,
         OsStr::new(".tmp"),

@@ -8,6 +8,7 @@ pub fn not_supported<T>() -> io::Result<T> {
     ))
 }
 
+/// 自定义路径错误
 #[derive(Debug)]
 struct PathError {
     path: PathBuf,
@@ -29,10 +30,11 @@ impl error::Error for PathError {
 pub(crate) trait IoResultExt<T> {
     fn with_err_path<F, P>(self, path: F) -> Self
     where
-        F: FnOnce() -> P,
-        P: Into<PathBuf>;
+        F: FnOnce() -> P, // 闭包
+        P: Into<PathBuf>; // 表示可以接收任意一个能够转换为 PathBuf 的类型
 }
 
+/// 将错误 Error 转换为 PathError
 impl<T> IoResultExt<T> for Result<T, io::Error> {
     fn with_err_path<F, P>(self, path: F) -> Self
     where
