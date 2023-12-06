@@ -18,20 +18,10 @@ use crate::error::IoResultExt;
 
 mod builder;
 mod imp;
+mod temp;
 mod util;
 
 use builder::Builder;
-
-/// Create a new temporary file.
-pub fn tempfile() -> io::Result<File> {
-    tempfile_in(env::temp_dir())
-}
-
-/// 创建临时文件
-/// Create a new temporary file in the specified directory.
-pub fn tempfile_in<P: AsRef<Path>>(dir: P) -> io::Result<File> {
-    imp::create(dir.as_ref())
-}
 
 /// Error returned when persisting a temporary file path fails.
 #[derive(Debug)]

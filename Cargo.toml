@@ -30,7 +30,6 @@ members = [
     "clipboard",
     "windows_rs",
     "crypto_examples",
-    "fs_examples",
     "terminal",
     "str_examples",
 ]

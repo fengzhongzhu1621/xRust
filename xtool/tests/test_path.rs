@@ -2,7 +2,10 @@ use chrono::{DateTime, Local};
 use std::env;
 use std::ffi::OsStr;
 use std::fs;
+
+#[cfg(windows)]
 use std::os::windows::fs::MetadataExt;
+
 use std::path::{Path, PathBuf};
 use std::time::{Duration, SystemTime};
 
@@ -149,4 +152,20 @@ fn test_path_push() {
     path.push("a");
     path.push("b");
     assert_eq!(path, PathBuf::from(r"./foo/a\\b"));
+}
+
+#[test]
+fn test_str_to_asref_path() {
+    // impl AsRef<Path> for str {
+    //     #[inline]
+    //     fn as_ref(&self) -> &Path {
+    //         Path::new(self)
+    //     }
+    // }
+    // pub fn new<S: AsRef<OsStr> + ?Sized>(s: &S) -> &Path {
+    //     unsafe { &*(s.as_ref() as *const OsStr as *const Path) }
+    // }
+    let s = "/a/b/c";
+    let path = unsafe { &*(s.as_ref() as *const OsStr as *const Path) };
+    assert_eq!(path, Path::new(s));
 }
