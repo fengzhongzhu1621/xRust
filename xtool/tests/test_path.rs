@@ -163,9 +163,31 @@ fn test_str_to_asref_path() {
     //     }
     // }
     // pub fn new<S: AsRef<OsStr> + ?Sized>(s: &S) -> &Path {
+    //     通常函数不能直接返回引用，但是如果底层也是在做转换，并没有创建新的对象，则可以通过 unsafe 实现返回一个引用
     //     unsafe { &*(s.as_ref() as *const OsStr as *const Path) }
     // }
     let s = "/a/b/c";
     let path = unsafe { &*(s.as_ref() as *const OsStr as *const Path) };
     assert_eq!(path, Path::new(s));
+}
+
+#[test]
+fn test_into_boxed_path() {
+    let path = PathBuf::from("hello world");
+    let s = path.into_boxed_path();
+
+    // 解引用将 Box<Path> -> Path
+    // let t = *s;
+    let t2 = &*s;
+    println!("{:?}", t2);
+
+    let t3: PathBuf = t2.into();
+    println!("{:?}", t3);
+}
+
+#[test]
+fn test_into() {
+    let t = PathBuf::from("hello world");
+    let t2: PathBuf = t.into();
+    println!("{:?}", t2);
 }
