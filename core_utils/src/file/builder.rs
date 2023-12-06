@@ -1,3 +1,8 @@
+use super::dir::{self, TempDir};
+use super::temp_file::{self, NamedTempFile};
+use super::temp_path::TempPath;
+use super::util;
+
 use std::ffi::OsStr;
 use std::fs::OpenOptions;
 use std::path::Path;
@@ -74,7 +79,7 @@ impl<'a, 'b> Builder<'a, 'b> {
             self.suffix,
             self.random_len,
             |path| {
-                file::create_named(
+                temp_file::create_named(
                     path,
                     OpenOptions::new().append(self.append),
                 )
