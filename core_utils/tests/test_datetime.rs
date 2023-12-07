@@ -1,4 +1,4 @@
-use todo_list::datetime;
+use core_utils::datetime;
 
 #[test]
 fn test_format_datetime() {

@@ -1,4 +1,4 @@
-use todo_list::hash;
+use core_utils::hash;
 
 #[test]
 fn test_hash_u8() {

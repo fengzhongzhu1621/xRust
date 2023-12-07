@@ -1,4 +1,4 @@
-use crate::datetime;
+use core_utils::datetime;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -21,9 +21,7 @@ pub struct TodoTaskList {
 impl TodoTaskList {
     /// 初始化任务待办列表
     pub fn new() -> Self {
-        TodoTaskList {
-            tasks: HashMap::new(),
-        }
+        TodoTaskList { tasks: HashMap::new() }
     }
 
     /// 添加一条待办
@@ -51,7 +49,8 @@ impl TodoTaskList {
         // 根据时间查找某一天的所有任务
         let task_chunks = self.tasks.get_mut(key).unwrap();
         // 根据任务自定义索引查找一天中的任务所在的数组索引
-        let task_index = task_chunks.iter().position(|x| x.index == *index).unwrap();
+        let task_index =
+            task_chunks.iter().position(|x| x.index == *index).unwrap();
         // 根据数组索引获得任务的可变引用
         let task_item = task_chunks.get_mut(task_index).unwrap();
         // 修改数组的元素
@@ -88,11 +87,8 @@ impl TodoTaskList {
                     return;
                 }
                 for task in task_chunks {
-                    let state = if task.is_finish {
-                        "已完成"
-                    } else {
-                        "未完成"
-                    };
+                    let state =
+                        if task.is_finish { "已完成" } else { "未完成" };
                     println!("{}: {} {}", task.index, state, task.content)
                 }
                 println!();
