@@ -2,6 +2,7 @@ use chrono::{DateTime, Local};
 use std::env;
 use std::ffi::OsStr;
 use std::fs;
+use std::sync::Arc;
 
 #[cfg(windows)]
 use std::os::windows::fs::MetadataExt;
@@ -190,4 +191,13 @@ fn test_into() {
     let t = PathBuf::from("hello world");
     let t2: PathBuf = t.into();
     println!("{:?}", t2);
+}
+
+#[test]
+fn test_arc_pathbuf() {
+    let t = PathBuf::from("hello world");
+    let path = Arc::new(t);
+
+    let t = path.as_ref();
+    println!("{:?}", t);
 }
