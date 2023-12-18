@@ -8,13 +8,14 @@ use std::ffi::OsStr;
 use std::fmt;
 use std::fs::{File, OpenOptions};
 use std::io::{self, Read, Seek, SeekFrom, Write};
+use std::path::{Path, PathBuf};
+
 #[cfg(unix)]
 use std::os::unix::io::{AsFd, AsRawFd, BorrowedFd, RawFd};
 #[cfg(target_os = "wasi")]
 use std::os::wasi::io::{AsFd, AsRawFd, BorrowedFd, RawFd};
 #[cfg(windows)]
 use std::os::windows::io::{AsHandle, AsRawHandle, BorrowedHandle, RawHandle};
-use std::path::{Path, PathBuf};
 
 /// 在默认目录创建临时文件
 pub fn tempfile() -> io::Result<File> {
@@ -24,6 +25,7 @@ pub fn tempfile() -> io::Result<File> {
 /// 创建临时文件
 /// Create a new temporary file in the specified directory.
 /// AsRef是一个用于实现引用转换的特型(trait)，AsRef<T>相当于&T。
+/// P 类型实现了 AsRef<Path> 特性
 pub fn tempfile_in<P: AsRef<Path>>(dir: P) -> io::Result<File> {
     imp::create(dir.as_ref())
 }

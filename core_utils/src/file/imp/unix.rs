@@ -1,7 +1,15 @@
+use crate::file::util;
 use std::env;
 use std::ffi::OsStr;
 use std::fs::{self, File, OpenOptions};
 use std::io;
+use std::path::Path;
+
+use {
+    rustix::fs::{rename, unlink},
+    std::fs::hard_link,
+};
+
 cfg_if::cfg_if! {
     if #[cfg(not(target_os = "wasi"))] {
         use std::os::unix::fs::{MetadataExt, OpenOptionsExt};
@@ -10,15 +18,8 @@ cfg_if::cfg_if! {
         use std::os::wasi::fs::MetadataExt;
     }
 }
-use crate::file::util;
-use std::path::Path;
 
-use {
-    rustix::fs::{rename, unlink},
-    std::fs::hard_link,
-};
-
-/// 根据路径创建文件
+/// 根据路径创建新文件
 pub fn create_named(
     file_path: &Path,
     open_options: &mut OpenOptions,
@@ -43,6 +44,7 @@ fn create_unlinked(file_path: &Path) -> io::Result<File> {
         file_path = &tmp;
     }
 
+    // 根据路径创建新文件
     let f = create_named(file_path, &mut OpenOptions::new())?;
     // don't care whether the path has already been unlinked,
     // but perhaps there are some IO error conditions we should send up?

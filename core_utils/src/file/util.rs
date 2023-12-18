@@ -15,7 +15,6 @@ fn tmpname(prefix: &OsStr, suffix: &OsStr, rand_len: usize) -> OsString {
     buf.push(prefix);
     let mut char_buf = [0u8; 4];
     // 创建一个新的迭代器，通过应用提供的闭包，重复器 F: FnMut() -> A 来无限地重复类型为 A 的元素。
-    //
     for c in repeat_with(fastrand::alphanumeric).take(rand_len) {
         // encode_utf8 将一个字符转成 u8 数组
         buf.push(c.encode_utf8(&mut char_buf));

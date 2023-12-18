@@ -51,4 +51,33 @@ fn test_as_ref() {
     // ref is: MyStruct: world
     // data is: world
     use_as_ref(mydata2);
+
+    let mydata3 = MyStruct { data: "hello".to_string() };
+
+    let mydata4 = MyStruct2 {
+        id: "abc".to_string(),
+        data: MyStruct { data: "world".to_string() },
+    };
+
+    fn use_as_ref_2<P>(val: P)
+    where
+        P: AsRef<MyStruct>,
+    {
+        println!("ref is: {}", val.as_ref());
+        println!("data is: {}", val.as_ref().data);
+    }
+
+    // ref is: MyStruct: hello
+    // data is: hello
+    use_as_ref_2(&mydata3);
+    // ref is: MyStruct: world
+    // data is: world
+    use_as_ref_2(&mydata4);
+
+    // ref is: MyStruct: hello
+    // data is: hello
+    use_as_ref_2(mydata3);
+    // ref is: MyStruct: world
+    // data is: world
+    use_as_ref_2(mydata4);
 }

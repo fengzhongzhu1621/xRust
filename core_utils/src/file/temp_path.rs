@@ -22,6 +22,7 @@ impl fmt::Debug for TempPath {
 /// 资源释放时删除文件
 impl Drop for TempPath {
     fn drop(&mut self) {
+        // 删除文件
         let _ = fs::remove_file(&self.path);
     }
 }
