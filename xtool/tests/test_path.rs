@@ -189,8 +189,13 @@ fn test_into_boxed_path() {
 #[test]
 fn test_into() {
     let t = PathBuf::from("hello world");
-    let t2: PathBuf = t.into();
+    let t2: PathBuf = t.clone().into();
     println!("{:?}", t2);
+
+    // PathBuf -> Arc<PathBuf>
+    let t3: Arc<PathBuf> = t.into();
+
+    println!("{:?}", t3);
 }
 
 #[test]
@@ -200,4 +205,12 @@ fn test_arc_pathbuf() {
 
     let t = path.as_ref();
     println!("{:?}", t);
+}
+
+#[test]
+fn test_to_owned() {
+    let path = Path::new("./foo/bar.txt");
+    // &Path -> PathBuf
+    let p = path.to_owned();
+    println!("{:?}", p);
 }

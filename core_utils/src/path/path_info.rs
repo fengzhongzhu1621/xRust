@@ -1,4 +1,5 @@
 use super::{Error, PathAbs, Result};
+use std::borrow::Borrow;
 use std::borrow::Cow;
 use std::ffi;
 use std::fs;
@@ -82,12 +83,6 @@ pub trait PathInfo {
     }
 
     /// Queries the file system to get information about a file, directory, etc.
-    ///
-    /// The same as [`std::path::Path::metadata()`], except that it returns a
-    /// rich [`path_abs::Error`] when a problem is encountered.
-    ///
-    /// [`path_abs::Error`]: struct.Error.html
-    /// [`std::path::Path::metadata()`]: https://doc.rust-lang.org/stable/std/path/struct.Path.html#method.metadata
     fn metadata(&self) -> Result<fs::Metadata> {
         Path::metadata(self.as_path()).map_err(|err| {
             Error::new(err, "getting metadata of", self.to_arc_pathbuf())
@@ -95,12 +90,6 @@ pub trait PathInfo {
     }
 
     /// Queries the metadata about a file without following symlinks.
-    ///
-    /// The same as [`std::path::Path::symlink_metadata()`], except that it
-    /// returns a rich [`path_abs::Error`] when a problem is encountered.
-    ///
-    /// [`path_abs::Error`]: struct.Error.html
-    /// [`std::path::Path::symlink_metadata()`]: https://doc.rust-lang.org/stable/std/path/struct.Path.html#method.symlink_metadata
     fn symlink_metadata(&self) -> Result<fs::Metadata> {
         Path::symlink_metadata(self.as_path()).map_err(|err| {
             Error::new(
@@ -124,12 +113,6 @@ pub trait PathInfo {
     }
 
     /// Reads a symbolic link, returning the path that the link points to.
-    ///
-    /// The same as [`std::path::Path::read_link()`], except that it returns a
-    /// rich [`path_abs::Error`] when a problem is encountered.
-    ///
-    /// [`path_abs::Error`]: struct.Error.html
-    /// [`std::path::Pathdoc.rust-lang.org/stable/std/path/struct.Path.html#method.read_link
     fn read_link(&self) -> Result<PathBuf> {
         Path::read_link(self.as_path()).map_err(|err| {
             Error::new(err, "reading link target of", self.to_arc_pathbuf())
@@ -138,13 +121,7 @@ pub trait PathInfo {
 
     /// Returns the canonical, absolute form of the path with all intermediate
     /// components normalized and symbolic links resolved.
-    ///
-    /// The same as [`std::path::Path::canonicalize()`],
-    ///   - On success, returns a `path_abs::PathAbs` instead of a `PathBuf`
-    ///   - returns a rich [`path_abs::Error`] when a problem is encountered
-    ///
-    /// [`path_abs::Error`]: struct.Error.html
-    /// [`std::path::Path::canonicalize()`]: https://doc.rust-lang.org/stable/std/path/struct.Path.html#method.canonicalize
+    /// 返回路径的规范、绝对形式，其中所有中间组件均已标准化并已解析符号链接。
     fn canonicalize(&self) -> Result<PathAbs> {
         Path::canonicalize(self.as_path())
             .map(|path| PathAbs(path.into()))
@@ -154,12 +131,6 @@ pub trait PathInfo {
     }
 
     /// Returns the path without its final component, if there is one.
-    ///
-    /// The same as [`std::path::Path::parent()`], except that it returns a
-    /// `Result` with a rich [`path_abs::Error`] when a problem is encountered.
-    ///
-    /// [`path_abs::Error`]: struct.Error.html
-    /// [`std::path::Path::parent()`]: https://doc.rust-lang.org/stable/std/path/struct.Path.html#method.parent
     fn parent(&self) -> Result<&Path> {
         let parent_path = Path::parent(self.as_path());
         if let Some(p) = parent_path {
@@ -171,5 +142,27 @@ pub trait PathInfo {
                 self.to_arc_pathbuf(),
             ))
         }
+    }
+}
+
+impl PathInfo for Path {
+    fn as_path(&self) -> &Path {
+        &self
+    }
+    fn to_arc_pathbuf(&self) -> Arc<PathBuf> {
+        self.to_path_buf().into()
+    }
+}
+
+impl<T> PathInfo for T
+where
+    T: Clone + Borrow<PathBuf> + Into<Arc<PathBuf>>,
+{
+    fn as_path(&self) -> &Path {
+        // T 类型实现了 Borrow，可以通过方法borrow()将其转换为 &PathBuf 类型
+        PathBuf::as_path(self.borrow())
+    }
+    fn to_arc_pathbuf(&self) -> Arc<PathBuf> {
+        self.clone().into()
     }
 }
