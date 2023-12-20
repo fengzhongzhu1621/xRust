@@ -10,6 +10,8 @@ mod path_info;
 mod path_mut;
 mod path_ops;
 mod path_type;
+#[cfg(feature = "serialize")]
+mod ser;
 
 pub use abs::PathAbs;
 pub use error::{Error, Result};
@@ -23,6 +25,8 @@ pub use path_info::PathInfo;
 pub use path_mut::PathMut;
 pub use path_ops::PathOps;
 pub use path_type::PathType;
+#[cfg(feature = "serialize")]
+pub use ser::{PathSer, ToStfu8};
 
 use regex::Regex;
 use std::path::Path;

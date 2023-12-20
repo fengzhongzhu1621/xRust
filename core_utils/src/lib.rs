@@ -1,3 +1,5 @@
+#![cfg_attr(target_os = "wasi", feature(wasi_ext))]
+
 #[macro_use]
 pub mod macros;
 #[macro_use]
