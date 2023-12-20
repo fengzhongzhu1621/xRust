@@ -13,6 +13,7 @@ error-code = "3.0.0"
 fastrand = "2.0.1"
 is-terminal = { version = "0.4.7", optional = true }
 regex = "1.10.2"
+tempfile = "3.8.1"
 
 [features]
 default = ["detect-tty", "detect-env", "std"]
@@ -20,6 +21,11 @@ detect-env = ["std"]
 detect-tty = ["is-terminal", "std"]
 std = ["alloc"]
 alloc = []
+serialize = [
+    "serde",
+    "serde_derive",
+    "stfu8",
+]
 
 [target.'cfg(windows)'.dependencies.windows-sys]
 version = "0.48"
@@ -27,3 +33,15 @@ features = ["Win32_Storage_FileSystem", "Win32_Foundation"]
 
 [target.'cfg(any(unix, target_os = "wasi"))'.dependencies]
 rustix = { version = "0.38.21", features = ["fs"] }
+
+[dependencies.serde]
+optional = true
+version = "^1.0"
+
+[dependencies.serde_derive]
+optional = true
+version = "^1.0"
+
+[dependencies.stfu8]
+optional = true
+version = "^0.2.1"

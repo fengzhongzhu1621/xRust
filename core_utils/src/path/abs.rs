@@ -68,7 +68,7 @@ impl PathAbs {
                 .map_err(|e| Error::new(e, "canonicalizing", cwd.into()))?;
 
             Ok(())
-        };
+        }
 
         for each in path.components() {
             match each {

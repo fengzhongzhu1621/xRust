@@ -21,3 +21,12 @@ pub mod vec2;
 mod set;
 
 extern crate alloc;
+
+#[cfg(feature = "serialize")]
+extern crate serde;
+#[macro_use]
+#[cfg(feature = "serialize")]
+extern crate serde_derive;
+
+#[cfg(feature = "serialize")]
+extern crate stfu8;
