@@ -101,7 +101,7 @@ fn test_try_unwrap() {
     let x = Rc::new(4);
     assert_eq!(Rc::try_unwrap(x).unwrap(), 4);
 
-    // 有多个强引用,返回 Err
+    // Note: 有多个强引用,返回 Err
     let x = Rc::new(5);
     let _y = Rc::clone(&x);
     assert_eq!(*Rc::try_unwrap(x).unwrap_err(), 5); // Rc::try_unwrap(x) 返回 Err(4)

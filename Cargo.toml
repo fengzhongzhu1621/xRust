@@ -31,4 +31,5 @@ members = [
     "windows_rs",
     "crypto_examples",
     "terminal",
+    "design_patterns",
 ]
