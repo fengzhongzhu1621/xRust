@@ -27,7 +27,7 @@ impl Window {
             debug_assert!(instance.0 != 0);
 
             // 将字符串常量转换为字符串所在的指针
-            let window_class = s!("ClipboardMonitor");
+            let window_class = s!("MessageLoopWindowClass");
 
             // 窗口类属性
             let wc = WNDCLASSA {
