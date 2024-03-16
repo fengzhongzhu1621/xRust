@@ -2,6 +2,8 @@
 name = "windows_rs"
 version = "0.1.0"
 edition = "2021"
+publish = false
+default-run = "message_loop"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -56,3 +58,11 @@ version = "0.48"
 
 [dev-dependencies.windows-bindgen]
 version = "0.48"
+
+[[bin]]
+name = "message_loop"
+path = "src/bin/message_loop.rs"
+
+[[bin]]
+name = "windows_subsystem"
+path = "src/bin/windows_subsystem.rs"
