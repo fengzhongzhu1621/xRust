@@ -288,7 +288,7 @@ fn main() {
     // 构造路径
     let path = Path::new("./foo/bar.txt");
     let os_str = OsStr::new("1.png");
-    // 构造一条上报记录
+    // 构造记录
     let record = Record::builder()
         .event_time(Some(event_time))
         .var_a(Some("hello world".to_string()))
