@@ -83,7 +83,11 @@ fn test_file_stem() {
 
     let path = Path::new(r"C:\");
     let file_stem = path.file_stem();
-    assert_eq!(file_stem, None);
+    if cfg!(windows) {
+        assert_eq!(file_stem, None);
+    } else {
+        assert_eq!(file_stem, Some(OsStr::new(r"C:\")));
+    }
 }
 
 #[test]
@@ -102,7 +106,11 @@ fn test_file_name() {
 
     let path = Path::new(r"C:\");
     let file_stem = path.file_name();
-    assert_eq!(file_stem, None);
+    if cfg!(windows) {
+        assert_eq!(file_stem, None);
+    } else {
+        assert_eq!(file_stem, Some(OsStr::new(r"C:\")));
+    }
 }
 
 #[test]
@@ -152,7 +160,11 @@ fn test_path_push() {
     let mut path = PathBuf::from("./foo/");
     path.push("a");
     path.push("b");
-    assert_eq!(path, PathBuf::from(r"./foo/a\\b"));
+    if cfg!(windows) {
+        assert_eq!(path, PathBuf::from(r"./foo/a\\b"));
+    } else {
+        assert_eq!(path, PathBuf::from(r"./foo/a/b"));
+    }
 }
 
 #[test]

@@ -8,6 +8,16 @@ pub mod random;
 pub mod stack;
 pub mod unsafe_link;
 
+pub mod r#box;
+pub mod cell;
+pub mod cow;
+pub mod rc;
+
+pub use cell::*;
+pub use cow::*;
+pub use r#box::*;
+pub use rc::*;
+
 pub use panic::*;
 pub use random::*;
 

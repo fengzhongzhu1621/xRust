@@ -19,10 +19,8 @@ pub fn cell_example() {
     }
 
     // not mutable
-    let my_struct = SomeStruct {
-        regular_field: 0,
-        special_field: Cell::new(1),
-    };
+    let my_struct =
+        SomeStruct { regular_field: 0, special_field: Cell::new(1) };
 
     let _ = my_struct.regular_field;
     // my_struct.regular_field = 100;
@@ -38,10 +36,8 @@ pub fn refcell_example() {
     }
 
     // not mutable
-    let my_struct = SomeStruct {
-        regular_field: 0,
-        special_field: RefCell::new(1),
-    };
+    let my_struct =
+        SomeStruct { regular_field: 0, special_field: RefCell::new(1) };
 
     // my_struct.regular_field = 100;
     let mut special_field = (&my_struct.special_field).borrow_mut();
@@ -88,15 +84,18 @@ pub fn once_cell_example() {
     assert!(cell.get().is_some());
 }
 
-pub fn lazy_cell_example() {
-    let lazy: LazyCell<i32> = LazyCell::new(|| {
-        println!("initializing");
-        92
-    });
-    println!("one_cell ready");
-    println!("{}", *lazy);
-    println!("{}", *lazy);
-}
+// todo: This is a nightly-only experimental API. (lazy_cell #109736)
+// https://doc.rust-lang.org/std/cell/struct.LazyCell.html
+//
+// pub fn lazy_cell_example() {
+//     let lazy: LazyCell<i32> = LazyCell::new(|| {
+//         println!("initializing");
+//         92
+//     });
+//     println!("one_cell ready");
+//     println!("{}", *lazy);
+//     println!("{}", *lazy);
+// }
 
 pub fn myrc_example() {
     let s = example::Rc::new("hello world");
@@ -125,17 +124,13 @@ pub mod example {
                 value: t,
             });
             let ptr = NonNull::new(Box::into_raw(ptr)).unwrap();
-            Self {
-                ptr: ptr,
-                phantom: PhantomData,
-            }
+            Self { ptr: ptr, phantom: PhantomData }
         }
 
         pub fn value(&self) -> &T {
             &self.inner().value
         }
     }
-
 
     struct RcBox<T: ?Sized> {
         strong: Cell<usize>,
@@ -146,10 +141,7 @@ pub mod example {
     impl<T: ?Sized> Clone for Rc<T> {
         fn clone(&self) -> Rc<T> {
             self.inc_strong();
-            Rc {
-                ptr: self.ptr,
-                phantom: PhantomData,
-            }
+            Rc { ptr: self.ptr, phantom: PhantomData }
         }
     }
 
