@@ -11,8 +11,11 @@ cfg-if = "1.0.0"
 chrono = "0.4.31"
 error-code = "3.0.0"
 fastrand = "2.0.1"
+file-hashing = "0.1.2"
 is-terminal = { version = "0.4.7", optional = true }
+md-5 = "0.10.6"
 regex = "1.10.2"
+sha1 = "0.10.6"
 tempfile = "3.8.1"
 
 [features]

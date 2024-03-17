@@ -28,7 +28,7 @@ pub use path_type::PathType;
 #[cfg(feature = "serialize")]
 pub use ser::{PathSer, ToStfu8};
 
-use regex::Regex;
+// use regex::Regex;
 use std::path::Path;
 
 pub fn escape<P: AsRef<Path>>(path: P) -> String {

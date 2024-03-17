@@ -7,7 +7,6 @@ edition = "2021"
 
 [dependencies]
 chrono = "0.4.31"
-file-hashing = "0.1.2"
 hyper = { version = "0.14.27", features = ["full"] }
 lazy_static = "1.4.0"
 rand = "0.8.5"
