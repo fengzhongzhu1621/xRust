@@ -50,8 +50,6 @@ impl<'a> Record<'a> {
     }
 }
 
-impl<'a> Record<'a> {}
-
 /// 用于构造协议，通过 Record 和 RecordBuidler 将协议的读写分离
 #[derive(Debug)]
 struct RecordBuilder<'a> {
