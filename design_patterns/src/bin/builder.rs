@@ -264,9 +264,7 @@ impl<'a> Format<'a> {
 /// 将 SystemTime 格式的时间转换为指定格式的字符串
 fn format_system_time(st: SystemTime) -> String {
     let local_datetime: DateTime<Local> = st.clone().into();
-    let datetime_str = local_datetime.format(DATETIME_FORMAT).to_string();
-
-    datetime_str
+    local_datetime.format(DATETIME_FORMAT).to_string()
 }
 
 fn main() {
