@@ -5,20 +5,30 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-include = [
-    "**/*.rs",
-    "Cargo.toml",
-    "README.md"
-]
+include = ["**/*.rs", "Cargo.toml", "README.md"]
 
 build = "build.rs"
 
 [dependencies]
+clipboard-win = "5.3.0"
 core_utils = { path = "../core_utils" }
+image = "0.25.0"
 
 [target.'cfg(windows)'.dependencies]
 error-code = "3.0.0"
 windows = "0.51.1"
+
+[dependencies.windows]
+version = "0.51"
+features = [
+    "Win32_Foundation",
+    "Win32_System_DataExchange",
+    "Win32_Graphics_Gdi",
+    "Win32_System_LibraryLoader",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_System_DataExchange",
+    "Win32_System_Registry",
+]
 
 [features]
 # 启动子包的std特性

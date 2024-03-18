@@ -12,6 +12,7 @@ chrono = "0.4.31"
 error-code = "3.0.0"
 fastrand = "2.0.1"
 file-hashing = "0.1.2"
+image = "0.25.0"
 is-terminal = { version = "0.4.7", optional = true }
 md-5 = "0.10.6"
 regex = "1.10.2"

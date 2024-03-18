@@ -13,6 +13,7 @@ pub mod error;
 pub mod ffi;
 pub mod file;
 pub mod hash;
+pub mod image;
 pub mod kv;
 pub mod maybe_static;
 pub mod path;
