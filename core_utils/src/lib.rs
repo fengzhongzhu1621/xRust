@@ -17,11 +17,14 @@ pub mod image;
 pub mod kv;
 pub mod maybe_static;
 pub mod path;
+pub mod random;
 pub mod time;
 pub mod var;
 pub mod vec2;
 
 mod set;
+
+pub use random::*;
 
 extern crate alloc;
 

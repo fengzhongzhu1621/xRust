@@ -4,7 +4,6 @@ pub mod linked_list;
 pub mod numbers;
 pub mod panic;
 pub mod proxy;
-pub mod random;
 pub mod stack;
 pub mod unsafe_link;
 
@@ -19,7 +18,6 @@ pub use r#box::*;
 pub use rc::*;
 
 pub use panic::*;
-pub use random::*;
 
 use std::env;
 use std::error::Error;

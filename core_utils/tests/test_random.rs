@@ -1,4 +1,4 @@
-use xtool::random::*;
+use core_utils::random::*;
 
 #[test]
 fn test_random_string() {
