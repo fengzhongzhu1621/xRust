@@ -21,10 +21,12 @@ pub mod random;
 pub mod time;
 pub mod var;
 pub mod vec2;
+pub mod zip;
 
 mod set;
 
 pub use random::*;
+pub use zip::*;
 
 extern crate alloc;
 
