@@ -21,6 +21,7 @@ rand_core = "0.6.4"
 regex = "1.10.2"
 sha1 = "0.10.6"
 tempfile = "3.8.1"
+walkdir = "2.5.0"
 zip = "0.6.6"
 zip-extensions = "0.6.2"
 
