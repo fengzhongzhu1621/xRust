@@ -43,3 +43,15 @@ pub fn generate_iv_2() -> [u8; 16] {
 
     bytes
 }
+
+pub fn get_random_key16() -> [u8; 16] {
+    let mut arr = [0u8; 16];
+    rand::thread_rng().try_fill(&mut arr[..]).expect("Ooops!");
+    return arr;
+}
+
+pub fn get_random_key32() -> [u8; 32] {
+    let mut arr = [0u8; 32];
+    rand::thread_rng().try_fill(&mut arr[..]).expect("Ooops!");
+    return arr;
+}
