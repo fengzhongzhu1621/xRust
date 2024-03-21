@@ -5,6 +5,7 @@ pub mod macros;
 #[macro_use]
 pub mod condition;
 
+pub mod aes;
 pub mod cached_bool;
 pub mod console;
 pub mod convert;
@@ -25,6 +26,7 @@ pub mod zip;
 
 mod set;
 
+pub use aes::*;
 pub use random::*;
 pub use zip::*;
 
