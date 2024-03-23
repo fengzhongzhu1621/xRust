@@ -23,6 +23,7 @@ pub mod time;
 pub mod var;
 pub mod vec2;
 pub mod zip;
+pub mod logger;
 
 mod set;
 
