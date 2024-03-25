@@ -1,5 +1,4 @@
 use core_utils::path::PathMut;
-use std::ffi;
 use std::io::ErrorKind;
 use std::path::{Path, PathBuf};
 

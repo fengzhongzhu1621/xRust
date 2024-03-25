@@ -9,6 +9,7 @@ fn test_condition_debug() {
     assert_eq!(format!("{:?}", condition), "Condition::ALWAYS");
 
     // 打印函数的地址
+    #[allow(dead_code)]
     fn other() -> bool {
         false
     }

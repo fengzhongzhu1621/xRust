@@ -1,6 +1,5 @@
 use core_utils::logger::log4rs::init_log;
 use log::debug;
-use log::LevelFilter;
 use std::env;
 
 #[test]
