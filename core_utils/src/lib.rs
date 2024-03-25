@@ -16,14 +16,15 @@ pub mod file;
 pub mod hash;
 pub mod image;
 pub mod kv;
+pub mod logger;
 pub mod maybe_static;
 pub mod path;
 pub mod random;
+pub mod str;
 pub mod time;
 pub mod var;
 pub mod vec2;
 pub mod zip;
-pub mod logger;
 
 mod set;
 
