@@ -65,6 +65,9 @@ fn test_osstr_encode_wide() {
         ]
     );
     assert_eq!(value[3], vec![25991, 20214, 21517]);
+    let hash_os_string = OsString::from_wide(value[2]);
+    assert_eq!(hash_os_string.into_string().unwrap(), "hash");
+
     let value: Vec<&[u16]> =
         vec_u16.splitn(4, |num| *num == '|' as u16).into_iter().collect();
     assert_eq!(
