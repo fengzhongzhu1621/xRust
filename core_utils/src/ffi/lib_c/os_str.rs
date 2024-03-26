@@ -1,13 +1,17 @@
-use super::{Error, IntoOsString};
+use super::Error;
+use crate::ffi::string::IntoOsString;
 use core::{fmt, mem::transmute, ptr::NonNull, slice, str};
 
 /// Owned allocation of an OS-native string.
+/// 尽量使用 NonNull 来包装 *mut T。
+/// 非空指针。会自动检查包装的指针是否为空。
 pub struct OsString {
-    alloc: NonNull<libc::c_char>,
+    alloc: NonNull<libc::c_char>, // 字符串的地址
     /// Length without the nul-byte.
-    len: usize,
+    len: usize, // 字符串的长度，不包含空字符
 }
 
+/// 实现Send的类型可以在线程间安全的传递其所有权
 unsafe impl Send for OsString {}
 
 impl Drop for OsString {
@@ -17,6 +21,8 @@ impl Drop for OsString {
     }
 }
 
+// OsString -> &OsStr
+// 转换后指向的是同一个指针
 impl AsRef<OsStr> for OsString {
     fn as_ref(&self) -> &OsStr {
         unsafe {
@@ -93,6 +99,8 @@ impl fmt::Display for OsStr {
     }
 }
 
+// &OsStr -> OsString
+// 转换后指向的是不同的地址
 impl<'str> IntoOsString for &'str OsStr {
     fn into_os_string(self) -> Result<OsString, Error> {
         let len = self.bytes.len();
