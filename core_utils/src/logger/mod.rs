@@ -1,3 +1,3 @@
 pub mod log4rs;
 
-use log4rs::*;
+pub use log4rs::*;

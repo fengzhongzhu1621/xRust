@@ -1,5 +1,7 @@
-use core::{fmt, mem::transmute, ptr::NonNull, slice, str};
+use super::OsStr;
+use core::{fmt, slice};
 
+// link_name 指定extern块中函数或静态变量的符号名称。
 #[cfg(not(feature = "std"))]
 extern "C" {
     /// Yeah, I had to copy this from std
@@ -32,26 +34,17 @@ extern "C" {
     fn errno_location() -> *mut libc::c_int;
 }
 
+/// errno_location 返回与参数无关的与线程绑定的一个特定地址，应用层直接从该地址取出errno的值。
 #[cfg(not(feature = "std"))]
 fn errno() -> libc::c_int {
     unsafe { *errno_location() }
 }
 
-/// 最新的操作系统错误码
-#[cfg(feature = "std")]
-fn errno() -> libc::c_int {
-    Error::last_os_error().raw_os_error().unwrap_or(0) as libc::c_int
-}
-
-#[cfg(feature = "std")]
-/// An IO error.
-pub type Error = std::io::Error;
-
 #[cfg(not(feature = "std"))]
 #[derive(Debug)]
 /// An IO error. Without std, you can only get a message or an OS error code.
 pub struct Error {
-    code: i32,
+    pub code: i32,
 }
 
 #[cfg(not(feature = "std"))]
@@ -75,10 +68,24 @@ impl Error {
 #[cfg(not(feature = "std"))]
 impl fmt::Display for Error {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        // 获得错误信息字符串的地址
         let msg_ptr = unsafe { libc::strerror(self.code as libc::c_int) };
+        // 获得错误信息的长度
         let len = unsafe { libc::strlen(msg_ptr) };
+        // 传入指向第一个元素的指针和长度参数，它会创建一个切片 &[i8]。
+        // 假设传入的指针指向有效的内存，且被指向的内存具有正确的数据类型
         let slice = unsafe { slice::from_raw_parts(msg_ptr, len) };
         write!(fmt, "{}", unsafe { OsStr::from_slice(slice) })?;
         Ok(())
     }
 }
+
+/// 最新的操作系统错误码
+#[cfg(feature = "std")]
+fn errno() -> libc::c_int {
+    Error::last_os_error().raw_os_error().unwrap_or(0) as libc::c_int
+}
+
+#[cfg(feature = "std")]
+/// An IO error.
+pub type Error = std::io::Error;

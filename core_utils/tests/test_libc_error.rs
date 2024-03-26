@@ -1,4 +1,4 @@
-use core_utils::ffi::libc::Error;
+use core_utils::ffi::lib_c::Error;
 
 #[cfg(not(feature = "std"))]
 #[test]
