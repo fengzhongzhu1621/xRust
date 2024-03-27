@@ -36,7 +36,7 @@ extern "C" {
 
 /// errno_location 返回与参数无关的与线程绑定的一个特定地址，应用层直接从该地址取出errno的值。
 #[cfg(not(feature = "std"))]
-fn errno() -> libc::c_int {
+pub fn errno() -> libc::c_int {
     unsafe { *errno_location() }
 }
 
@@ -82,7 +82,7 @@ impl fmt::Display for Error {
 
 /// 最新的操作系统错误码
 #[cfg(feature = "std")]
-fn errno() -> libc::c_int {
+pub fn errno() -> libc::c_int {
     Error::last_os_error().raw_os_error().unwrap_or(0) as libc::c_int
 }
 

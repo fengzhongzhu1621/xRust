@@ -1,43 +1,11 @@
-use super::Error;
+use super::{Error, OsString};
 use crate::ffi::string::IntoOsString;
 use core::{fmt, mem::transmute, ptr::NonNull, slice, str};
-
-/// Owned allocation of an OS-native string.
-/// 尽量使用 NonNull 来包装 *mut T。
-/// 非空指针。会自动检查包装的指针是否为空。
-pub struct OsString {
-    alloc: NonNull<libc::c_char>, // 字符串的地址
-    /// Length without the nul-byte.
-    len: usize, // 字符串的长度，不包含空字符
-}
-
-/// 实现Send的类型可以在线程间安全的传递其所有权
-unsafe impl Send for OsString {}
-
-impl Drop for OsString {
-    fn drop(&mut self) {
-        let ptr = self.alloc.as_ptr() as *mut libc::c_void;
-        unsafe { libc::free(ptr) }
-    }
-}
-
-// OsString -> &OsStr
-// 转换后指向的是同一个指针
-impl AsRef<OsStr> for OsString {
-    fn as_ref(&self) -> &OsStr {
-        unsafe {
-            OsStr::from_slice(slice::from_raw_parts(
-                self.alloc.as_ptr(),
-                self.len,
-            ))
-        }
-    }
-}
 
 /// Borrowed allocation of an OS-native string.
 #[repr(transparent)]
 pub struct OsStr {
-    bytes: [libc::c_char],
+    pub bytes: [libc::c_char], // 字节数组
 }
 
 impl OsStr {
@@ -103,14 +71,18 @@ impl fmt::Display for OsStr {
 // 转换后指向的是不同的地址
 impl<'str> IntoOsString for &'str OsStr {
     fn into_os_string(self) -> Result<OsString, Error> {
+        // 获得非空字节数组的长度
         let len = self.bytes.len();
+        // 需要分配多一个字节的空间，存放\0
         let alloc = unsafe { libc::malloc(len + 1) };
+        // 转换为非空指针类型
         let alloc = match NonNull::new(alloc as *mut libc::c_char) {
             Some(alloc) => alloc,
             None => {
                 return Err(Error::last_os_error());
             }
         };
+        // 拷贝字符串
         unsafe {
             libc::memcpy(
                 alloc.as_ptr() as *mut libc::c_void,
