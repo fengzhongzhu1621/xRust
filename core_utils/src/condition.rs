@@ -1,3 +1,4 @@
+use crate::cached_bool::CachedBool;
 use core::sync::atomic::{AtomicPtr, Ordering};
 use std::fmt;
 
