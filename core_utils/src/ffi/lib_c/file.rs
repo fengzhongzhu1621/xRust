@@ -3,6 +3,14 @@ use super::{errno, Error, OsStr};
 /// A type representing file descriptor on Unix.
 pub type FileDesc = libc::c_int;
 
+/// A type representing Process ID on Unix.
+pub type Pid = libc::pid_t;
+
+/// Returns the ID of the current process.
+pub fn pid() -> Pid {
+    unsafe { libc::getpid() }
+}
+
 /// Opens a file with only purpose of locking it. Creates it if it does not
 /// exist. Path must not contain a nul-byte in the middle, but a nul-byte in the
 /// end (and only in the end) is allowed, which in this case no extra allocation
