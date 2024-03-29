@@ -7,6 +7,7 @@ pub mod sys;
 mod utils;
 
 pub use dc::*;
+pub use file::*;
 pub use lock::*;
 pub use mem::*;
 pub use sys::*;

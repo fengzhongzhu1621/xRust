@@ -85,3 +85,18 @@ serde_json = "1.0.108"
 [target.'cfg(unix)'.dependencies.libc]
 version = "^0.2.66"
 default-features = false
+
+[target.'cfg(windows)'.dependencies.winapi]
+version = "^0.3.8"
+features = [
+    "minwindef", 
+    "minwinbase",
+    "winbase",
+    "errhandlingapi",
+    "winerror",
+    "winnt",
+    "synchapi",
+    "handleapi",
+    "fileapi",
+    "processthreadsapi"
+]
