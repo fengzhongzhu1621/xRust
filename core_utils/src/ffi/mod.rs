@@ -1,5 +1,6 @@
 pub mod buffer;
 pub mod fmt;
+pub mod nix;
 pub mod types;
 
 #[cfg(unix)]

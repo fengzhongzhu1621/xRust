@@ -243,3 +243,4 @@ The following components are provided under the MIT License. See project link fo
 The text of each license is also included at licenses/LICENSE-[project].txt.
 
     (MIT License) fslock v0.2.1 (https://github.com/brunoczim/fslock)
+    (MIT License) ctrlc 3.4.4 (https://github.com/Detegr/rust-ctrlc)
