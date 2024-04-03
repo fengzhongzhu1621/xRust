@@ -1,5 +1,6 @@
-use super::{Error, OsString};
-use crate::ffi::string::IntoOsString;
+use super::error::Error;
+use super::os_string::OsString;
+use crate::platform::string::IntoOsString;
 use core::{fmt, mem::transmute, ptr::NonNull, slice, str};
 
 /// Borrowed allocation of an OS-native string.

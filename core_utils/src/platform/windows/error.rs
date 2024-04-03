@@ -3,6 +3,8 @@ use core::{
     slice,
 };
 
+pub type IOError = std::io::Error;
+
 #[cfg(feature = "std")]
 /// An IO error.
 pub type Error = std::io::Error;

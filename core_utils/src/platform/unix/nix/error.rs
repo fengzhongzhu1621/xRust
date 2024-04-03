@@ -1,2 +1,2 @@
 /// Platform specific error type
-pub type Error = nix::Error;
+pub type IOError = nix::Error;

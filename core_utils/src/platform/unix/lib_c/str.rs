@@ -1,5 +1,7 @@
-use super::{Error, OsStr, OsString};
-use crate::ffi::string::{EitherOsStr, ToOsStr};
+use super::error::Error;
+use super::os_str::OsStr;
+use super::os_string::OsString;
+use crate::platform::string::{EitherOsStr, ToOsStr};
 use core::{mem::transmute, ptr::NonNull, str};
 
 impl ToOsStr for str {

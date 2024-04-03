@@ -1,6 +1,3 @@
-use super::OsStr;
-use core::{fmt, slice};
-
 // link_name 指定extern块中函数或静态变量的符号名称。
 #[cfg(not(feature = "std"))]
 extern "C" {

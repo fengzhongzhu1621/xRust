@@ -1,4 +1,4 @@
-use super::{pipe2, Error};
+use super::{error::IOError, pipe::pipe2};
 use crate::error::CtrlcError;
 use nix::unistd;
 use std::os::fd::BorrowedFd;
@@ -24,14 +24,14 @@ extern "C" fn os_handler(_: nix::libc::c_int) {
 /// Will return an error if a system error occurred.
 ///
 #[inline]
-pub unsafe fn init_os_handler(overwrite: bool) -> Result<(), Error> {
+pub unsafe fn init_os_handler(overwrite: bool) -> Result<(), IOError> {
     use nix::fcntl;
     use nix::sys::signal;
 
     // 创建匿名管道，复制给全局变量
     PIPE = pipe2(fcntl::OFlag::O_CLOEXEC)?;
 
-    let close_pipe = |e: nix::Error| -> Error {
+    let close_pipe = |e: nix::Error| -> IOError {
         // Try to close the pipes. close() should not fail,
         // but if it does, there isn't much we can do
         let _ = unistd::close(PIPE.1);

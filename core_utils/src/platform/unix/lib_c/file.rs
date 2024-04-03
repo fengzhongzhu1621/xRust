@@ -1,4 +1,5 @@
-use super::{errno, Error, OsStr};
+use super::error::{errno, Error};
+use super::os_str::OsStr;
 
 /// A type representing file descriptor on Unix.
 pub type FileDesc = libc::c_int;

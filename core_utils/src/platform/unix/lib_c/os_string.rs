@@ -1,4 +1,4 @@
-use super::OsStr;
+use super::os_str::OsStr;
 use core::{ptr::NonNull, slice};
 
 /// Owned allocation of an OS-native string.
