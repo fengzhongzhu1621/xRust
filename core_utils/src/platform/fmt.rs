@@ -26,7 +26,7 @@ impl Writer {
     pub fn write_fmt(
         &self,
         arguments: fmt::Arguments,
-    ) -> Result<(), sys::Error> {
+    ) -> Result<(), sys::IOError> {
         let mut adapter = Adapter::new(self.0);
         let _ = adapter.write_fmt(arguments);
         adapter.finish()
@@ -45,7 +45,7 @@ struct Adapter {
     /// Cursor tracking where new bytes should be written at the buffer.
     cursor: usize,
     /// Partial result for writes.
-    result: Result<(), sys::Error>,
+    result: Result<(), sys::IOError>,
 }
 
 /// 自定义写缓存
@@ -56,7 +56,7 @@ impl Adapter {
     }
 
     /// Flushes the buffer into the open file.
-    fn flush(&mut self) -> Result<(), sys::Error> {
+    fn flush(&mut self) -> Result<(), sys::IOError> {
         // 将缓存结果写入到文件，并清空缓存
         sys::write(self.desc, &self.buffer[..self.cursor])?;
         self.buffer = [0; BUF_SIZE];
@@ -65,7 +65,7 @@ impl Adapter {
     }
 
     /// Finishes the adapter, returning the I/O Result
-    fn finish(mut self) -> Result<(), sys::Error> {
+    fn finish(mut self) -> Result<(), sys::IOError> {
         // 将 self.result复制为 Ok(())
         mem::replace(&mut self.result, Ok(()))
     }

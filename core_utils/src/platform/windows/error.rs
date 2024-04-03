@@ -1,8 +1,3 @@
-use core::{
-    ptr::{self, NonNull},
-    slice,
-};
-
 pub type IOError = std::io::Error;
 
 #[cfg(feature = "std")]
