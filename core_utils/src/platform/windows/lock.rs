@@ -1,5 +1,5 @@
-use crate::ffi::win::GlobalUnlock;
-use crate::ffi::types::c_void;
+use super::system::GlobalUnlock;
+use crate::platform::types::c_void;
 
 #[inline]
 pub fn unlock_data(data: *mut c_void) {

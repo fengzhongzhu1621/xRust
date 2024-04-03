@@ -1,5 +1,5 @@
-use crate::ffi::types::*;
-use crate::ffi::win::sys::*;
+use super::system::*;
+use super::types::*;
 use core::ptr;
 
 #[inline(always)]

@@ -46,8 +46,8 @@ impl error::Error for CtrlcError {
 }
 
 // platform::Error -> CtrlcError
-impl From<platform::Error> for CtrlcError {
-    fn from(e: platform::Error) -> CtrlcError {
+impl From<platform::sys::Error> for CtrlcError {
+    fn from(e: platform::sys::Error) -> CtrlcError {
         #[cfg(not(windows))]
         if e == platform::Error::EEXIST {
             return CtrlcError::MultipleHandlers;

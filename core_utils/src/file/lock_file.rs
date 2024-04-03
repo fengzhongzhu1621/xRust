@@ -1,4 +1,4 @@
-use crate::ffi::{fmt, string::ToOsStr, sys};
+use crate::platform::{fmt, string::ToOsStr, sys};
 
 #[derive(Debug)]
 pub struct LockFile {

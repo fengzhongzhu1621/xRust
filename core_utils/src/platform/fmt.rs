@@ -1,6 +1,6 @@
 //! This module implements formatting functions for writing into lock files.
 
-use crate::ffi::sys;
+use crate::platform::sys;
 use core::{
     fmt::{self, Write},
     mem,
@@ -14,9 +14,7 @@ const BUF_SIZE: usize = 16;
 ///
 /// # Example
 ///
-/// ```
 /// writeln!(fmt::Writer(self.desc), "{}", sys::pid())
-/// ```
 #[derive(Debug, Clone, Copy)]
 pub struct Writer(
     /// The open file to which data will be written.

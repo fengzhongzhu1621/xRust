@@ -1,11 +1,16 @@
 #[cfg(unix)]
-mod unix;
+pub mod unix;
 
 #[cfg(windows)]
-mod windows;
+pub mod windows;
 
 #[cfg(unix)]
-pub use self::unix::*;
+pub use self::unix as sys;
 
 #[cfg(windows)]
-pub use self::windows::*;
+pub use self::windows as sys;
+
+pub mod buffer;
+pub mod fmt;
+pub mod string;
+pub mod types;

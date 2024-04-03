@@ -1,4 +1,4 @@
-use crate::ffi::types::c_void;
+use crate::platform::types::*;
 use error_code::ErrorCode;
 
 #[cold]
@@ -17,5 +17,4 @@ pub fn unlikely_last_error() -> ErrorCode {
 
 #[inline]
 /// 空操作
-pub fn noop(_: *mut c_void) {
-}
+pub fn noop(_: *mut c_void) {}

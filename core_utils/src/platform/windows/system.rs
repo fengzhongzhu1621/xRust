@@ -1,4 +1,5 @@
-use crate::ffi::types::*;
+use super::types::*;
+use crate::platform::types::*;
 
 // https://learn.microsoft.com/zh-cn/windows/win32/api/_base/
 

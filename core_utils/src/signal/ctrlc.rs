@@ -57,7 +57,7 @@ where
 {
     // 注册信号处理函数
     unsafe {
-        match platform::init_os_handler(overwrite) {
+        match platform::sys::init_os_handler(overwrite) {
             Ok(_) => {}
             Err(err) => {
                 return Err(err.into());
@@ -71,7 +71,7 @@ where
         .spawn(move || loop {
             // 等待信号被触发
             unsafe {
-                platform::block_ctrl_c()
+                platform::sys::block_ctrl_c()
                     .expect("Critical system error while waiting for Ctrl-C");
             }
             // 执行用户自定义业务逻辑

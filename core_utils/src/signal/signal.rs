@@ -1,4 +1,4 @@
-use crate::platform::Signal;
+use crate::platform::sys::Signal;
 
 #[derive(Debug)]
 pub enum SignalType {

@@ -1,8 +1,7 @@
 #[cfg(windows)]
 #[allow(non_camel_case_types, non_snake_case)]
 mod windows_console {
-    use crate::ffi::types::*;
-    use crate::ffi::win::sys::*;
+    use crate::platform::windows::{system::*, types::*};
 
     // 获得标准输出的句柄
     fn get_output_handle() -> Result<HANDLE, DWORD> {

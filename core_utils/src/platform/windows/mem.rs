@@ -1,7 +1,10 @@
-use crate::ffi::win::*;
-use crate::ffi::types::*;
-use error_code::ErrorCode;
+use super::lock::*;
+use super::system::*;
+use super::types::*;
+use super::utils::*;
+use crate::platform::types::*;
 use core::{mem, ptr};
+use error_code::ErrorCode;
 
 const BYTES_LAYOUT: alloc::alloc::Layout = alloc::alloc::Layout::new::<u8>();
 
@@ -9,9 +12,7 @@ const BYTES_LAYOUT: alloc::alloc::Layout = alloc::alloc::Layout::new::<u8>();
 /// 使用全局分配器释放内存。
 /// 此函数将调用转发到用 #[global_allocator] 属性注册的分配器的 GlobalAlloc::dealloc 方法。
 pub fn free_rust_mem(data: *mut c_void) {
-    unsafe {
-        alloc::alloc::dealloc(data as _, BYTES_LAYOUT)
-    }
+    unsafe { alloc::alloc::dealloc(data as _, BYTES_LAYOUT) }
 }
 
 #[inline]
@@ -20,7 +21,6 @@ pub fn free_global_mem(data: *mut c_void) {
         GlobalFree(data);
     }
 }
-
 
 pub struct Scope<T: Copy>(pub T, pub fn(T));
 
@@ -39,7 +39,10 @@ impl RawMem {
     pub fn new_rust_mem(size: usize) -> SysResult<Self> {
         // 分配内存
         let mem = unsafe {
-            alloc::alloc::alloc_zeroed(alloc::alloc::Layout::array::<u8>(size).expect("To create layout for bytes"))
+            alloc::alloc::alloc_zeroed(
+                alloc::alloc::Layout::array::<u8>(size)
+                    .expect("To create layout for bytes"),
+            )
         };
 
         if mem.is_null() {
@@ -81,15 +84,14 @@ impl RawMem {
         mem::forget(self)
     }
 
-    pub fn lock(&self) -> SysResult<(ptr::NonNull<c_void>, Scope<*mut c_void>)> {
-        let ptr = unsafe {
-            GlobalLock(self.get())
-        };
+    pub fn lock(
+        &self,
+    ) -> SysResult<(ptr::NonNull<c_void>, Scope<*mut c_void>)> {
+        let ptr = unsafe { GlobalLock(self.get()) };
 
         match ptr::NonNull::new(ptr) {
             Some(ptr) => Ok((ptr, Scope(self.get(), unlock_data))),
             None => Err(ErrorCode::last_system()),
         }
     }
-
 }

@@ -1,14 +1,14 @@
-use crate::ffi::types::*;
-use crate::ffi::win::SysResult;
-use crate::ffi::win::sys::*;
-use crate::ffi::win::CP_UTF8;
-use crate::ffi::buffer::Buffer;
-use crate::ffi::win::utils::*;
-
-use error_code::ErrorCode;
-use core::{ptr, mem, slice};
+use super::constants::*;
+use super::system::*;
+use super::types::SysResult;
+use super::types::*;
+use super::utils::*;
+use crate::platform::buffer::Buffer;
+use crate::platform::types::*;
 use core::num::NonZeroU32;
 use core::num::NonZeroUsize;
+use core::{mem, ptr, slice};
+use error_code::ErrorCode;
 
 ///A handle to a bitmap (HBITMAP).
 pub const CF_BITMAP: c_uint = 2;
@@ -89,7 +89,7 @@ pub const CF_WAVE: c_uint = 12;
 pub fn open_for(owner: HWND) -> SysResult<()> {
     match unsafe { OpenClipboard(owner) } {
         0 => Err(ErrorCode::last_system()), // 如果函数失败，则返回值为零
-        _ => Ok(()),    // 如果该函数成功，则返回值为非零值。
+        _ => Ok(()), // 如果该函数成功，则返回值为非零值。
     }
 }
 
@@ -125,7 +125,7 @@ pub fn seq_num() -> Option<NonZeroU32> {
 
 #[inline]
 ///Retrieves size of clipboard data for specified format.
-/// 
+///
 ///# Unsafety:
 ///
 ///In some cases, clipboard content might be so invalid that it crashes on `GlobalSize` (e.g.
@@ -144,10 +144,10 @@ pub unsafe fn size_unsafe(format: u32) -> Option<NonZeroUsize> {
 #[inline]
 ///Retrieves size of clipboard data for specified format.
 pub fn size(format: u32) -> Option<NonZeroUsize> {
-    let clipboard_data = unsafe {GetClipboardData(format)};
+    let clipboard_data = unsafe { GetClipboardData(format) };
 
     if clipboard_data.is_null() {
-        return None
+        return None;
     }
 
     unsafe {
@@ -166,9 +166,7 @@ pub fn size(format: u32) -> Option<NonZeroUsize> {
 #[inline(always)]
 ///Retrieves raw pointer to clipboard data.
 pub fn get_clipboard_data(format: c_uint) -> SysResult<ptr::NonNull<c_void>> {
-    let ptr = unsafe {
-        GetClipboardData(format)
-    };
+    let ptr = unsafe { GetClipboardData(format) };
     match ptr::NonNull::new(ptr) {
         Some(ptr) => Ok(ptr),
         None => Err(ErrorCode::last_system()),
@@ -191,7 +189,7 @@ pub fn count_formats() -> Option<usize> {
     if result == 0 {
         // 如果函数失败，则返回值为零。 要获得更多的错误信息，请调用 GetLastError。
         if ErrorCode::last_system().raw_code() != 0 {
-            return None
+            return None;
         }
     }
 
@@ -199,15 +197,12 @@ pub fn count_formats() -> Option<usize> {
     Some(result as usize)
 }
 
-
 #[inline(always)]
 ///Retrieves the window handle of the current owner of the clipboard.
 ///
 ///Returns `None` if clipboard is not owned.
-pub fn get_owner() -> Option<ptr::NonNull::<c_void>> {
-    ptr::NonNull::new(unsafe {
-        GetClipboardOwner()
-    })
+pub fn get_owner() -> Option<ptr::NonNull<c_void>> {
+    ptr::NonNull::new(unsafe { GetClipboardOwner() })
 }
 
 ///Enumerator over available clipboard formats.
@@ -216,7 +211,7 @@ pub fn get_owner() -> Option<ptr::NonNull::<c_void>> {
 ///
 ///* [open()](fn.open.html) has been called.
 pub struct EnumFormats {
-    idx: u32
+    idx: u32,
 }
 
 impl EnumFormats {
@@ -261,7 +256,6 @@ impl Iterator for EnumFormats {
         (0, count_formats())
     }
 }
-
 
 macro_rules! match_format_name_big {
     ( $name:expr, $( $f:ident ),* ) => {
@@ -346,31 +340,32 @@ pub fn format_name(format: u32, mut out: Buffer<'_>) -> Option<&'_ str> {
 
 ///Returns format name based on it's code (allocating variant suitable for big names)
 pub fn format_name_big(format: u32) -> Option<String> {
-    match_format_name_big!(format,
-                           CF_BITMAP,
-                           CF_DIB,
-                           CF_DIBV5,
-                           CF_DIF,
-                           CF_DSPBITMAP,
-                           CF_DSPENHMETAFILE,
-                           CF_DSPMETAFILEPICT,
-                           CF_DSPTEXT,
-                           CF_ENHMETAFILE,
-                           CF_HDROP,
-                           CF_LOCALE,
-                           CF_METAFILEPICT,
-                           CF_OEMTEXT,
-                           CF_OWNERDISPLAY,
-                           CF_PALETTE,
-                           CF_PENDATA,
-                           CF_RIFF,
-                           CF_SYLK,
-                           CF_TEXT,
-                           CF_WAVE,
-                           CF_TIFF,
-                           CF_UNICODETEXT)
+    match_format_name_big!(
+        format,
+        CF_BITMAP,
+        CF_DIB,
+        CF_DIBV5,
+        CF_DIF,
+        CF_DSPBITMAP,
+        CF_DSPENHMETAFILE,
+        CF_DSPMETAFILEPICT,
+        CF_DSPTEXT,
+        CF_ENHMETAFILE,
+        CF_HDROP,
+        CF_LOCALE,
+        CF_METAFILEPICT,
+        CF_OEMTEXT,
+        CF_OWNERDISPLAY,
+        CF_PALETTE,
+        CF_PENDATA,
+        CF_RIFF,
+        CF_SYLK,
+        CF_TEXT,
+        CF_WAVE,
+        CF_TIFF,
+        CF_UNICODETEXT
+    )
 }
-
 
 #[inline]
 ///Registers a new clipboard format with specified name as C wide string (meaning it must have null
@@ -385,10 +380,10 @@ pub fn format_name_big(format: u32) -> Option<String> {
 ///- Custom format identifier is in range `0xC000...0xFFFF`.
 ///- Function fails if input is not null terminated string.
 pub unsafe fn register_raw_format(name: &[u16]) -> Option<NonZeroU32> {
-    if name.is_empty() || name[name.len()-1] != b'\0' as u16 {
-        return unlikely_empty_size_result()
+    if name.is_empty() || name[name.len() - 1] != b'\0' as u16 {
+        return unlikely_empty_size_result();
     }
-    NonZeroU32::new(RegisterClipboardFormatW(name.as_ptr()) )
+    NonZeroU32::new(RegisterClipboardFormatW(name.as_ptr()))
 }
 
 ///Registers a new clipboard format with specified name.
@@ -402,17 +397,31 @@ pub unsafe fn register_raw_format(name: &[u16]) -> Option<NonZeroU32> {
 ///Custom format identifier is in range `0xC000...0xFFFF`.
 pub fn register_format(name: &str) -> Option<NonZeroU32> {
     let size = unsafe {
-        MultiByteToWideChar(CP_UTF8, 0, name.as_ptr() as *const _, name.len() as c_int, ptr::null_mut(), 0)
+        MultiByteToWideChar(
+            CP_UTF8,
+            0,
+            name.as_ptr() as *const _,
+            name.len() as c_int,
+            ptr::null_mut(),
+            0,
+        )
     };
 
     if size == 0 {
-        return unlikely_empty_size_result()
+        return unlikely_empty_size_result();
     }
 
     if size > 52 {
         let mut buffer = alloc::vec::Vec::with_capacity(size as usize);
         let size = unsafe {
-            MultiByteToWideChar(CP_UTF8, 0, name.as_ptr() as *const _, name.len() as c_int, buffer.as_mut_ptr(), size)
+            MultiByteToWideChar(
+                CP_UTF8,
+                0,
+                name.as_ptr() as *const _,
+                name.len() as c_int,
+                buffer.as_mut_ptr(),
+                size,
+            )
         };
         unsafe {
             buffer.set_len(size as usize);
@@ -422,11 +431,24 @@ pub fn register_format(name: &str) -> Option<NonZeroU32> {
     } else {
         let mut buffer = mem::MaybeUninit::<[u16; 52]>::uninit();
         let size = unsafe {
-            MultiByteToWideChar(CP_UTF8, 0, name.as_ptr() as *const _, name.len() as c_int, buffer.as_mut_ptr() as *mut u16, 51)
+            MultiByteToWideChar(
+                CP_UTF8,
+                0,
+                name.as_ptr() as *const _,
+                name.len() as c_int,
+                buffer.as_mut_ptr() as *mut u16,
+                51,
+            )
         };
         unsafe {
-            ptr::write((buffer.as_mut_ptr() as *mut u16).offset(size as isize), 0);
-            register_raw_format(slice::from_raw_parts(buffer.as_ptr() as *const u16, size as usize + 1))
+            ptr::write(
+                (buffer.as_mut_ptr() as *mut u16).offset(size as isize),
+                0,
+            );
+            register_raw_format(slice::from_raw_parts(
+                buffer.as_ptr() as *const u16,
+                size as usize + 1,
+            ))
         }
     }
 }

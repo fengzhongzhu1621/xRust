@@ -7,7 +7,8 @@
 // notice may not be copied, modified, or distributed except
 // according to those terms.
 
-use crate::ffi::types::{FALSE, TRUE};
+use super::error::Error;
+use super::types::{FALSE, TRUE};
 use std::io;
 use std::ptr;
 use windows_sys::Win32::Foundation::{
@@ -17,12 +18,6 @@ use windows_sys::Win32::System::Console::SetConsoleCtrlHandler;
 use windows_sys::Win32::System::Threading::{
     CreateSemaphoreA, ReleaseSemaphore, WaitForSingleObject, INFINITE,
 };
-
-/// Platform specific error type
-pub type Error = io::Error;
-
-/// Platform specific signal type
-pub type Signal = u32;
 
 const MAX_SEM_COUNT: i32 = 255;
 static mut SEMAPHORE: HANDLE = 0 as HANDLE;
