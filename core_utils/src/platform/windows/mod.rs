@@ -11,7 +11,7 @@ pub mod system;
 pub mod types;
 pub mod utils;
 
-pub use error::{CtrlcError, Error};
+pub use error::{Error, SignalError};
 pub use file::{
     close, fsync, lock, open, pid, truncate, try_lock, unlock, write, OsStr,
     OsString,

@@ -1,3 +1,5 @@
+use std::io;
+
 /// Platform specific error type
 pub type SignalError = io::Error;
 
