@@ -46,10 +46,10 @@ impl error::Error for CtrlcError {
 }
 
 // platform::Error -> CtrlcError
-impl From<platform::sys::IOError> for CtrlcError {
-    fn from(e: platform::sys::IOError) -> CtrlcError {
+impl From<platform::sys::SignalError> for CtrlcError {
+    fn from(e: platform::sys::SignalError) -> CtrlcError {
         #[cfg(not(windows))]
-        if e == platform::sys::IOError::EEXIST {
+        if e == platform::sys::SignalError::EEXIST {
             return CtrlcError::MultipleHandlers;
         }
 

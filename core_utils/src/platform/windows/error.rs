@@ -1,4 +1,5 @@
-pub type IOError = std::io::Error;
+/// Platform specific error type
+pub type SignalError = io::Error;
 
 #[cfg(feature = "std")]
 /// An IO error.

@@ -7,7 +7,7 @@
 // notice may not be copied, modified, or distributed except
 // according to those terms.
 
-use super::error::Error;
+use super::error::SignalError;
 use super::types::{FALSE, TRUE};
 use std::io;
 use std::ptr;
@@ -40,7 +40,7 @@ unsafe extern "system" fn os_handler(_: u32) -> BOOL {
 /// Will return an error if a system error occurred.
 ///
 #[inline]
-pub unsafe fn init_os_handler(_overwrite: bool) -> Result<(), Error> {
+pub unsafe fn init_os_handler(_overwrite: bool) -> Result<(), SignalError> {
     // 创建信号量
     SEMAPHORE =
         CreateSemaphoreA(ptr::null_mut(), 0, MAX_SEM_COUNT, ptr::null());
@@ -72,7 +72,7 @@ pub unsafe fn init_os_handler(_overwrite: bool) -> Result<(), Error> {
 /// Will return an error if a system error occurred.
 ///
 #[inline]
-pub unsafe fn block_ctrl_c() -> Result<(), Error> {
+pub unsafe fn block_ctrl_c() -> Result<(), SignalError> {
     // 等待 ReleaseSemaphore 发出信号
     // 每次线程完成信号灯对象的等待时，信号量对象的计数都会递减一。
     match WaitForSingleObject(SEMAPHORE, INFINITE) {
