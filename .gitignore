@@ -23,3 +23,4 @@ todo_list/todo_list.txt
 core_utils/tests/data.zip
 core_utils/tests/test.log
 core_utils/tests.zip
+wasm/pkg/
