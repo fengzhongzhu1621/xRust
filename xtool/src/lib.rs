@@ -12,6 +12,8 @@ pub mod cell;
 pub mod cow;
 pub mod rc;
 
+mod env;
+
 pub use cell::*;
 pub use cow::*;
 pub use r#box::*;
