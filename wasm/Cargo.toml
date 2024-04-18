@@ -1,5 +1,5 @@
 [package]
-name = "hello"
+name = "wasm1"
 version = "0.1.0"
 authors = ["fengzhongzhu1621 <jinyinqiao@gmail.com>"]
 edition = "2018"
