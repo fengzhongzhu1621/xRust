@@ -21,7 +21,6 @@ pub use rc::*;
 
 pub use panic::*;
 
-use std::env;
 use std::error::Error;
 use std::fs;
 
@@ -70,7 +69,7 @@ impl Config {
         };
 
         // 判断环境变了是否设置，如果没有设置is_err() 返回 true
-        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
+        let case_sensitive = std::env::var("CASE_INSENSITIVE").is_err();
 
         // 成功返回Ok枚举
         Ok(Config { query, filename, case_sensitive })
