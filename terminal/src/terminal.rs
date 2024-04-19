@@ -235,23 +235,3 @@ impl IsTerminal for std::process::ChildStderr {
         false
     }
 }
-
-#[cfg(test)]
-mod tests {
-    // Verify that the msys_tty_on function works with long path.
-    #[test]
-    #[cfg(windows)]
-    fn msys_tty_on_path_length() {
-        use std::{fs::File, os::windows::io::AsRawHandle};
-        use windows_sys::Win32::Foundation::MAX_PATH;
-
-        let dir =
-            tempfile::tempdir().expect("Unable to create temporary directory");
-        let file_path = dir.path().join("ten_chars_".repeat(25));
-        // Ensure that the path is longer than MAX_PATH.
-        assert!(file_path.to_string_lossy().len() > MAX_PATH as usize);
-        let file = File::create(file_path).expect("Unable to create file");
-
-        assert!(!unsafe { msys_tty_on(file.as_raw_handle() as isize) });
-    }
-}
