@@ -28,6 +28,7 @@ pub mod str;
 pub mod time;
 pub mod var;
 pub mod vec2;
+pub mod version;
 pub mod zip;
 
 extern crate alloc;
