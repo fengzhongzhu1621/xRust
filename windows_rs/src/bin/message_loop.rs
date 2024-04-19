@@ -90,7 +90,7 @@ impl Window {
             }
 
             // 如果函数检索 WM_QUIT 消息，则返回值为零。
-            Ok(())
+            return Ok(());
         }
 
         Ok(())
