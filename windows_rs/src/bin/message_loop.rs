@@ -1,8 +1,8 @@
 use windows::core::Result;
 use windows::{
-    core::*, Win32::Foundation::*, Win32::System::DataExchange::*,
+    core::*, Win32::Foundation::*, Win32::Graphics::Gdi::ValidateRect,
     Win32::System::LibraryLoader::GetModuleHandleA,
-    Win32::UI::WindowsAndMessaging::*, Win32_UI_WindowsAndMessaging,
+    Win32::UI::WindowsAndMessaging::*,
 };
 
 fn main() -> Result<()> {
