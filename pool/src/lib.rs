@@ -344,7 +344,7 @@ pub fn threadpool_executor_example() {
         .core_pool_size(1)
         .maximum_pool_size(3)
         .keep_alive_time(std::time::Duration::from_secs(300))
-        .exceed_limit_policy(
+        .exeed_limit_policy(
             threadpool_executor::threadpool::ExceedLimitPolicy::Wait,
         )
         .build();
