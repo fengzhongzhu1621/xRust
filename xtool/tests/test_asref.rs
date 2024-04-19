@@ -1,4 +1,12 @@
-use std::fmt;
+use std::{borrow::Borrow, fmt};
+
+#[test]
+fn test_string() {
+    let s = String::from("hello");
+    let s1: &str = s.borrow();
+    let s2: &str = s.as_ref();
+    assert_eq!(s1, s2);
+}
 
 struct MyStruct {
     pub data: String,
