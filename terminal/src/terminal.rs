@@ -252,6 +252,6 @@ mod tests {
         assert!(file_path.to_string_lossy().len() > MAX_PATH as usize);
         let file = File::create(file_path).expect("Unable to create file");
 
-        assert!(!unsafe { crate::msys_tty_on(file.as_raw_handle() as isize) });
+        assert!(!unsafe { msys_tty_on(file.as_raw_handle() as isize) });
     }
 }
