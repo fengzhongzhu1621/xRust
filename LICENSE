@@ -223,6 +223,7 @@ at licenses/LICENSE-[project].txt.
     (ALv2 License) tempfile v3.8.1 (https://github.com/Stebalien/tempfile)
     (ALv2 License) path_abs v0.5.1 (https://github.com/vitiral/path_abs)
     (ALv2 License) snapbox v0.5.9 (https://github.com/assert-rs/trycmd/tree/main/crates/snapbox)
+    (ALv2 License) os_info v3.8.2 (https://github.com/stanislav-tkach/os_info)
 
 
 ========================================================================

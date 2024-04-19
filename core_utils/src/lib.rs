@@ -16,6 +16,7 @@ pub mod hash;
 pub mod image;
 pub mod kv;
 pub mod logger;
+pub mod matcher;
 pub mod maybe_static;
 pub mod panic;
 pub mod path;

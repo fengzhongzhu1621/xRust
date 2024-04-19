@@ -30,8 +30,8 @@ fn hook(panic_info: &panic::PanicInfo) {
 /// 在panic发出后，在panic运行时之前，触发钩子函数去处理这个panic信息。
 /// panic信息被保存在PanicInfo结构体中。
 pub fn register_panic_hook() {
-    // panic::set_hook(Box::new(|panic_info| {
-    //     hook(panic_info);
-    // }));
+    panic::set_hook(Box::new(|panic_info| {
+        hook(panic_info);
+    }));
     setup_panic!();
 }
