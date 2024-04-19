@@ -1,5 +1,5 @@
 [package]
-name = "wasm1"
+name = "wasm"
 version = "0.1.0"
 authors = ["fengzhongzhu1621 <jinyinqiao@gmail.com>"]
 edition = "2018"
@@ -11,7 +11,7 @@ crate-type = ["cdylib", "rlib"]
 default = ["console_error_panic_hook"]
 
 [dependencies]
-wasm-bindgen = "0.2.84"
+wasm-bindgen = "0.2.92"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires

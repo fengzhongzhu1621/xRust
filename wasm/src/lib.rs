@@ -1,4 +1,4 @@
-mod utils;
+pub mod utils;
 
 use wasm_bindgen::prelude::*;
 
@@ -8,6 +8,7 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-pub fn greet() {
-    alert("Hello, wasm1!");
+pub fn greet(name: &str) {
+    utils::set_panic_hook();
+    alert(&format!("Hello, {}!", name));
 }

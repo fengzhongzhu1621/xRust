@@ -1,7 +1,7 @@
 use core_utils::panic::register_panic_hook;
 use env_logger;
-use log::info;
 use log::LevelFilter;
+use std::thread;
 
 #[test]
 fn test_panic_set_hook() {
@@ -11,4 +11,22 @@ fn test_panic_set_hook() {
         .try_init();
 
     register_panic_hook();
+
+    thread::spawn(|| {
+        panic!("child thread panic");
+    });
+}
+
+#[test]
+fn test_panic_unwrap() {
+    let _ = env_logger::builder()
+        .is_test(true)
+        .filter(None, LevelFilter::Debug)
+        .try_init();
+
+    register_panic_hook();
+
+    thread::spawn(|| {
+        let _ = "abc".parse::<i32>().unwrap();
+    });
 }
