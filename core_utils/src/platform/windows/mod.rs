@@ -6,6 +6,7 @@ pub mod error;
 pub mod file;
 pub mod lock;
 pub mod mem;
+pub mod os_info;
 pub mod signal;
 pub mod system;
 pub mod types;

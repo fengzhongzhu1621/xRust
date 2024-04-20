@@ -1,4 +1,21 @@
 use crate::platform::types::*;
+use windows_sys::Win32::{
+    Foundation::{ERROR_SUCCESS, FARPROC, NTSTATUS, STATUS_SUCCESS},
+    System::{
+        LibraryLoader::{GetModuleHandleA, GetProcAddress},
+        Registry::{
+            RegOpenKeyExW, RegQueryValueExW, HKEY_LOCAL_MACHINE, KEY_READ,
+            REG_SZ,
+        },
+        SystemInformation::{
+            GetNativeSystemInfo, GetSystemInfo, PROCESSOR_ARCHITECTURE_AMD64,
+            PROCESSOR_ARCHITECTURE_ARM, PROCESSOR_ARCHITECTURE_IA64,
+            PROCESSOR_ARCHITECTURE_INTEL, SYSTEM_INFO,
+        },
+        SystemServices::{VER_NT_WORKSTATION, VER_SUITE_WH_SERVER},
+    },
+    UI::WindowsAndMessaging::{GetSystemMetrics, SM_SERVERR2},
+};
 
 pub use error_code::ErrorCode;
 ///Alias to result used by this crate
@@ -120,3 +137,11 @@ pub const GENERIC_WRITE: DWORD = 0x40000000;
 pub const FILE_SHARE_READ: DWORD = 0x00000001;
 pub const FILE_SHARE_WRITE: DWORD = 0x00000002;
 pub const OPEN_EXISTING: DWORD = 3;
+
+#[cfg(target_arch = "x86")]
+type OSVERSIONINFOEX =
+    windows_sys::Win32::System::SystemInformation::OSVERSIONINFOEXA;
+
+#[cfg(not(target_arch = "x86"))]
+type OSVERSIONINFOEX =
+    windows_sys::Win32::System::SystemInformation::OSVERSIONINFOEXW;
