@@ -219,11 +219,11 @@ at licenses/LICENSE-[project].txt.
 
     (ALv2 License) concurrency-programming-via-rust (https://github.com/smallnest/concurrency-programming-via-rust)
     (ALv2 License) windows-rs 0.51.1 (https://github.com/microsoft/windows-rs)
-    (ALv2 License) is-terminal v0.4.9 (https://github.com/sunfishcode/is-terminal)
     (ALv2 License) tempfile v3.8.1 (https://github.com/Stebalien/tempfile)
     (ALv2 License) path_abs v0.5.1 (https://github.com/vitiral/path_abs)
     (ALv2 License) snapbox v0.5.9 (https://github.com/assert-rs/trycmd/tree/main/crates/snapbox)
     (ALv2 License) os_info v3.8.2 (https://github.com/stanislav-tkach/os_info)
+    (ALv2 License) predicates-rs v3.1.0 (https://github.com/assert-rs/predicates-rs)
 
 
 ========================================================================
@@ -246,3 +246,10 @@ The text of each license is also included at licenses/LICENSE-[project].txt.
 
     (MIT License) fslock v0.2.1 (https://github.com/brunoczim/fslock)
     (MIT License) ctrlc 3.4.4 (https://github.com/Detegr/rust-ctrlc)
+    (MIT License) windows-rs 0.51.1 (https://github.com/microsoft/windows-rs)
+    (MIT License) is-terminal v0.4.9 (https://github.com/sunfishcode/is-terminal)
+    (MIT License) tempfile v3.8.1 (https://github.com/Stebalien/tempfile)
+    (MIT License) path_abs v0.5.1 (https://github.com/vitiral/path_abs)
+    (MIT License) snapbox v0.5.9 (https://github.com/assert-rs/trycmd/tree/main/crates/snapbox)
+    (MIT License) os_info v3.8.2 (https://github.com/stanislav-tkach/os_info)
+    (MIT License) predicates-rs v3.1.0 (https://github.com/assert-rs/predicates-rs)

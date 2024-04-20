@@ -3,13 +3,16 @@ use std::borrow::Borrow;
 use std::borrow::Cow;
 use std::collections::HashMap;
 
+#[derive(Debug)]
 struct StudentNo(String);
 
 impl ToOwned for StudentNo {
     type Owned = Student;
 
     fn to_owned(&self) -> Student {
+        // 根据学号查询学生
         let student = STUDENTS.get(&self.0).unwrap();
+        // 返回学生对象
         Student {
             no: StudentNo(self.0.clone()),
             name: student.name.clone(),
@@ -18,6 +21,7 @@ impl ToOwned for StudentNo {
     }
 }
 
+/// 使用 From 将 &StudentNo -> Cow<'a, StudentNo>
 impl<'a> From<&'a StudentNo> for Cow<'a, StudentNo> {
     #[inline]
     fn from(s: &'a StudentNo) -> Cow<'a, StudentNo> {
@@ -31,12 +35,14 @@ struct Student {
     age: u8,
 }
 
+// 学号唯一表示一名学生
 impl Borrow<StudentNo> for Student {
     fn borrow(&self) -> &StudentNo {
         &self.no
     }
 }
 
+/// 使用 From 将 Student -> Cow<'a, StudentNo>
 impl<'a> From<Student> for Cow<'a, StudentNo> {
     #[inline]
     fn from(s: Student) -> Cow<'a, StudentNo> {
@@ -63,9 +69,10 @@ lazy_static! {
 
 #[test]
 fn test_into_owned() {
+    // 获得学生的学号
     let student_no = StudentNo(STUDENT_NO.clone());
 
-    // 复制一个 Student 类型
+    // 转换为Cow<'a StuduentNo>类型，使用into_owned() 复制一个 Student 类型
     let cow_1 = Cow::Borrowed(&student_no);
     let student_1 = cow_1.into_owned();
     assert_eq!(student_1.name, "bob");
@@ -74,7 +81,7 @@ fn test_into_owned() {
     // B 类型是 StudentNo
     // <B as ToOwned>::Owned 类型是 Student
     let cow_2: Cow<'_, StudentNo> = Cow::Owned(student_1);
-    let student_2 = cow_2.into_owned();
+    let student_2 = cow_2.into_owned(); // 没有复制， student_1 和 student_2是同一个对象
     assert_eq!(student_2.name, "bob");
 }
 
@@ -93,7 +100,7 @@ fn test_to_owned() {
     // <B as ToOwned>::Owned 类型是 Student
     let cow_2: Cow<'_, StudentNo> = Cow::Owned(student_2);
     let student_3 = cow_2.to_owned();
-    let student_4 = student_3.into_owned();
+    let student_4 = student_3.into_owned(); // student_3 和 student_4 是同一个对象
     assert_eq!(student_4.name, "bob");
 }
 
@@ -166,6 +173,17 @@ fn test_deref() {
     let student_1 = cow_1.into_owned();
     let cow_2: Cow<'_, StudentNo> = Cow::Owned(student_1);
     assert_eq!(cow_2.0, "A0001");
+}
+
+#[test]
+fn test_as_ref() {
+    let student_no = StudentNo(STUDENT_NO.clone());
+    let cow_1 = Cow::Borrowed(&student_no);
+    assert_eq!(cow_1.as_ref().0, "A0001"); // 转换为 &StudentNo 类型
+
+    let student_1 = cow_1.into_owned();
+    let cow_2: Cow<'_, StudentNo> = Cow::Owned(student_1);
+    assert_eq!(cow_2.as_ref().0, "A0001");
 }
 
 #[test]

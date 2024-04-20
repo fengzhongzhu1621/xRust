@@ -5,25 +5,30 @@ use std::borrow::Cow;
 // and clone the data lazily when mutation or ownership is required.
 pub fn cow_example() {
     let origin = "hello world";
+    // 转化为写时clone智能指针
     let mut cow = Cow::from(origin);
     assert_eq!(cow, "hello world");
 
     // Cow can be borrowed as a str
+    // Cow<'a str> -> &str
     let s: &str = &cow;
     assert_eq!(s, "hello world");
 
     // Cow can be borrowed as a mut str
+    // cow<'a str> -> &mut str
     let s: &mut str = cow.to_mut();
     s.make_ascii_uppercase();
     assert_eq!(s, "HELLO WORLD");
     assert_eq!(origin, "hello world");
 
     // Cow can be cloned
+    // clone 如果是Borrowd，不会真的拷贝数据
     let cow2 = cow.clone();
     assert_eq!(cow2, "HELLO WORLD");
     assert_eq!(origin, "hello world");
 
     // Cow can be converted to a String
+    // Cow<'a str> -> String
     let s: String = cow.into();
     assert_eq!(s, "HELLO WORLD");
 }
