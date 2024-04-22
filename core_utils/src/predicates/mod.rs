@@ -3,13 +3,13 @@ mod child;
 mod parameter;
 mod predicate;
 mod product;
-mod relection;
+mod reflection;
 mod tree;
 
 pub use case::*;
 pub use child::*;
 pub use parameter::*;
-pub use preducate::*;
+pub use predicate::*;
 pub use product::*;
-pub use relection::*;
+pub use reflection::*;
 pub use tree::*;

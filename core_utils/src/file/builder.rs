@@ -45,6 +45,7 @@ impl<'a, 'b> Builder<'a, 'b> {
         self
     }
 
+    #[allow(dead_code)]
     pub fn suffix<S: AsRef<OsStr> + ?Sized>(
         &mut self,
         suffix: &'b S,
@@ -53,6 +54,7 @@ impl<'a, 'b> Builder<'a, 'b> {
         self
     }
 
+    #[allow(dead_code)]
     pub fn rand_bytes(&mut self, rand: usize) -> &mut Self {
         self.random_len = rand;
         self

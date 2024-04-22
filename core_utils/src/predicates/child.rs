@@ -1,4 +1,4 @@
-use super::relection::PredicateReflection;
+use super::reflection::PredicateReflection;
 use std::fmt;
 
 pub struct Child<'a>(&'a str, &'a dyn PredicateReflection);

@@ -1,7 +1,7 @@
 #![allow(dead_code)]
-use core_utils::ffi::win::*;
-use core_utils::ffi::types::c_uint;
 use super::action::*;
+use core_utils::platform::types::*;
+use core_utils::platform::windows::types::*;
 
 ///Describes format getter, specifying data type as type param
 ///
@@ -19,7 +19,6 @@ pub trait Setter<Type: ?Sized> {
     fn write_clipboard(&self, data: &Type) -> SysResult<()>;
 }
 
-
 ///Format to write/read from clipboard as raw bytes
 ///
 ///Has to be initialized with format `id`
@@ -34,7 +33,10 @@ impl<T: AsRef<[u8]>> Setter<T> for RawData {
 
 impl Getter<alloc::vec::Vec<u8>> for RawData {
     #[inline(always)]
-    fn read_clipboard(&self, out: &mut alloc::vec::Vec<u8>) -> SysResult<usize> {
+    fn read_clipboard(
+        &self,
+        out: &mut alloc::vec::Vec<u8>,
+    ) -> SysResult<usize> {
         get_vec(self.0, out)
     }
 }
@@ -46,14 +48,20 @@ pub struct Unicode;
 
 impl Getter<alloc::vec::Vec<u8>> for Unicode {
     #[inline(always)]
-    fn read_clipboard(&self, out: &mut alloc::vec::Vec<u8>) -> SysResult<usize> {
+    fn read_clipboard(
+        &self,
+        out: &mut alloc::vec::Vec<u8>,
+    ) -> SysResult<usize> {
         get_string(out)
     }
 }
 
 impl Getter<alloc::string::String> for Unicode {
     #[inline(always)]
-    fn read_clipboard(&self, out: &mut alloc::string::String) -> SysResult<usize> {
+    fn read_clipboard(
+        &self,
+        out: &mut alloc::string::String,
+    ) -> SysResult<usize> {
         self.read_clipboard(unsafe { out.as_mut_vec() })
     }
 }
@@ -74,7 +82,10 @@ pub struct FileList;
 
 impl Getter<alloc::vec::Vec<alloc::string::String>> for FileList {
     #[inline(always)]
-    fn read_clipboard(&self, out: &mut alloc::vec::Vec<alloc::string::String>) -> SysResult<usize> {
+    fn read_clipboard(
+        &self,
+        out: &mut alloc::vec::Vec<alloc::string::String>,
+    ) -> SysResult<usize> {
         get_file_list(out)
     }
 }
@@ -82,7 +93,10 @@ impl Getter<alloc::vec::Vec<alloc::string::String>> for FileList {
 #[cfg(feature = "std")]
 impl Getter<alloc::vec::Vec<std::path::PathBuf>> for FileList {
     #[inline(always)]
-    fn read_clipboard(&self, out: &mut alloc::vec::Vec<std::path::PathBuf>) -> SysResult<usize> {
+    fn read_clipboard(
+        &self,
+        out: &mut alloc::vec::Vec<std::path::PathBuf>,
+    ) -> SysResult<usize> {
         get_file_list_path(out)
     }
 }
@@ -101,7 +115,10 @@ pub struct Bitmap;
 
 impl Getter<alloc::vec::Vec<u8>> for Bitmap {
     #[inline(always)]
-    fn read_clipboard(&self, out: &mut alloc::vec::Vec<u8>) -> SysResult<usize> {
+    fn read_clipboard(
+        &self,
+        out: &mut alloc::vec::Vec<u8>,
+    ) -> SysResult<usize> {
         get_bitmap(out)
     }
 }

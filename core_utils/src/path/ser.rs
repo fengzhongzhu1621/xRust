@@ -1,4 +1,4 @@
-use super::{Error, Result};
+use super::Result;
 use super::{PathAbs, PathDir, PathFile};
 use super::{PathMut, PathOps};
 use serde::{self, Deserialize, Deserializer, Serialize, Serializer};

@@ -1,10 +1,12 @@
+use super::types::OSVERSIONINFOEX;
+use crate::version::Version;
+use std::fmt::{self, Display, Formatter};
 use std::{
     ffi::{OsStr, OsString},
     mem::{self, MaybeUninit},
     os::windows::ffi::{OsStrExt, OsStringExt},
     ptr,
 };
-
 use windows_sys::Win32::{
     Foundation::{ERROR_SUCCESS, FARPROC, NTSTATUS, STATUS_SUCCESS},
     System::{
@@ -23,15 +25,74 @@ use windows_sys::Win32::{
     UI::WindowsAndMessaging::{GetSystemMetrics, SM_SERVERR2},
 };
 
-use crate::{Bitness, Info, Type, Version};
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct Info {
+    /// Operating system type. See `Type` for details.
+    pub(crate) os_type: Type,
+    /// Operating system version. See `Version` for details.
+    pub(crate) version: Version,
+    /// Operating system edition.
+    pub(crate) edition: Option<String>,
+    /// Operating system codename.
+    pub(crate) codename: Option<String>,
+    /// Operating system architecture in terms of how many bits compose the basic values it can deal
+    /// with. See `Bitness` for details.
+    pub(crate) bitness: Bitness,
+    /// Processor architecture.
+    pub(crate) architecture: Option<String>,
+}
 
-#[cfg(target_arch = "x86")]
-type OSVERSIONINFOEX =
-    windows_sys::Win32::System::SystemInformation::OSVERSIONINFOEXA;
+impl Default for Info {
+    fn default() -> Self {
+        Self::unknown()
+    }
+}
 
-#[cfg(not(target_arch = "x86"))]
-type OSVERSIONINFOEX =
-    windows_sys::Win32::System::SystemInformation::OSVERSIONINFOEXW;
+impl Info {
+    pub fn unknown() -> Self {
+        Self {
+            os_type: Type::Unknown,
+            version: Version::Unknown,
+            edition: None,
+            codename: None,
+            bitness: Bitness::Unknown,
+            architecture: None,
+        }
+    }
+
+    pub fn os_type(&self) -> Type {
+        self.os_type
+    }
+}
+impl Display for Info {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        write!(f, "{}", self.os_type)?;
+        if self.version != Version::Unknown {
+            write!(f, " {}", self.version)?;
+        }
+        if let Some(ref edition) = self.edition {
+            write!(f, " ({edition})")?;
+        }
+        if let Some(ref codename) = self.codename {
+            write!(f, " ({codename})")?;
+        }
+        write!(f, " [{}]", self.bitness)
+    }
+}
+
+/// Operating system architecture in terms of how many bits compose the basic values it can deal with.
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[non_exhaustive]
+pub enum Bitness {
+    /// Unknown bitness (unable to determine).
+    Unknown,
+    /// 32-bit.
+    X32,
+    /// 64-bit.
+    X64,
+}
 
 pub fn get() -> Info {
     let (version, edition) = version();
@@ -93,6 +154,162 @@ fn architecture(system_info: SYSTEM_INFO) -> Option<String> {
 fn bitness() -> Bitness {
     // x64 program can only run on x64 Windows.
     Bitness::X64
+}
+
+impl Display for Bitness {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        match *self {
+            Bitness::Unknown => write!(f, "unknown bitness"),
+            Bitness::X32 => write!(f, "32-bit"),
+            Bitness::X64 => write!(f, "64-bit"),
+        }
+    }
+}
+
+/// A list of supported operating system types.
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[allow(non_camel_case_types, clippy::upper_case_acronyms)]
+#[non_exhaustive]
+pub enum Type {
+    /// IBM AIX (<https://en.wikipedia.org/wiki/IBM_AIX>).
+    AIX,
+    /// AlmaLinux (<https://en.wikipedia.org/wiki/AlmaLinux>).
+    AlmaLinux,
+    /// Alpaquita Linux (<https://bell-sw.com/alpaquita-linux/>).
+    Alpaquita,
+    /// Alpine Linux (<https://en.wikipedia.org/wiki/Alpine_Linux>).
+    Alpine,
+    /// Amazon Linux AMI (<https://en.wikipedia.org/wiki/Amazon_Machine_Image#Amazon_Linux_AMI>).
+    Amazon,
+    /// Android (<https://en.wikipedia.org/wiki/Android_(operating_system)>).
+    Android,
+    /// Arch Linux (<https://en.wikipedia.org/wiki/Arch_Linux>).
+    Arch,
+    /// Artix Linux (<https://en.wikipedia.org/wiki/Artix_Linux>).
+    Artix,
+    /// CentOS (<https://en.wikipedia.org/wiki/CentOS>).
+    CentOS,
+    /// Debian (<https://en.wikipedia.org/wiki/Debian>).
+    Debian,
+    /// DragonFly BSD (<https://en.wikipedia.org/wiki/DragonFly_BSD>).
+    DragonFly,
+    /// Emscripten (<https://en.wikipedia.org/wiki/Emscripten>).
+    Emscripten,
+    /// EndeavourOS (<https://en.wikipedia.org/wiki/EndeavourOS>).
+    EndeavourOS,
+    /// Fedora (<https://en.wikipedia.org/wiki/Fedora_(operating_system)>).
+    Fedora,
+    /// FreeBSD (<https://en.wikipedia.org/wiki/FreeBSD>).
+    FreeBSD,
+    /// Garuda Linux (<https://en.wikipedia.org/wiki/Garuda_Linux>)
+    Garuda,
+    /// Gentoo Linux (<https://en.wikipedia.org/wiki/Gentoo_Linux>).
+    Gentoo,
+    /// HardenedBSD (https://hardenedbsd.org/).
+    HardenedBSD,
+    /// Illumos (https://en.wikipedia.org/wiki/Illumos).
+    Illumos,
+    /// Kali Linux (https://en.wikipedia.org/wiki/Kali_Linux).
+    Kali,
+    /// Linux based operating system (<https://en.wikipedia.org/wiki/Linux>).
+    Linux,
+    /// Mabox (<https://maboxlinux.org/>).
+    Mabox,
+    /// Mac OS X/OS X/macOS (<https://en.wikipedia.org/wiki/MacOS>).
+    Macos,
+    /// Manjaro (<https://en.wikipedia.org/wiki/Manjaro>).
+    Manjaro,
+    /// Mariner (<https://en.wikipedia.org/wiki/CBL-Mariner>).
+    Mariner,
+    /// MidnightBSD (<https://en.wikipedia.org/wiki/MidnightBSD>).
+    MidnightBSD,
+    /// Mint (<https://en.wikipedia.org/wiki/Linux_Mint>).
+    Mint,
+    /// NetBSD (<https://en.wikipedia.org/wiki/NetBSD>).
+    NetBSD,
+    /// NixOS (<https://en.wikipedia.org/wiki/NixOS>).
+    NixOS,
+    /// Nobara (<https://nobaraproject.org/>).
+    Nobara,
+    /// Uos (<https://www.chinauos.com/>).
+    Uos,
+    /// OpenBSD (<https://en.wikipedia.org/wiki/OpenBSD>).
+    OpenBSD,
+    /// OpenCloudOS (<https://www.opencloudos.org>).
+    OpenCloudOS,
+    /// openEuler (<https://en.wikipedia.org/wiki/EulerOS>).
+    openEuler,
+    /// openSUSE (<https://en.wikipedia.org/wiki/OpenSUSE>).
+    openSUSE,
+    /// Oracle Linux (<https://en.wikipedia.org/wiki/Oracle_Linux>).
+    OracleLinux,
+    /// Pop!_OS (<https://en.wikipedia.org/wiki/Pop!_OS>)
+    Pop,
+    /// Raspberry Pi OS (<https://en.wikipedia.org/wiki/Raspberry_Pi_OS>).
+    Raspbian,
+    /// Red Hat Linux (<https://en.wikipedia.org/wiki/Red_Hat_Linux>).
+    Redhat,
+    /// Red Hat Enterprise Linux (<https://en.wikipedia.org/wiki/Red_Hat_Enterprise_Linux>).
+    RedHatEnterprise,
+    /// Redox (<https://en.wikipedia.org/wiki/Redox_(operating_system)>).
+    Redox,
+    /// Rocky Linux (<https://en.wikipedia.org/wiki/Rocky_Linux>).
+    RockyLinux,
+    /// Solus (<https://en.wikipedia.org/wiki/Solus_(operating_system)>).
+    Solus,
+    /// SUSE Linux Enterprise Server (<https://en.wikipedia.org/wiki/SUSE_Linux_Enterprise>).
+    SUSE,
+    /// Ubuntu (<https://en.wikipedia.org/wiki/Ubuntu_(operating_system)>).
+    Ubuntu,
+    /// Ultramarine (<https://ultramarine-linux.org/>).
+    Ultramarine,
+    /// Void Linux (<https://en.wikipedia.org/wiki/Void_Linux>).
+    Void,
+    /// Unknown operating system.
+    Unknown,
+    /// Windows (<https://en.wikipedia.org/wiki/Microsoft_Windows>).
+    Windows,
+}
+
+impl Default for Type {
+    fn default() -> Self {
+        Type::Unknown
+    }
+}
+
+impl Display for Type {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        match *self {
+            Type::Alpaquita => write!(f, "Alpaquita Linux"),
+            Type::Alpine => write!(f, "Alpine Linux"),
+            Type::AlmaLinux => write!(f, "AlmaLinux"),
+            Type::Amazon => write!(f, "Amazon Linux AMI"),
+            Type::Arch => write!(f, "Arch Linux"),
+            Type::Artix => write!(f, "Artix Linux"),
+            Type::DragonFly => write!(f, "DragonFly BSD"),
+            Type::Garuda => write!(f, "Garuda Linux"),
+            Type::Gentoo => write!(f, "Gentoo Linux"),
+            Type::Illumos => write!(f, "illumos"),
+            Type::Kali => write!(f, "Kali Linux"),
+            Type::Macos => write!(f, "Mac OS"),
+            Type::MidnightBSD => write!(f, "Midnight BSD"),
+            Type::Mint => write!(f, "Linux Mint"),
+            Type::Nobara => write!(f, "Nobara Linux"),
+            Type::Uos => write!(f, "Uos"),
+            Type::openEuler => write!(f, "EulerOS"),
+            Type::OracleLinux => write!(f, "Oracle Linux"),
+            Type::Pop => write!(f, "Pop!_OS"),
+            Type::Raspbian => write!(f, "Raspberry Pi OS"),
+            Type::Redhat => write!(f, "Red Hat Linux"),
+            Type::RedHatEnterprise => write!(f, "Red Hat Enterprise Linux"),
+            Type::RockyLinux => write!(f, "Rocky Linux"),
+            Type::SUSE => write!(f, "SUSE Linux Enterprise Server"),
+            Type::Ultramarine => write!(f, "Ultramarine Linux"),
+            Type::Void => write!(f, "Void Linux"),
+            _ => write!(f, "{self:?}"),
+        }
+    }
 }
 
 #[cfg(target_pointer_width = "32")]

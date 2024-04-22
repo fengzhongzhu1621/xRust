@@ -1,5 +1,5 @@
 use super::product::{CaseProducts, Product};
-use super::relection::PredicateReflection;
+use super::reflection::PredicateReflection;
 use std::fmt;
 use std::slice;
 

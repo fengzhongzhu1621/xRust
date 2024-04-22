@@ -1,10 +1,9 @@
 #![allow(dead_code)]
-use core_utils::ffi::win::*;
-use core_utils::ffi::types::*;
-use super::formats::{Unicode, Setter, Getter};
+use super::formats::{Getter, Setter, Unicode};
+use core_utils::platform::windows::{clipboard, system::*, types::*};
 
 pub struct Clipboard {
-    _dummy: ()
+    _dummy: (),
 }
 
 impl Clipboard {
@@ -35,7 +34,7 @@ impl Clipboard {
                 Err(err) => match num {
                     0 => break Err(err),
                     _ => num -= 1,
-                }
+                },
             }
 
             //0 causes to yield remaining time in scheduler, but remain to be scheduled once again.
@@ -65,7 +64,10 @@ pub fn with_clipboard<F: FnMut()>(mut cb: F) -> SysResult<()> {
 ///
 ///If clipboard fails to open, attempts `num` number of retries before giving up.
 ///In which case closure is not called
-pub fn with_clipboard_attempts<F: FnMut()>(num: usize, mut cb: F) -> SysResult<()> {
+pub fn with_clipboard_attempts<F: FnMut()>(
+    num: usize,
+    mut cb: F,
+) -> SysResult<()> {
     let _clip = Clipboard::new_attempts(num)?;
     cb();
     Ok(())
@@ -117,5 +119,3 @@ pub fn get_clipboard_string() -> SysResult<alloc::string::String> {
 pub fn set_clipboard_string(data: &str) -> SysResult<()> {
     set_clipboard(Unicode, data)
 }
-
-

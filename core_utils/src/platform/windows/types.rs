@@ -1,21 +1,4 @@
 use crate::platform::types::*;
-use windows_sys::Win32::{
-    Foundation::{ERROR_SUCCESS, FARPROC, NTSTATUS, STATUS_SUCCESS},
-    System::{
-        LibraryLoader::{GetModuleHandleA, GetProcAddress},
-        Registry::{
-            RegOpenKeyExW, RegQueryValueExW, HKEY_LOCAL_MACHINE, KEY_READ,
-            REG_SZ,
-        },
-        SystemInformation::{
-            GetNativeSystemInfo, GetSystemInfo, PROCESSOR_ARCHITECTURE_AMD64,
-            PROCESSOR_ARCHITECTURE_ARM, PROCESSOR_ARCHITECTURE_IA64,
-            PROCESSOR_ARCHITECTURE_INTEL, SYSTEM_INFO,
-        },
-        SystemServices::{VER_NT_WORKSTATION, VER_SUITE_WH_SERVER},
-    },
-    UI::WindowsAndMessaging::{GetSystemMetrics, SM_SERVERR2},
-};
 
 pub use error_code::ErrorCode;
 ///Alias to result used by this crate
@@ -27,11 +10,14 @@ pub type FileDesc = HANDLE;
 /// A type representing Process ID on Windows.
 pub type Pid = DWORD;
 
+#[allow(non_camel_case_types)]
 pub type wchar_t = u16;
 pub type HANDLE = *mut c_void; // 等于 C 的 void*。
 pub type HGLOBAL = HANDLE;
 pub type BOOL = c_int;
+#[allow(non_camel_case_types)]
 pub type ULONG_PTR = usize;
+#[allow(non_camel_case_types)]
 pub type SIZE_T = ULONG_PTR;
 pub type HWND = HANDLE;
 pub type WORD = c_ushort;
@@ -44,9 +30,11 @@ pub type LPVOID = *mut c_void;
 pub type HDC = *mut c_void;
 pub type HDROP = *mut c_void;
 pub type HBITMAP = *mut c_void;
-
+#[allow(non_camel_case_types)]
 pub type LPSECURITY_ATTRIBUTES = *mut SECURITY_ATTRIBUTES;
 
+#[allow(non_camel_case_types)]
+#[allow(non_snake_case)]
 #[repr(C)]
 pub struct SECURITY_ATTRIBUTES {
     pub nLength: DWORD,
@@ -61,6 +49,7 @@ pub struct POINT {
     pub y: c_long,
 }
 
+#[allow(non_snake_case)]
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct BITMAPINFOHEADER {
@@ -77,6 +66,7 @@ pub struct BITMAPINFOHEADER {
     pub biClrImportant: DWORD, // 指定本图象中重要的颜色数，如果该值为零，则认为所有的颜色都是重要的。
 }
 
+#[allow(non_snake_case)]
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct RGBQUAD {
@@ -86,6 +76,7 @@ pub struct RGBQUAD {
     pub rgbReserved: c_uchar,
 }
 
+#[allow(non_snake_case)]
 #[repr(C)]
 #[derive(Copy, Clone)]
 // 定义了DIB(设备无关位图)的大小和颜色信息。
@@ -94,6 +85,7 @@ pub struct BITMAPINFO {
     pub bmiColors: [RGBQUAD; 1], // 1、RGBQUAD数组，每个项组成了颜色表 2、16位无符号整型数组，指定了当前以实现的逻辑调色板的索引
 }
 
+#[allow(non_snake_case)]
 #[repr(C)]
 #[derive(Copy, Clone)]
 // 定义了逻辑位图的高度、宽度、颜色格式和位值。
@@ -107,6 +99,7 @@ pub struct BITMAP {
     pub bmBits: LPVOID,    // 指向位图数据内存的地址
 }
 
+#[allow(non_snake_case)]
 #[repr(C)]
 #[repr(packed)]
 #[derive(Copy, Clone)]
@@ -139,9 +132,9 @@ pub const FILE_SHARE_WRITE: DWORD = 0x00000002;
 pub const OPEN_EXISTING: DWORD = 3;
 
 #[cfg(target_arch = "x86")]
-type OSVERSIONINFOEX =
+pub type OSVERSIONINFOEX =
     windows_sys::Win32::System::SystemInformation::OSVERSIONINFOEXA;
 
 #[cfg(not(target_arch = "x86"))]
-type OSVERSIONINFOEX =
+pub type OSVERSIONINFOEX =
     windows_sys::Win32::System::SystemInformation::OSVERSIONINFOEXW;
