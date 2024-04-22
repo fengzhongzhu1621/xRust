@@ -15,6 +15,7 @@ pub mod error;
 pub mod file;
 pub mod hash;
 pub mod image;
+pub mod iterator;
 pub mod kv;
 pub mod logger;
 pub mod matcher;

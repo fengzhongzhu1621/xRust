@@ -224,6 +224,7 @@ at licenses/LICENSE-[project].txt.
     (ALv2 License) snapbox v0.5.9 (https://github.com/assert-rs/trycmd/tree/main/crates/snapbox)
     (ALv2 License) os_info v3.8.2 (https://github.com/stanislav-tkach/os_info)
     (ALv2 License) predicates-rs v3.1.0 (https://github.com/assert-rs/predicates-rs)
+    (ALv2 License) normalize-line-endings v0.3.0 (https://github.com/derekdreery/normalize-line-endings.git)
 
 
 ========================================================================

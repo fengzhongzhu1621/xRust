@@ -7,7 +7,7 @@ static STOP_FLAG: OnceLock<AtomicBool> = OnceLock::new();
 
 #[test]
 fn test_ctrlc() {
-    let (tx, rx) = channel();
+    let (tx, _) = channel();
 
     ctrlc::set_handler(move || {
         tx.send(()).expect("Could not send signal on channel.");
