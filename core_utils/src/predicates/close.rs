@@ -1,7 +1,7 @@
 use super::case::Case;
 use super::color::Palette;
 use super::parameter::Parameter;
-use super::predicate::Predicate;
+use super::predicate::{default_find_case, Predicate};
 use super::product::Product;
 use super::reflection::PredicateReflection;
 use float_cmp::ApproxEq;
@@ -58,17 +58,16 @@ impl Predicate<f64> for IsClosePredicate {
         // 执行断言，返回断言的结果
         let actual = self.eval(variable);
         if expected == actual {
-            Some(
-                Case::new(Some(self), actual)
-                    .add_product(Product::new(
-                        "actual epsilon",
-                        (variable - self.target).abs(), // 浮点数差值
-                    ))
-                    .add_product(Product::new(
-                        "actual ulps",
-                        variable.ulps(&self.target).abs(), // 浮点数转换为整数的差值
-                    )),
-            )
+            default_find_case(self, expected, variable).map(|case| {
+                case.add_product(Product::new(
+                    "actual epsilon",
+                    (variable - self.target).abs(), // 浮点数差值
+                ))
+                .add_product(Product::new(
+                    "actual ulps",
+                    variable.ulps(&self.target).abs(), // 浮点数转换为整数的差值
+                ))
+            })
         } else {
             None
         }

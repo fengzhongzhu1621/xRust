@@ -1,4 +1,4 @@
-use core_utils::predicates::{self, Predicate};
+use core_utils::predicates::{self, predicate::Predicate};
 
 #[test]
 fn test_predicate_is_close() {
@@ -7,7 +7,7 @@ fn test_predicate_is_close() {
     let c = 0.451_f64;
 
     // 在默认误差范围内比较 a 和 b 的大小
-    let predicate_fn = predicates::is_close(a);
+    let predicate_fn = predicates::close::is_close(a);
     assert_eq!(true, predicate_fn.eval(&b));
 
     // 在误差范围是 0 时，比较 a 和 b 的大小

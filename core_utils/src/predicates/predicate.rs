@@ -29,3 +29,20 @@ pub trait Predicate<Item: ?Sized>: PredicateReflection {
         }
     }
 }
+
+pub fn default_find_case<'a, P, Item>(
+    pred: &'a P,
+    expected: bool,
+    variable: &Item,
+) -> Option<Case<'a>>
+where
+    P: Predicate<Item>,
+    Item: ?Sized,
+{
+    let actual = pred.eval(variable);
+    if expected == actual {
+        Some(Case::new(Some(pred), actual))
+    } else {
+        None
+    }
+}
