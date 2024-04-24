@@ -2,7 +2,7 @@
 
 #![cfg(target_arch = "wasm32")]
 
-use wasm::utils::set_once;
+use wasm::set_once;
 use wasm_bindgen_test::*;
 
 wasm_bindgen_test_configure!(run_in_browser);

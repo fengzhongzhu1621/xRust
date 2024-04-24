@@ -1,14 +1,15 @@
-pub mod utils;
+mod greet;
+mod point;
+mod utils;
 
+pub use greet::*;
+pub use point::*;
+pub use utils::*;
+
+use console_error_panic_hook;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-extern "C" {
-    fn alert(s: &str);
-}
-
-#[wasm_bindgen]
-pub fn greet(name: &str) {
-    utils::set_panic_hook();
-    alert(&format!("Hello, {}!", name));
+pub fn init() {
+    console_error_panic_hook::set_once();
 }
