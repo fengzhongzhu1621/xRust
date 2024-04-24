@@ -38,7 +38,7 @@ fn convert(case: &Case<'_>) -> CaseTreeInner {
     // 创建断言子结点
     leaves.extend(case.children().map(convert));
 
-    // 创建根结点
+    // 创建根结点，如果没有断言则返回Displayable的默认值
     let root =
         case.predicate().map(|p| Displayable::new(&p)).unwrap_or_default();
 

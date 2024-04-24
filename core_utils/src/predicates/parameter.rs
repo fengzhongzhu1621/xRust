@@ -1,5 +1,6 @@
 use std::fmt;
 
+/// 断言参数
 pub struct Parameter<'a>(&'a str, &'a dyn fmt::Display);
 
 impl<'a> Parameter<'a> {

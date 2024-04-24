@@ -49,11 +49,13 @@ impl<'a> Case<'a> {
     }
 
     /// Access the by-products from determining this case.
+    /// 转化为自定义的迭代器
     pub fn products(&self) -> CaseProducts<'_> {
         CaseProducts(self.products.iter())
     }
 
     /// Access the sub-cases.
+    /// 转换为自定义的迭代器
     pub fn children(&self) -> CaseChildren<'_> {
         CaseChildren(self.children.iter())
     }

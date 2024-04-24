@@ -1,5 +1,6 @@
 use std::fmt;
 
+// 定义一个可现显示的结点
 #[derive(Default)]
 pub struct Displayable {
     primary: String,   // {} 的打印内容
