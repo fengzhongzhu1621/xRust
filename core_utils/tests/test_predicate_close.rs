@@ -22,4 +22,16 @@ fn test_is_close() {
     assert_eq!(false, predicate_fn.distance(10).eval(&c));
     assert_eq!(false, predicate_fn.distance(100).eval(&c));
     assert_eq!(false, predicate_fn.distance(100000).eval(&c));
+
+    println!("{}", predicate_fn);
+    println!("{:#}", predicate_fn);
+    println!("{:#?}", predicate_fn);
+
+    // var != 0.44999999999999996
+    // var != 0.44999999999999996 // 有颜色
+    // IsClosePredicate {
+    //     target: 0.44999999999999996,
+    //     epsilon: 4.440892098500626e-16,
+    //     ulps: 2,
+    // }
 }

@@ -24,6 +24,7 @@ impl IsClosePredicate {
         self.epsilon = (distance as f64) * ::std::f64::EPSILON;
         // 浮点数转换为整数的差值
         self.ulps = distance;
+        // 返回一个 clone，即此函数不会影响当前对象的值
         self
     }
 
@@ -93,13 +94,23 @@ impl fmt::Display for IsClosePredicate {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         // 创建一个调色板
         let palette = Palette::new(f.alternate());
-        write!(
-            f,
-            "{} {} {}",
-            palette.var("var"),            // 红色粗体
-            palette.description("!="),     // 蓝色粗体
-            palette.expected(self.target), // 绿色粗体
-        )
+        if (f.alternate()) {
+            write!(
+                f,
+                "{:#} {:#} {:#}",
+                palette.var("var"),            // 红色粗体
+                palette.description("!="),     // 蓝色粗体
+                palette.expected(self.target), // 绿色粗体
+            )
+        } else {
+            write!(
+                f,
+                "{} {} {}",
+                palette.var("var"),            // 红色粗体
+                palette.description("!="),     // 蓝色粗体
+                palette.expected(self.target), // 绿色粗体
+            )
+        }
     }
 }
 
