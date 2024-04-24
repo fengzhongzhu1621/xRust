@@ -1,7 +1,7 @@
 use core_utils::predicates::{self, Predicate};
 
 #[test]
-fn test_is_close() {
+fn test_predicate_is_close() {
     let a = 0.15_f64 + 0.15_f64 + 0.15_f64; // 0.45
     let b = 0.1_f64 + 0.1_f64 + 0.25_f64; // 0.45
     let c = 0.451_f64;
