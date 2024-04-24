@@ -9,11 +9,10 @@ use super::reflection::PredicateReflection;
 /// different from `Ord` and `Eq` in that an `item` will almost never be the
 /// same type as the implementing `Predicate` type.
 pub trait Predicate<Item: ?Sized>: PredicateReflection {
-    /// Execute this `Predicate` against `variable`, returning the resulting
-    /// boolean.
     /// 执行断言，返回断言的结果
     fn eval(&self, variable: &Item) -> bool;
 
+    /// 返回断言成功的描述信息
     /// Find a case that proves this predicate as `expected` when run against `variable`.
     fn find_case<'a>(
         &'a self,
@@ -23,6 +22,7 @@ pub trait Predicate<Item: ?Sized>: PredicateReflection {
         // 返回断言的执行结果
         let actual = self.eval(variable);
         if expected == actual {
+            // 返回断言成功的描述信息
             Some(Case::new(None, actual))
         } else {
             None

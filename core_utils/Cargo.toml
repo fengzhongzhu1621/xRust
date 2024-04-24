@@ -7,6 +7,7 @@ publish = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+anstyle = "1.0.6"
 anyhow = "1.0.81"
 base64 = "0.22.0"
 bmp-rust = "0.4.1"
@@ -16,6 +17,7 @@ env_logger = "0.11.3"
 error-code = "3.0.0"
 fastrand = "2.0.1"
 file-hashing = "0.1.2"
+float-cmp = "0.9.0"
 fslock = "0.2.1"
 human-panic = "1.2.3"
 image = "0.25.0"
@@ -40,13 +42,14 @@ zip = "0.6.6"
 zip-extensions = "0.6.2"
 
 [features]
-default = ["detect-tty", "detect-env", "std", "serialize"]
+default = ["detect-tty", "detect-env", "std", "serialize", "color"]
 detect-env = ["std"]
 detect-tty = ["is-terminal", "std"]
 std = ["alloc"]
 alloc = []
 serialize = ["serde", "serde_derive", "stfu8"]
 serde = ["dep:serde"]
+color = []
 
 [dependencies.windows]
 version = "0.52"
