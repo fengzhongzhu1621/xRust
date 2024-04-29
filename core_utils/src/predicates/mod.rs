@@ -1,10 +1,7 @@
-pub mod case;
-pub mod child;
 pub mod close;
-pub mod color;
+pub mod core;
 pub mod existence;
-pub mod parameter;
-pub mod predicate;
-pub mod product;
-pub mod reflection;
-pub mod tree;
+
+pub use close::*;
+pub use core::*;
+pub use existence::*;
