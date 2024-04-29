@@ -1,12 +1,12 @@
 use core_utils::predicates::{self, core::Predicate};
 
 #[test]
-fn test_predicate_str_startwith() {
-    let predicate_fn = predicates::str::starts_with("Hello");
+fn test_predicate_str_endswith() {
+    let predicate_fn = predicates::str::ends_with("World");
     let expect = r#"
 Some(
     Case {
-        predicate: "Some(var.starts_with(\"Hello\"))",
+        predicate: "Some(var.ends_with(\"World\"))",
         result: true,
         products: [
             ("var", Hello World),
