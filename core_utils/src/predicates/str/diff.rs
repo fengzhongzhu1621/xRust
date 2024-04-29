@@ -106,6 +106,11 @@ fn colorize_diff(mut lines: Vec<String>, palette: Palette) -> Vec<String> {
     lines
 }
 
+#[cfg(not(feature = "color"))]
+fn colorize_diff(lines: Vec<String>, _palette: crate::Palette) -> Vec<String> {
+    lines
+}
+
 pub fn diff<S>(orig: S) -> DifferencePredicate
 where
     S: Into<borrow::Cow<'static, str>>,

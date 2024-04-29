@@ -1,4 +1,28 @@
-use core_utils::predicates::{self, core::Predicate, PredicateBooleanExt};
+use core_utils::predicates::{
+    self,
+    core::{CaseTreeExt, Predicate},
+    PredicateBooleanExt,
+};
+
+#[test]
+fn test_predicate_and_case_tree() {
+    let pred = predicates::ne(5).not().and(predicates::ge(5));
+
+    let var = 5;
+    let case = pred.find_case(true, &var);
+    if let Some(case) = case {
+        println!("var is {}", var);
+        println!("{}", case.tree());
+
+        // var is 5
+        // ((! var != 5) && var >= 5)
+        // ├── (! var != 5)
+        // │   └── var != 5
+        // │       └── var: 5
+        // └── var >= 5
+        //     └── var: 5
+    }
+}
 
 #[test]
 fn test_predicate_always() {

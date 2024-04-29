@@ -1,4 +1,7 @@
-use core_utils::predicates::{self, core::Predicate};
+use core_utils::predicates::{
+    self,
+    core::{CaseTreeExt, Predicate},
+};
 
 #[test]
 fn test_predicate_diff() {
@@ -15,7 +18,7 @@ fn test_predicate_diff() {
     //         predicate: "Some(diff original var)",
     //         result: true,
     //         products: [
-    //             ("diff", 
+    //             ("diff",
     //             ---         orig
     //             +++         var
     //             @@ -1 +1 @@
@@ -26,9 +29,18 @@ fn test_predicate_diff() {
     //         children: [],
     //     },
     // )
-}
 
-#[cfg(not(feature = "color"))]
-fn colorize_diff(lines: Vec<String>, _palette: crate::Palette) -> Vec<String> {
-    lines
+    if let Some(case) = predicate_fn.find_case(false, "Goodbye World") {
+        let tree = case.tree();
+        println!("{}", tree);
+    }
+
+    // diff original var
+    // ├── original: Hello World
+    // └── diff:
+    //     ---         orig
+    //     +++         var
+    //     @@ -1 +1 @@
+    //     -Hello World
+    //     +Goodbye World
 }
