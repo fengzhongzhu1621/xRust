@@ -1,6 +1,4 @@
-use crate::predicates::core::{
-    Case, Child, Palette, Parameter, Predicate, PredicateReflection, Product,
-};
+use crate::predicates::core::{Case, Child, Predicate, PredicateReflection};
 use std::fmt;
 
 use crate::iterator::normalized;

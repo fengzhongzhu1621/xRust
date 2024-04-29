@@ -5,6 +5,7 @@ mod ends_with;
 mod is_empty;
 mod matches;
 mod normalize;
+mod regex;
 mod starts_with;
 
 pub use adapters::*;
@@ -14,4 +15,5 @@ pub use ends_with::*;
 pub use is_empty::*;
 pub use matches::*;
 pub use normalize::*;
+pub use regex::*;
 pub use starts_with::*;
