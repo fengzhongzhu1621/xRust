@@ -7,6 +7,7 @@ mod matches;
 mod normalize;
 mod regex;
 mod starts_with;
+mod trim;
 
 pub use adapters::*;
 pub use contains::*;
@@ -17,3 +18,4 @@ pub use matches::*;
 pub use normalize::*;
 pub use regex::*;
 pub use starts_with::*;
+pub use trim::*;
