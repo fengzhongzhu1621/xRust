@@ -1,9 +1,9 @@
 use crate::path::read_file;
 use crate::predicates::core::{
-    default_find_case, Case, Child, Palette, Parameter, Predicate,
-    PredicateReflection, Product,
+    Case, Child, Predicate, PredicateReflection, Product,
 };
 use std::fmt;
+use std::io;
 use std::path;
 
 /// 定义一个文件内容断言
@@ -14,6 +14,16 @@ where
     P: Predicate<[u8]>,
 {
     p: P,
+}
+
+impl<P> FileContentPredicate<P>
+where
+    P: Predicate<[u8]>,
+{
+    fn eval(&self, path: &path::Path) -> io::Result<bool> {
+        let buffer = read_file(path)?;
+        Ok(self.p.eval(&buffer))
+    }
 }
 
 impl<P> PredicateReflection for FileContentPredicate<P>
@@ -39,7 +49,9 @@ impl<P> Predicate<path::Path> for FileContentPredicate<P>
 where
     P: Predicate<[u8]>,
 {
+    // Predicate<path::Path> 修改了基类的类型
     fn eval(&self, path: &path::Path) -> bool {
+        // 调用了父类的方法
         self.eval(path).unwrap_or(false)
     }
 
