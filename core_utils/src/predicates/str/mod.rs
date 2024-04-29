@@ -8,6 +8,7 @@ mod normalize;
 mod regex;
 mod starts_with;
 mod trim;
+mod utf8;
 
 pub use adapters::*;
 pub use contains::*;
@@ -19,3 +20,4 @@ pub use normalize::*;
 pub use regex::*;
 pub use starts_with::*;
 pub use trim::*;
+pub use utf8::*;
