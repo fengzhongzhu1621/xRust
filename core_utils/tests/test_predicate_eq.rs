@@ -2,7 +2,7 @@ use core_utils::predicates::{self, core::Predicate};
 
 #[test]
 fn test_predicate_eq() {
-    let predicate_fn = predicates::eq::eq(5);
+    let predicate_fn = predicates::eq(5);
     assert_eq!(true, predicate_fn.eval(&5));
     assert_eq!(false, predicate_fn.eval(&10));
     let expect = r#"

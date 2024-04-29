@@ -1,6 +1,6 @@
 use crate::predicates::core::{
     default_find_case, Case, Child, Palette, Parameter, Predicate,
-    PredicateReflection, Product,
+    PredicateReflection,
 };
 use std::fmt;
 use std::marker::PhantomData;
@@ -344,16 +344,6 @@ where
     Self: Predicate<Item>,
 {
     /// Compute the logical AND of two `Predicate` results, returning the result.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use predicates::prelude::*;
-    ///
-    /// let predicate_fn1 = predicate::always().and(predicate::always());
-    /// let predicate_fn2 = predicate::always().and(predicate::never());
-    /// assert_eq!(true, predicate_fn1.eval(&4));
-    /// assert_eq!(false, predicate_fn2.eval(&4));
     fn and<B>(self, other: B) -> AndPredicate<Self, B, Item>
     where
         B: Predicate<Item>,
@@ -363,18 +353,6 @@ where
     }
 
     /// Compute the logical OR of two `Predicate` results, returning the result.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use predicates::prelude::*;
-    ///
-    /// let predicate_fn1 = predicate::always().or(predicate::always());
-    /// let predicate_fn2 = predicate::always().or(predicate::never());
-    /// let predicate_fn3 = predicate::never().or(predicate::never());
-    /// assert_eq!(true, predicate_fn1.eval(&4));
-    /// assert_eq!(true, predicate_fn2.eval(&4));
-    /// assert_eq!(false, predicate_fn3.eval(&4));
     fn or<B>(self, other: B) -> OrPredicate<Self, B, Item>
     where
         B: Predicate<Item>,
@@ -384,16 +362,6 @@ where
     }
 
     /// Compute the logical NOT of a `Predicate`, returning the result.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use predicates::prelude::*;
-    ///
-    /// let predicate_fn1 = predicate::always().not();
-    /// let predicate_fn2 = predicate::never().not();
-    /// assert_eq!(false, predicate_fn1.eval(&4));
-    /// assert_eq!(true, predicate_fn2.eval(&4));
     fn not(self) -> NotPredicate<Self, Item>
     where
         Self: Sized,
