@@ -19,21 +19,6 @@ pub enum Version {
 
 impl Version {
     /// Constructs `VersionType` from the given string.
-    ///
-    /// Returns `VersionType::Unknown` if the string is empty. If it can be parsed as a semantic
-    /// version, then `VersionType::Semantic`, otherwise `VersionType::Custom`.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use os_info::Version;
-    ///
-    /// let v = Version::from_string("custom");
-    /// assert_eq!(Version::Custom("custom".to_owned()), v);
-    ///
-    /// let v = Version::from_string("1.2.3");
-    /// assert_eq!(Version::Semantic(1, 2, 3), v);
-    /// ```
     pub fn from_string<S: Into<String> + AsRef<str>>(s: S) -> Self {
         // AsRef<str> 表示 s 可以通过 .as_ref()转换为 &str 类型
         if s.as_ref().is_empty() {

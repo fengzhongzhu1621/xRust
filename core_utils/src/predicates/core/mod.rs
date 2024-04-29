@@ -9,7 +9,7 @@ pub mod tree;
 
 pub use case::*;
 pub use child::*;
-pub use color::*;
+pub use color::{Palette, Styled};
 pub use parameter::*;
 pub use predicate::*;
 pub use product::*;

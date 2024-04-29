@@ -1,13 +1,13 @@
 use anstyle;
 
 #[derive(Debug)]
-pub(crate) struct Styled<D> {
+pub struct Styled<D> {
     display: D, // 可显示的对象
     style: anstyle::Style,
 }
 
 impl<D: std::fmt::Display> Styled<D> {
-    pub(crate) fn new(display: D, style: anstyle::Style) -> Self {
+    pub fn new(display: D, style: anstyle::Style) -> Self {
         Self { display, style }
     }
 }
@@ -29,14 +29,14 @@ impl<D: std::fmt::Display> std::fmt::Display for Styled<D> {
 
 /// 自定义调色板
 #[derive(Copy, Clone, Debug, Default)]
-pub(crate) struct Palette {
+pub struct Palette {
     description: anstyle::Style, // 定义描述的样式
     var: anstyle::Style,         // 变量的样式
     expected: anstyle::Style,    // 期望值的样式
 }
 
 impl Palette {
-    pub(crate) fn new(alternate: bool) -> Self {
+    pub fn new(alternate: bool) -> Self {
         if alternate && cfg!(feature = "color") {
             Self {
                 description: anstyle::AnsiColor::Blue.on_default()

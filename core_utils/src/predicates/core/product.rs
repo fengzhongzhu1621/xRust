@@ -3,15 +3,6 @@ use std::fmt;
 use std::slice;
 
 /// A by-product of a predicate evaluation.
-///
-/// ```rust
-/// use predicates_core;
-///
-/// let product = predicates_core::reflection::Product::new("key", "value");
-/// println!("{}", product);
-/// let product = predicates_core::reflection::Product::new(format!("key-{}", 5), 30);
-/// println!("{}", product);
-/// ```
 pub struct Product(borrow::Cow<'static, str>, Box<dyn fmt::Display>);
 
 impl Product {

@@ -1,5 +1,5 @@
 use crate::predicates::core::{
-    default_find_case, Case, Child, Palette, Parameter, Predicate,
+    default_find_case, Case, Child, Parameter, Predicate,
     PredicateReflection,
 };
 use std::fmt;

@@ -1,4 +1,3 @@
-use core_utils::predicates::str::PredicateStrExt;
 use core_utils::predicates::{
     self, core::Predicate, PredicateBooleanExt, PredicateNameExt,
 };
