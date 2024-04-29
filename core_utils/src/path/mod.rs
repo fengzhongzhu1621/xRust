@@ -17,7 +17,7 @@ pub use abs::PathAbs;
 pub use error::{Error, Result};
 pub use file_edit::FileEdit;
 pub use file_open::FileOpen;
-pub use file_read::FileRead;
+pub use file_read::{read_file, FileRead};
 pub use file_write::FileWrite;
 pub use path_dir::PathDir;
 pub use path_file::PathFile;

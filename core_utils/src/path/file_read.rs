@@ -115,3 +115,10 @@ impl From<FileRead> for File {
         orig.0.into()
     }
 }
+
+/// 读文件
+pub fn read_file(path: &Path) -> io::Result<Vec<u8>> {
+    let mut buffer = Vec::new();
+    fs::File::open(path)?.read_to_end(&mut buffer)?;
+    Ok(buffer)
+}

@@ -1,9 +1,8 @@
-use super::case::Case;
-use super::color::Palette;
-use super::parameter::Parameter;
-use super::predicate::{default_find_case, Predicate};
-use super::product::Product;
-use super::reflection::PredicateReflection;
+use crate::predicates::core::{
+    default_find_case, Case, Palette, Parameter, Predicate,
+    PredicateReflection, Product,
+};
+
 use float_cmp::ApproxEq;
 use float_cmp::Ulps;
 use std::fmt;
@@ -93,23 +92,13 @@ impl fmt::Display for IsClosePredicate {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         // 创建一个调色板
         let palette = Palette::new(f.alternate());
-        if (f.alternate()) {
-            write!(
-                f,
-                "{:#} {:#} {:#}",
-                palette.var("var"),            // 红色粗体
-                palette.description("!="),     // 蓝色粗体
-                palette.expected(self.target), // 绿色粗体
-            )
-        } else {
-            write!(
-                f,
-                "{} {} {}",
-                palette.var("var"),            // 红色粗体
-                palette.description("!="),     // 蓝色粗体
-                palette.expected(self.target), // 绿色粗体
-            )
-        }
+        write!(
+            f,
+            "{:#} {:#} {:#}",
+            palette.var("var"),            // 红色粗体
+            palette.description("!="),     // 蓝色粗体
+            palette.expected(self.target), // 绿色粗体
+        )
     }
 }
 

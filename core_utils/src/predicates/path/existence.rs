@@ -1,11 +1,11 @@
-use super::case::Case;
-use super::color::Palette;
-use super::predicate::{default_find_case, Predicate};
-use super::product::Product;
-use super::reflection::PredicateReflection;
+use crate::predicates::core::{
+    default_find_case, Case, Palette, Parameter, Predicate,
+    PredicateReflection, Product,
+};
 
 use std::{fmt, path};
 
+// 定义一个路径是否存在的断言
 /// Predicate that checks if a file is present
 ///
 /// This is created by the `predicate::path::exists` and `predicate::path::missing`.
@@ -53,10 +53,12 @@ impl fmt::Display for ExistencePredicate {
     }
 }
 
+/// 定义一个路径存在断言
 pub fn exists() -> ExistencePredicate {
     ExistencePredicate { exists: true }
 }
 
+/// 定义一个路径不存在断言
 pub fn missing() -> ExistencePredicate {
     ExistencePredicate { exists: false }
 }
