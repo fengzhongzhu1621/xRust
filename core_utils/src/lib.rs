@@ -10,6 +10,7 @@ pub mod cached_bool;
 pub mod console;
 pub mod convert;
 pub mod datetime;
+pub mod debug;
 pub mod displayable;
 pub mod error;
 pub mod file;
