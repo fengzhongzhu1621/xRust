@@ -59,8 +59,3 @@ pub fn get_random_key32() -> [u8; 32] {
     rand::thread_rng().try_fill(&mut arr[..]).expect("Ooops!");
     return arr;
 }
-
-pub struct Gen {
-    rng: rand::rngs::SmallRng,
-    size: usize,
-}
