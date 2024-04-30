@@ -35,3 +35,16 @@ fn test_get_random_key32() {
     let s = get_random_key32();
     assert_eq!(s.len(), 32);
 }
+
+#[test]
+fn test_gen() {
+    let mut gen = Gen::new(5);
+    let x = gen.gen_range(100..1000);
+    println!("{}", x);
+
+    let y: bool = gen.gen();
+    println!("{}", y);
+
+    let z: u32 = gen.gen();
+    println!("{}", z);
+}

@@ -11,6 +11,7 @@ pub fn mpsc_example() {
     for i in 0..10 {
         let tx = tx.clone();
         handles.push(thread::spawn(move || {
+            // 获得指定范围内的随机整数
             let dur = rand::thread_rng().gen_range(100..1000);
             thread::sleep(Duration::from_millis(dur));
             // 子线程通过channel发送消息

@@ -26,7 +26,6 @@ pub mod path;
 pub mod platform;
 pub mod predicates;
 pub mod random;
-mod set;
 pub mod signal;
 pub mod str;
 pub mod time;
@@ -34,6 +33,8 @@ pub mod var;
 pub mod vec2;
 pub mod version;
 pub mod zip;
+
+mod set;
 
 extern crate alloc;
 
