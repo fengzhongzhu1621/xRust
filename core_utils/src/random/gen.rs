@@ -23,6 +23,7 @@ impl Gen {
         self.size
     }
 
+    // 在切片中随机选择一个
     /// Choose among the possible alternatives in the slice given. If the slice
     /// is empty, then `None` is returned. Otherwise, a non-`None` value is
     /// guaranteed to be returned.
@@ -30,6 +31,7 @@ impl Gen {
         slice.choose(&mut self.rng)
     }
 
+    /// 生成一个随机数，类型自行推导
     pub fn gen<T>(&mut self) -> T
     where
         rand::distributions::Standard: rand::distributions::Distribution<T>,

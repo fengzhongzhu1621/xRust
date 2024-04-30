@@ -40,11 +40,15 @@ fn test_get_random_key32() {
 fn test_gen() {
     let mut gen = Gen::new(5);
     let x = gen.gen_range(100..1000);
-    println!("{}", x);
+    println!("{}", x); // 422
 
-    let y: bool = gen.gen();
+    let y: bool = gen.gen(); // true
     println!("{}", y);
 
-    let z: u32 = gen.gen();
+    let z: u32 = gen.gen(); // 1158930227
     println!("{}", z);
+
+    // 在切片中随机选择
+    let c = gen.choose(&[1, 2, 3]).unwrap().to_owned(); // 2
+    println!("{:}", c);
 }
