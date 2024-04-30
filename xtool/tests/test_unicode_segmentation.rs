@@ -21,4 +21,10 @@ fn test_unicode_segmentation() {
         "The", " ", "quick", " ", "(", "\"", "brown", "\"", ")", "  ", "fox",
     ];
     assert_eq!(w, b);
+
+    // Returns an iterator over the grapheme clusters of self and their byte offsets. See graphemes() for more information.
+    let gr_inds = UnicodeSegmentation::grapheme_indices("a̐éö̲\r\n", true)
+        .collect::<Vec<(usize, &str)>>();
+    let b: &[_] = &[(0, "a̐"), (3, "é"), (6, "ö̲"), (11, "\r\n")];
+    assert_eq!(&gr_inds[..], b);
 }

@@ -7,6 +7,7 @@ pub mod condition;
 
 pub mod aes;
 pub mod cached_bool;
+pub mod cmd;
 pub mod console;
 pub mod convert;
 pub mod datetime;

@@ -226,6 +226,7 @@ at licenses/LICENSE-[project].txt.
     (ALv2 License) predicates-rs v3.1.0 (https://github.com/assert-rs/predicates-rs)
     (ALv2 License) normalize-line-endings v0.3.0 (https://github.com/derekdreery/normalize-line-endings.git)
     (ALv2 License) bstr v1.9.1 (https://github.com/BurntSushi/bstr)
+    (ALv2 License) unicode-segmentation v1.11.0 (https://github.com/unicode-rs/unicode-segmentation)
 
 
 ========================================================================
@@ -258,4 +259,5 @@ The text of each license is also included at licenses/LICENSE-[project].txt.
     (MIT License) bstr v1.9.1 (https://github.com/BurntSushi/bstr)
     (MIT License) memchr v2.7.2 (https://github.com/BurntSushi/memchr)
     (MIT License) quickcheck v1.0.3 (https://github.com/BurntSushi/quickcheck)
+    (MIT License) unicode-segmentation v1.11.0 (https://github.com/unicode-rs/unicode-segmentation)
       
