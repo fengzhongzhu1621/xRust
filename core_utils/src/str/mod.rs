@@ -12,6 +12,7 @@ mod bstring;
 mod error;
 mod ext_vec;
 mod escape_bytes;
+mod hexdigit;
 
 pub use bstr::BStr;
 pub use ascii::first_non_ascii_byte;
@@ -27,3 +28,4 @@ pub use bstring::BString;
 pub use error::{FromUtf8Error, Utf8Error};
 pub use ext_vec::{concat, join, ByteVec, DrainBytes};
 pub use escape_bytes::EscapeBytes;
+pub use hexdigit::*;

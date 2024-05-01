@@ -1,3 +1,4 @@
+///! 对字符串按单词分割
 use regex_automata::{dfa::Automaton, Anchored, Input};
 
 use crate::str::{

@@ -1,3 +1,4 @@
+///! 对字符串按字节切片
 use super::fsm::{
     grapheme_break_fwd::GRAPHEME_BREAK_FWD,
     grapheme_break_rev::GRAPHEME_BREAK_REV,

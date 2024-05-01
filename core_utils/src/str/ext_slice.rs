@@ -234,35 +234,6 @@ pub trait ByteSlice: private::Sealed {
     }
 
     /// Safely convert this byte string into a `&str` if it's valid UTF-8.
-    ///
-    /// If this byte string is not valid UTF-8, then an error is returned. The
-    /// error returned indicates the first invalid byte found and the length
-    /// of the error.
-    ///
-    /// In cases where a lossy conversion to `&str` is acceptable, then use one
-    /// of the [`to_str_lossy`](trait.ByteSlice.html#method.to_str_lossy) or
-    /// [`to_str_lossy_into`](trait.ByteSlice.html#method.to_str_lossy_into)
-    /// methods.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// # #[cfg(feature = "alloc")] {
-    /// use bstr::{B, ByteSlice, ByteVec};
-    ///
-    /// # fn example() -> Result<(), bstr::Utf8Error> {
-    /// let s = B("☃βツ").to_str()?;
-    /// assert_eq!("☃βツ", s);
-    ///
-    /// let mut bstring = <Vec<u8>>::from("☃βツ");
-    /// bstring.push(b'\xFF');
-    /// let err = bstring.to_str().unwrap_err();
-    /// assert_eq!(8, err.valid_up_to());
-    /// # Ok(()) }; example().unwrap()
-    /// # }
-    /// ```
     #[inline]
     fn to_str(&self) -> Result<&str, Utf8Error> {
         utf8::validate(self.as_bytes()).map(|_| {
@@ -362,7 +333,6 @@ pub trait ByteSlice: private::Sealed {
     /// let bs = B(b"\x61\xF1\x80\x80\xE1\x80\xC2\x62");
     /// assert_eq!("a\u{FFFD}\u{FFFD}\u{FFFD}b", bs.to_str_lossy());
     /// ```
-    #[cfg(feature = "alloc")]
     #[inline]
     fn to_str_lossy(&self) -> Cow<'_, str> {
         match utf8::validate(self.as_bytes()) {
@@ -419,7 +389,6 @@ pub trait ByteSlice: private::Sealed {
     /// bstring.to_str_lossy_into(&mut dest);
     /// assert_eq!("☃βツ\u{FFFD}", dest);
     /// ```
-    #[cfg(feature = "alloc")]
     #[inline]
     fn to_str_lossy_into(&self, dest: &mut String) {
         let mut bytes = self.as_bytes();
@@ -611,7 +580,6 @@ pub trait ByteSlice: private::Sealed {
     /// assert_eq!(b"foo".repeatn(4), B("foofoofoofoo"));
     /// assert_eq!(b"foo".repeatn(0), B(""));
     /// ```
-    #[cfg(feature = "alloc")]
     #[inline]
     fn repeatn(&self, n: usize) -> Vec<u8> {
         self.as_bytes().repeat(n)
@@ -1535,7 +1503,6 @@ pub trait ByteSlice: private::Sealed {
     /// let s = b"foo".replace("", "Z");
     /// assert_eq!(s, "ZfZoZoZ".as_bytes());
     /// ```
-    #[cfg(feature = "alloc")]
     #[inline]
     fn replace<N: AsRef<[u8]>, R: AsRef<[u8]>>(
         &self,
@@ -1581,7 +1548,6 @@ pub trait ByteSlice: private::Sealed {
     /// let s = b"foo".replacen("", "Z", 2);
     /// assert_eq!(s, "ZfZoo".as_bytes());
     /// ```
-    #[cfg(feature = "alloc")]
     #[inline]
     fn replacen<N: AsRef<[u8]>, R: AsRef<[u8]>>(
         &self,
@@ -1639,7 +1605,6 @@ pub trait ByteSlice: private::Sealed {
     /// s.replace_into("", "Z", &mut dest);
     /// assert_eq!(dest, "ZfZoZoZ".as_bytes());
     /// ```
-    #[cfg(feature = "alloc")]
     #[inline]
     fn replace_into<N: AsRef<[u8]>, R: AsRef<[u8]>>(
         &self,
@@ -1703,7 +1668,6 @@ pub trait ByteSlice: private::Sealed {
     /// s.replacen_into("", "Z", 2, &mut dest);
     /// assert_eq!(dest, "ZfZoo".as_bytes());
     /// ```
-    #[cfg(feature = "alloc")]
     #[inline]
     fn replacen_into<N: AsRef<[u8]>, R: AsRef<[u8]>>(
         &self,
@@ -2515,44 +2479,12 @@ pub trait ByteSlice: private::Sealed {
     /// let s = B(b"FOO\xFFBAR\xE2\x98BAZ");
     /// assert_eq!(s.to_ascii_lowercase(), B(b"foo\xFFbar\xE2\x98baz"));
     /// ```
-    #[cfg(feature = "alloc")]
     #[inline]
     fn to_ascii_lowercase(&self) -> Vec<u8> {
         self.as_bytes().to_ascii_lowercase()
     }
 
     /// Convert this byte string to its lowercase ASCII equivalent in place.
-    ///
-    /// In this case, lowercase is only defined in ASCII letters. Namely, the
-    /// letters `A-Z` are converted to `a-z`. All other bytes remain unchanged.
-    ///
-    /// If you don't need to do the conversion in
-    /// place and instead prefer convenience, then use
-    /// [`to_ascii_lowercase`](#method.to_ascii_lowercase) instead.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteSlice;
-    ///
-    /// let mut s = <Vec<u8>>::from("HELLO Β");
-    /// s.make_ascii_lowercase();
-    /// assert_eq!(s, "hello Β".as_bytes());
-    /// ```
-    ///
-    /// Invalid UTF-8 remains as is:
-    ///
-    /// ```
-    /// # #[cfg(feature = "alloc")] {
-    /// use bstr::{B, ByteSlice, ByteVec};
-    ///
-    /// let mut s = <Vec<u8>>::from_slice(b"FOO\xFFBAR\xE2\x98BAZ");
-    /// s.make_ascii_lowercase();
-    /// assert_eq!(s, B(b"foo\xFFbar\xE2\x98baz"));
-    /// # }
-    /// ```
     #[inline]
     fn make_ascii_lowercase(&mut self) {
         self.as_bytes_mut().make_ascii_lowercase();
@@ -2717,85 +2649,18 @@ pub trait ByteSlice: private::Sealed {
     /// let s = B(b"foo\xFFbar\xE2\x98baz");
     /// assert_eq!(s.to_ascii_uppercase(), B(b"FOO\xFFBAR\xE2\x98BAZ"));
     /// ```
-    #[cfg(feature = "alloc")]
     #[inline]
     fn to_ascii_uppercase(&self) -> Vec<u8> {
         self.as_bytes().to_ascii_uppercase()
     }
 
     /// Convert this byte string to its uppercase ASCII equivalent in place.
-    ///
-    /// In this case, uppercase is only defined in ASCII letters. Namely, the
-    /// letters `a-z` are converted to `A-Z`. All other bytes remain unchanged.
-    ///
-    /// If you don't need to do the conversion in
-    /// place and instead prefer convenience, then use
-    /// [`to_ascii_uppercase`](#method.to_ascii_uppercase) instead.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::{B, ByteSlice};
-    ///
-    /// let mut s = <Vec<u8>>::from("hello β");
-    /// s.make_ascii_uppercase();
-    /// assert_eq!(s, B("HELLO β"));
-    /// ```
-    ///
-    /// Invalid UTF-8 remains as is:
-    ///
-    /// ```
-    /// # #[cfg(feature = "alloc")] {
-    /// use bstr::{B, ByteSlice, ByteVec};
-    ///
-    /// let mut s = <Vec<u8>>::from_slice(b"foo\xFFbar\xE2\x98baz");
-    /// s.make_ascii_uppercase();
-    /// assert_eq!(s, B(b"FOO\xFFBAR\xE2\x98BAZ"));
-    /// # }
-    /// ```
     #[inline]
     fn make_ascii_uppercase(&mut self) {
         self.as_bytes_mut().make_ascii_uppercase();
     }
 
     /// Escapes this byte string into a sequence of `char` values.
-    ///
-    /// When the sequence of `char` values is concatenated into a string, the
-    /// result is always valid UTF-8. Any unprintable or invalid UTF-8 in this
-    /// byte string are escaped using using `\xNN` notation. Moreover, the
-    /// characters `\0`, `\r`, `\n`, `\t` and `\` are escaped as well.
-    ///
-    /// This is useful when one wants to get a human readable view of the raw
-    /// bytes that is also valid UTF-8.
-    ///
-    /// The iterator returned implements the `Display` trait. So one can do
-    /// `b"foo\xFFbar".escape_bytes().to_string()` to get a `String` with its
-    /// bytes escaped.
-    ///
-    /// The dual of this function is [`ByteVec::unescape_bytes`].
-    ///
-    /// Note that this is similar to, but not equivalent to the `Debug`
-    /// implementation on [`BStr`] and [`BString`]. The `Debug` implementations
-    /// also use the debug representation for all Unicode codepoints. However,
-    /// this escaping routine only escapes individual bytes. All Unicode
-    /// codepoints above `U+007F` are passed through unchanged without any
-    /// escaping.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// # #[cfg(feature = "alloc")] {
-    /// use bstr::{B, ByteSlice};
-    ///
-    /// assert_eq!(r"foo\xFFbar", b"foo\xFFbar".escape_bytes().to_string());
-    /// assert_eq!(r"foo\nbar", b"foo\nbar".escape_bytes().to_string());
-    /// assert_eq!(r"foo\tbar", b"foo\tbar".escape_bytes().to_string());
-    /// assert_eq!(r"foo\\bar", b"foo\\bar".escape_bytes().to_string());
-    /// assert_eq!(r"foo☃bar", B("foo☃bar").escape_bytes().to_string());
-    /// # }
-    /// ```
     #[inline]
     fn escape_bytes(&self) -> EscapeBytes<'_> {
         EscapeBytes::new(self.as_bytes())
@@ -3096,12 +2961,6 @@ impl<'a> Finder<'a> {
 
     /// Convert this finder into its owned variant, such that it no longer
     /// borrows the needle.
-    ///
-    /// If this is already an owned finder, then this is a no-op. Otherwise,
-    /// this copies the needle.
-    ///
-    /// This is only available when the `alloc` feature is enabled.
-    #[cfg(feature = "alloc")]
     #[inline]
     pub fn into_owned(self) -> Finder<'static> {
         Finder(self.0.into_owned())
@@ -3179,12 +3038,6 @@ impl<'a> FinderReverse<'a> {
 
     /// Convert this finder into its owned variant, such that it no longer
     /// borrows the needle.
-    ///
-    /// If this is already an owned finder, then this is a no-op. Otherwise,
-    /// this copies the needle.
-    ///
-    /// This is only available when the `alloc` feature is enabled.
-    #[cfg(feature = "alloc")]
     #[inline]
     pub fn into_owned(self) -> FinderReverse<'static> {
         FinderReverse(self.0.into_owned())

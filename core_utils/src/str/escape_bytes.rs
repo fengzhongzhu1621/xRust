@@ -1,4 +1,4 @@
-use super::utf8;
+use super::{hexdigit::*, utf8};
 
 /// An iterator of `char` values that represent an escaping of arbitrary bytes.
 ///
@@ -131,13 +131,11 @@ enum EscapeState {
 /// expose this for core-only use cases too. I'm just not quite sure what the
 /// API should be.
 #[derive(Clone, Debug)]
-#[cfg(feature = "alloc")]
 pub(crate) struct UnescapeBytes<I> {
     it: I,
     state: UnescapeState,
 }
 
-#[cfg(feature = "alloc")]
 impl<I: Iterator<Item = char>> UnescapeBytes<I> {
     pub(crate) fn new<T: IntoIterator<IntoIter = I>>(
         t: T,
@@ -146,7 +144,6 @@ impl<I: Iterator<Item = char>> UnescapeBytes<I> {
     }
 }
 
-#[cfg(feature = "alloc")]
 impl<I: Iterator<Item = char>> Iterator for UnescapeBytes<I> {
     type Item = u8;
 
@@ -270,7 +267,6 @@ impl<I: Iterator<Item = char>> Iterator for UnescapeBytes<I> {
 
 /// The state used by the FSM in the unescaping iterator.
 #[derive(Clone, Debug)]
-#[cfg(feature = "alloc")]
 enum UnescapeState {
     /// The start state. Look for an escape sequence, otherwise emit the next
     /// codepoint as-is.
@@ -289,7 +285,6 @@ enum UnescapeState {
     HexSecond(char),
 }
 
-#[cfg(feature = "alloc")]
 impl UnescapeState {
     /// Create a new `Bytes` variant with the given slice.
     ///
@@ -339,21 +334,99 @@ impl UnescapeState {
     }
 }
 
-/// Convert the given codepoint to its corresponding hexadecimal digit.
-///
-/// # Panics
-///
-/// This panics if `ch` is not in `[0-9A-Fa-f]`.
-#[cfg(feature = "alloc")]
-fn char_to_hexdigit(ch: char) -> u8 {
-    u8::try_from(ch.to_digit(16).unwrap()).unwrap()
-}
 
-/// Convert the given hexadecimal digit to its corresponding codepoint.
-///
-/// # Panics
-///
-/// This panics when `digit > 15`.
-fn hexdigit_to_char(digit: u8) -> char {
-    char::from_digit(u32::from(digit), 16).unwrap().to_ascii_uppercase()
+#[cfg(all(test, feature = "std"))]
+mod tests {
+    use alloc::string::{String, ToString};
+
+    use crate::str::BString;
+
+    use super::*;
+
+    #[allow(non_snake_case)]
+    fn B<B: AsRef<[u8]>>(bytes: B) -> BString {
+        BString::from(bytes.as_ref())
+    }
+
+    fn e<B: AsRef<[u8]>>(bytes: B) -> String {
+        EscapeBytes::new(bytes.as_ref()).to_string()
+    }
+
+    fn u(string: &str) -> BString {
+        UnescapeBytes::new(string.chars()).collect()
+    }
+
+    #[test]
+    fn escape() {
+        assert_eq!(r"a", e(br"a"));
+        assert_eq!(r"\\x61", e(br"\x61"));
+        assert_eq!(r"a", e(b"\x61"));
+        assert_eq!(r"~", e(b"\x7E"));
+        assert_eq!(r"\x7F", e(b"\x7F"));
+
+        assert_eq!(r"\n", e(b"\n"));
+        assert_eq!(r"\r", e(b"\r"));
+        assert_eq!(r"\t", e(b"\t"));
+        assert_eq!(r"\\", e(b"\\"));
+        assert_eq!(r"\0", e(b"\0"));
+        assert_eq!(r"\0", e(b"\x00"));
+
+        assert_eq!(r"\x88", e(b"\x88"));
+        assert_eq!(r"\x8F", e(b"\x8F"));
+        assert_eq!(r"\xF8", e(b"\xF8"));
+        assert_eq!(r"\xFF", e(b"\xFF"));
+
+        assert_eq!(r"\xE2", e(b"\xE2"));
+        assert_eq!(r"\xE2\x98", e(b"\xE2\x98"));
+        assert_eq!(r"☃", e(b"\xE2\x98\x83"));
+
+        assert_eq!(r"\xF0", e(b"\xF0"));
+        assert_eq!(r"\xF0\x9F", e(b"\xF0\x9F"));
+        assert_eq!(r"\xF0\x9F\x92", e(b"\xF0\x9F\x92"));
+        assert_eq!(r"💩", e(b"\xF0\x9F\x92\xA9"));
+    }
+
+    #[test]
+    fn unescape() {
+        assert_eq!(B(r"a"), u(r"a"));
+        assert_eq!(B(r"\x61"), u(r"\\x61"));
+        assert_eq!(B(r"a"), u(r"\x61"));
+        assert_eq!(B(r"~"), u(r"\x7E"));
+        assert_eq!(B(b"\x7F"), u(r"\x7F"));
+
+        assert_eq!(B(b"\n"), u(r"\n"));
+        assert_eq!(B(b"\r"), u(r"\r"));
+        assert_eq!(B(b"\t"), u(r"\t"));
+        assert_eq!(B(b"\\"), u(r"\\"));
+        assert_eq!(B(b"\0"), u(r"\0"));
+        assert_eq!(B(b"\0"), u(r"\x00"));
+
+        assert_eq!(B(b"\x88"), u(r"\x88"));
+        assert_eq!(B(b"\x8F"), u(r"\x8F"));
+        assert_eq!(B(b"\xF8"), u(r"\xF8"));
+        assert_eq!(B(b"\xFF"), u(r"\xFF"));
+
+        assert_eq!(B(b"\xE2"), u(r"\xE2"));
+        assert_eq!(B(b"\xE2\x98"), u(r"\xE2\x98"));
+        assert_eq!(B("☃"), u(r"\xE2\x98\x83"));
+
+        assert_eq!(B(b"\xF0"), u(r"\xf0"));
+        assert_eq!(B(b"\xF0\x9F"), u(r"\xf0\x9f"));
+        assert_eq!(B(b"\xF0\x9F\x92"), u(r"\xf0\x9f\x92"));
+        assert_eq!(B("💩"), u(r"\xf0\x9f\x92\xa9"));
+    }
+
+    #[test]
+    fn unescape_weird() {
+        assert_eq!(B(b"\\"), u(r"\"));
+        assert_eq!(B(b"\\"), u(r"\\"));
+        assert_eq!(B(b"\\x"), u(r"\x"));
+        assert_eq!(B(b"\\xA"), u(r"\xA"));
+
+        assert_eq!(B(b"\\xZ"), u(r"\xZ"));
+        assert_eq!(B(b"\\xZZ"), u(r"\xZZ"));
+        assert_eq!(B(b"\\i"), u(r"\i"));
+        assert_eq!(B(b"\\u"), u(r"\u"));
+        assert_eq!(B(b"\\u{2603}"), u(r"\u{2603}"));
+    }
 }

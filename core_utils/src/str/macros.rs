@@ -18,7 +18,6 @@ macro_rules! impl_partial_eq {
     };
 }
 
-#[cfg(feature = "alloc")]
 macro_rules! impl_partial_eq_cow {
     ($lhs:ty, $rhs:ty) => {
         impl<'a, 'b> PartialEq<$rhs> for $lhs {
