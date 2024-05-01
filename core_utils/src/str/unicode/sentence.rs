@@ -59,6 +59,7 @@ impl<'a> Iterator for Sentences<'a> {
 
     #[inline]
     fn next(&mut self) -> Option<&'a str> {
+        // 按句子进行切片，获得第一个句子
         let (sentence, size) = decode_sentence(self.bs);
         if size == 0 {
             return None;
@@ -157,5 +158,20 @@ fn decode_sentence(bs: &[u8]) -> (&str, usize) {
         // No match on non-empty bytes implies we found invalid UTF-8.
         let (_, size) = utf8::decode_lossy(bs);
         (INVALID, size)
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_sentences() {
+        let it = b"I want this. Not that. Right now.";
+        let mut sentences = Sentences::new(it);
+        assert_eq!(sentences.next(), Some("I want this. "));
+        assert_eq!(sentences.next(), Some("Not that. "));
+        assert_eq!(sentences.next(), Some("Right now."));
     }
 }
