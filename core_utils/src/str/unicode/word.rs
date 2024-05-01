@@ -38,24 +38,6 @@ impl<'a> Words<'a> {
     }
 
     /// View the underlying data as a subslice of the original data.
-    ///
-    /// The slice returned has the same lifetime as the original slice, and so
-    /// the iterator can continue to be used while this exists.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use bstr::ByteSlice;
-    ///
-    /// let mut it = b"foo bar baz".words();
-    ///
-    /// assert_eq!(b"foo bar baz", it.as_bytes());
-    /// it.next();
-    /// it.next();
-    /// assert_eq!(b" baz", it.as_bytes());
-    /// it.next();
-    /// assert_eq!(b"", it.as_bytes());
-    /// ```
     #[inline]
     pub fn as_bytes(&self) -> &'a [u8] {
         self.0.as_bytes()
@@ -115,25 +97,6 @@ impl<'a> WordIndices<'a> {
     }
 
     /// View the underlying data as a subslice of the original data.
-    ///
-    /// The slice returned has the same lifetime as the original slice, and so
-    /// the iterator can continue to be used while this exists.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use bstr::ByteSlice;
-    ///
-    /// let mut it = b"foo bar baz".word_indices();
-    ///
-    /// assert_eq!(b"foo bar baz", it.as_bytes());
-    /// it.next();
-    /// it.next();
-    /// assert_eq!(b" baz", it.as_bytes());
-    /// it.next();
-    /// it.next();
-    /// assert_eq!(b"", it.as_bytes());
-    /// ```
     #[inline]
     pub fn as_bytes(&self) -> &'a [u8] {
         self.0.as_bytes()
@@ -186,27 +149,6 @@ impl<'a> WordsWithBreaks<'a> {
     }
 
     /// View the underlying data as a subslice of the original data.
-    ///
-    /// The slice returned has the same lifetime as the original slice, and so
-    /// the iterator can continue to be used while this exists.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use bstr::ByteSlice;
-    ///
-    /// let mut it = b"foo bar baz".words_with_breaks();
-    ///
-    /// assert_eq!(b"foo bar baz", it.as_bytes());
-    /// it.next();
-    /// assert_eq!(b" bar baz", it.as_bytes());
-    /// it.next();
-    /// it.next();
-    /// assert_eq!(b" baz", it.as_bytes());
-    /// it.next();
-    /// it.next();
-    /// assert_eq!(b"", it.as_bytes());
-    /// ```
     #[inline]
     pub fn as_bytes(&self) -> &'a [u8] {
         self.bs
@@ -266,27 +208,6 @@ impl<'a> WordsWithBreakIndices<'a> {
     }
 
     /// View the underlying data as a subslice of the original data.
-    ///
-    /// The slice returned has the same lifetime as the original slice, and so
-    /// the iterator can continue to be used while this exists.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use bstr::ByteSlice;
-    ///
-    /// let mut it = b"foo bar baz".words_with_break_indices();
-    ///
-    /// assert_eq!(b"foo bar baz", it.as_bytes());
-    /// it.next();
-    /// assert_eq!(b" bar baz", it.as_bytes());
-    /// it.next();
-    /// it.next();
-    /// assert_eq!(b" baz", it.as_bytes());
-    /// it.next();
-    /// it.next();
-    /// assert_eq!(b"", it.as_bytes());
-    /// ```
     #[inline]
     pub fn as_bytes(&self) -> &'a [u8] {
         self.bs

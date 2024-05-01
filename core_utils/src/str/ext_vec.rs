@@ -15,20 +15,6 @@ use super::{
 
 /// Concatenate the elements given by the iterator together into a single
 /// `Vec<u8>`.
-///
-/// The elements may be any type that can be cheaply converted into an `&[u8]`.
-/// This includes, but is not limited to, `&str`, `&BStr` and `&[u8]` itself.
-///
-/// # Examples
-///
-/// Basic usage:
-///
-/// ```
-/// use bstr;
-///
-/// let s = bstr::concat(&["foo", "bar", "baz"]);
-/// assert_eq!(s, "foobarbaz".as_bytes());
-/// ```
 #[inline]
 pub fn concat<T, I>(elements: I) -> Vec<u8>
 where
@@ -44,21 +30,6 @@ where
 
 /// Join the elements given by the iterator with the given separator into a
 /// single `Vec<u8>`.
-///
-/// Both the separator and the elements may be any type that can be cheaply
-/// converted into an `&[u8]`. This includes, but is not limited to,
-/// `&str`, `&BStr` and `&[u8]` itself.
-///
-/// # Examples
-///
-/// Basic usage:
-///
-/// ```
-/// use bstr;
-///
-/// let s = bstr::join(",", &["foo", "bar", "baz"]);
-/// assert_eq!(s, "foo,bar,baz".as_bytes());
-/// ```
 #[inline]
 pub fn join<B, T, I>(separator: B, elements: I) -> Vec<u8>
 where
@@ -106,19 +77,6 @@ mod private {
 impl private::Sealed for Vec<u8> {}
 
 /// A trait that extends `Vec<u8>` with string oriented methods.
-///
-/// Note that when using the constructor methods, such as
-/// `ByteVec::from_slice`, one should actually call them using the concrete
-/// type. For example:
-///
-/// ```
-/// use bstr::{B, ByteVec};
-///
-/// let s = Vec::from_slice(b"abc"); // NOT ByteVec::from_slice("...")
-/// assert_eq!(s, B("abc"));
-/// ```
-///
-/// This trait is sealed and cannot be implemented outside of `bstr`.
 pub trait ByteVec: private::Sealed {
     /// A method for accessing the raw vector bytes of this type. This is
     /// always a no-op and callers shouldn't care about it. This only exists
@@ -141,41 +99,12 @@ pub trait ByteVec: private::Sealed {
         Self: Sized;
 
     /// Create a new owned byte string from the given byte slice.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::{B, ByteVec};
-    ///
-    /// let s = Vec::from_slice(b"abc");
-    /// assert_eq!(s, B("abc"));
-    /// ```
     #[inline]
     fn from_slice<B: AsRef<[u8]>>(bytes: B) -> Vec<u8> {
         bytes.as_ref().to_vec()
     }
 
     /// Create a new byte string from an owned OS string.
-    ///
-    /// When the underlying bytes of OS strings are accessible, then this
-    /// always succeeds and is zero cost. Otherwise, this returns the given
-    /// `OsString` if it is not valid UTF-8.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use std::ffi::OsString;
-    ///
-    /// use bstr::{B, ByteVec};
-    ///
-    /// let os_str = OsString::from("foo");
-    /// let bs = Vec::from_os_string(os_str).expect("valid UTF-8");
-    /// assert_eq!(bs, B("foo"));
-    /// ```
     #[inline]
     #[cfg(feature = "std")]
     fn from_os_string(os_str: OsString) -> Result<Vec<u8>, OsString> {
@@ -197,26 +126,6 @@ pub trait ByteVec: private::Sealed {
     }
 
     /// Lossily create a new byte string from an OS string slice.
-    ///
-    /// When the underlying bytes of OS strings are accessible, then this is
-    /// zero cost and always returns a slice. Otherwise, a UTF-8 check is
-    /// performed and if the given OS string is not valid UTF-8, then it is
-    /// lossily decoded into valid UTF-8 (with invalid bytes replaced by the
-    /// Unicode replacement codepoint).
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use std::ffi::OsStr;
-    ///
-    /// use bstr::{B, ByteVec};
-    ///
-    /// let os_str = OsStr::new("foo");
-    /// let bs = Vec::from_os_str_lossy(os_str);
-    /// assert_eq!(bs, B("foo"));
-    /// ```
     #[inline]
     #[cfg(feature = "std")]
     fn from_os_str_lossy<'a>(os_str: &'a OsStr) -> Cow<'a, [u8]> {
@@ -241,24 +150,6 @@ pub trait ByteVec: private::Sealed {
     }
 
     /// Create a new byte string from an owned file path.
-    ///
-    /// When the underlying bytes of paths are accessible, then this always
-    /// succeeds and is zero cost. Otherwise, this returns the given `PathBuf`
-    /// if it is not valid UTF-8.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use std::path::PathBuf;
-    ///
-    /// use bstr::{B, ByteVec};
-    ///
-    /// let path = PathBuf::from("foo");
-    /// let bs = Vec::from_path_buf(path).expect("must be valid UTF-8");
-    /// assert_eq!(bs, B("foo"));
-    /// ```
     #[inline]
     #[cfg(feature = "std")]
     fn from_path_buf(path: PathBuf) -> Result<Vec<u8>, PathBuf> {
@@ -266,26 +157,6 @@ pub trait ByteVec: private::Sealed {
     }
 
     /// Lossily create a new byte string from a file path.
-    ///
-    /// When the underlying bytes of paths are accessible, then this is
-    /// zero cost and always returns a slice. Otherwise, a UTF-8 check is
-    /// performed and if the given path is not valid UTF-8, then it is lossily
-    /// decoded into valid UTF-8 (with invalid bytes replaced by the Unicode
-    /// replacement codepoint).
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use std::path::Path;
-    ///
-    /// use bstr::{B, ByteVec};
-    ///
-    /// let path = Path::new("foo");
-    /// let bs = Vec::from_path_lossy(path);
-    /// assert_eq!(bs, B("foo"));
-    /// ```
     #[inline]
     #[cfg(feature = "std")]
     fn from_path_lossy<'a>(path: &'a Path) -> Cow<'a, [u8]> {
@@ -300,44 +171,12 @@ pub trait ByteVec: private::Sealed {
     }
 
     /// Appends the given byte to the end of this byte string.
-    ///
-    /// Note that this is equivalent to the generic `Vec::push` method. This
-    /// method is provided to permit callers to explicitly differentiate
-    /// between pushing bytes, codepoints and strings.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let mut s = <Vec<u8>>::from("abc");
-    /// s.push_byte(b'\xE2');
-    /// s.push_byte(b'\x98');
-    /// s.push_byte(b'\x83');
-    /// assert_eq!(s, "abc☃".as_bytes());
-    /// ```
     #[inline]
     fn push_byte(&mut self, byte: u8) {
         self.as_vec_mut().push(byte);
     }
 
     /// Appends the given `char` to the end of this byte string.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let mut s = <Vec<u8>>::from("abc");
-    /// s.push_char('1');
-    /// s.push_char('2');
-    /// s.push_char('3');
-    /// assert_eq!(s, "abc123".as_bytes());
-    /// ```
     #[inline]
     fn push_char(&mut self, ch: char) {
         if ch.len_utf8() == 1 {
@@ -351,18 +190,6 @@ pub trait ByteVec: private::Sealed {
     /// Appends the given slice to the end of this byte string. This accepts
     /// any type that be converted to a `&[u8]`. This includes, but is not
     /// limited to, `&str`, `&BStr`, and of course, `&[u8]` itself.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let mut s = <Vec<u8>>::from("abc");
-    /// s.push_str(b"123");
-    /// assert_eq!(s, "abc123".as_bytes());
-    /// ```
     #[inline]
     fn push_str<B: AsRef<[u8]>>(&mut self, bytes: B) {
         self.as_vec_mut().extend_from_slice(bytes.as_ref());
@@ -370,42 +197,6 @@ pub trait ByteVec: private::Sealed {
 
     /// Converts a `Vec<u8>` into a `String` if and only if this byte string is
     /// valid UTF-8.
-    ///
-    /// If it is not valid UTF-8, then a
-    /// [`FromUtf8Error`](struct.FromUtf8Error.html)
-    /// is returned. (This error can be used to examine why UTF-8 validation
-    /// failed, or to regain the original byte string.)
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let bytes = Vec::from("hello");
-    /// let string = bytes.into_string().unwrap();
-    ///
-    /// assert_eq!("hello", string);
-    /// ```
-    ///
-    /// If this byte string is not valid UTF-8, then an error will be returned.
-    /// That error can then be used to inspect the location at which invalid
-    /// UTF-8 was found, or to regain the original byte string:
-    ///
-    /// ```
-    /// use bstr::{B, ByteVec};
-    ///
-    /// let bytes = Vec::from_slice(b"foo\xFFbar");
-    /// let err = bytes.into_string().unwrap_err();
-    ///
-    /// assert_eq!(err.utf8_error().valid_up_to(), 3);
-    /// assert_eq!(err.utf8_error().error_len(), Some(1));
-    ///
-    /// // At no point in this example is an allocation performed.
-    /// let bytes = Vec::from(err.into_vec());
-    /// assert_eq!(bytes, B(b"foo\xFFbar"));
-    /// ```
     #[inline]
     fn into_string(self) -> Result<String, FromUtf8Error>
     where
@@ -424,18 +215,6 @@ pub trait ByteVec: private::Sealed {
     /// Lossily converts a `Vec<u8>` into a `String`. If this byte string
     /// contains invalid UTF-8, then the invalid bytes are replaced with the
     /// Unicode replacement codepoint.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let bytes = Vec::from_slice(b"foo\xFFbar");
-    /// let string = bytes.into_string_lossy();
-    /// assert_eq!(string, "foo\u{FFFD}bar");
-    /// ```
     #[inline]
     fn into_string_lossy(self) -> String
     where
@@ -453,30 +232,6 @@ pub trait ByteVec: private::Sealed {
 
     /// Unsafely convert this byte string into a `String`, without checking for
     /// valid UTF-8.
-    ///
-    /// # Safety
-    ///
-    /// Callers *must* ensure that this byte string is valid UTF-8 before
-    /// calling this method. Converting a byte string into a `String` that is
-    /// not valid UTF-8 is considered undefined behavior.
-    ///
-    /// This routine is useful in performance sensitive contexts where the
-    /// UTF-8 validity of the byte string is already known and it is
-    /// undesirable to pay the cost of an additional UTF-8 validation check
-    /// that [`into_string`](#method.into_string) performs.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// // SAFETY: This is safe because string literals are guaranteed to be
-    /// // valid UTF-8 by the Rust compiler.
-    /// let s = unsafe { Vec::from("☃βツ").into_string_unchecked() };
-    /// assert_eq!("☃βツ", s);
-    /// ```
     #[inline]
     unsafe fn into_string_unchecked(self) -> String
     where
@@ -486,24 +241,6 @@ pub trait ByteVec: private::Sealed {
     }
 
     /// Converts this byte string into an OS string, in place.
-    ///
-    /// When OS strings can be constructed from arbitrary byte sequences, this
-    /// always succeeds and is zero cost. Otherwise, if this byte string is not
-    /// valid UTF-8, then an error (with the original byte string) is returned.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use std::ffi::OsStr;
-    ///
-    /// use bstr::ByteVec;
-    ///
-    /// let bs = Vec::from("foo");
-    /// let os_str = bs.into_os_string().expect("should be valid UTF-8");
-    /// assert_eq!(os_str, OsStr::new("foo"));
-    /// ```
     #[cfg(feature = "std")]
     #[inline]
     fn into_os_string(self) -> Result<OsString, FromUtf8Error>
@@ -528,26 +265,6 @@ pub trait ByteVec: private::Sealed {
     }
 
     /// Lossily converts this byte string into an OS string, in place.
-    ///
-    /// When OS strings can be constructed from arbitrary byte sequences, this
-    /// is zero cost and always returns a slice. Otherwise, this will perform a
-    /// UTF-8 check and lossily convert this byte string into valid UTF-8 using
-    /// the Unicode replacement codepoint.
-    ///
-    /// Note that this can prevent the correct roundtripping of file paths when
-    /// the representation of `OsString` is opaque.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let bs = Vec::from_slice(b"foo\xFFbar");
-    /// let os_str = bs.into_os_string_lossy();
-    /// assert_eq!(os_str.to_string_lossy(), "foo\u{FFFD}bar");
-    /// ```
     #[inline]
     #[cfg(feature = "std")]
     fn into_os_string_lossy(self) -> OsString
@@ -572,22 +289,6 @@ pub trait ByteVec: private::Sealed {
     }
 
     /// Converts this byte string into an owned file path, in place.
-    ///
-    /// When paths can be constructed from arbitrary byte sequences, this
-    /// always succeeds and is zero cost. Otherwise, if this byte string is not
-    /// valid UTF-8, then an error (with the original byte string) is returned.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let bs = Vec::from("foo");
-    /// let path = bs.into_path_buf().expect("should be valid UTF-8");
-    /// assert_eq!(path.as_os_str(), "foo");
-    /// ```
     #[cfg(feature = "std")]
     #[inline]
     fn into_path_buf(self) -> Result<PathBuf, FromUtf8Error>
@@ -598,26 +299,6 @@ pub trait ByteVec: private::Sealed {
     }
 
     /// Lossily converts this byte string into an owned file path, in place.
-    ///
-    /// When paths can be constructed from arbitrary byte sequences, this is
-    /// zero cost and always returns a slice. Otherwise, this will perform a
-    /// UTF-8 check and lossily convert this byte string into valid UTF-8 using
-    /// the Unicode replacement codepoint.
-    ///
-    /// Note that this can prevent the correct roundtripping of file paths when
-    /// the representation of `PathBuf` is opaque.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let bs = Vec::from_slice(b"foo\xFFbar");
-    /// let path = bs.into_path_buf_lossy();
-    /// assert_eq!(path.to_string_lossy(), "foo\u{FFFD}bar");
-    /// ```
     #[inline]
     #[cfg(feature = "std")]
     fn into_path_buf_lossy(self) -> PathBuf
@@ -628,75 +309,12 @@ pub trait ByteVec: private::Sealed {
     }
 
     /// Removes the last byte from this `Vec<u8>` and returns it.
-    ///
-    /// If this byte string is empty, then `None` is returned.
-    ///
-    /// If the last codepoint in this byte string is not ASCII, then removing
-    /// the last byte could make this byte string contain invalid UTF-8.
-    ///
-    /// Note that this is equivalent to the generic `Vec::pop` method. This
-    /// method is provided to permit callers to explicitly differentiate
-    /// between popping bytes and codepoints.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let mut s = Vec::from("foo");
-    /// assert_eq!(s.pop_byte(), Some(b'o'));
-    /// assert_eq!(s.pop_byte(), Some(b'o'));
-    /// assert_eq!(s.pop_byte(), Some(b'f'));
-    /// assert_eq!(s.pop_byte(), None);
-    /// ```
     #[inline]
     fn pop_byte(&mut self) -> Option<u8> {
         self.as_vec_mut().pop()
     }
 
     /// Removes the last codepoint from this `Vec<u8>` and returns it.
-    ///
-    /// If this byte string is empty, then `None` is returned. If the last
-    /// bytes of this byte string do not correspond to a valid UTF-8 code unit
-    /// sequence, then the Unicode replacement codepoint is yielded instead in
-    /// accordance with the
-    /// [replacement codepoint substitution policy](index.html#handling-of-invalid-utf8-8).
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let mut s = Vec::from("foo");
-    /// assert_eq!(s.pop_char(), Some('o'));
-    /// assert_eq!(s.pop_char(), Some('o'));
-    /// assert_eq!(s.pop_char(), Some('f'));
-    /// assert_eq!(s.pop_char(), None);
-    /// ```
-    ///
-    /// This shows the replacement codepoint substitution policy. Note that
-    /// the first pop yields a replacement codepoint but actually removes two
-    /// bytes. This is in contrast with subsequent pops when encountering
-    /// `\xFF` since `\xFF` is never a valid prefix for any valid UTF-8
-    /// code unit sequence.
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let mut s = Vec::from_slice(b"f\xFF\xFF\xFFoo\xE2\x98");
-    /// assert_eq!(s.pop_char(), Some('\u{FFFD}'));
-    /// assert_eq!(s.pop_char(), Some('o'));
-    /// assert_eq!(s.pop_char(), Some('o'));
-    /// assert_eq!(s.pop_char(), Some('\u{FFFD}'));
-    /// assert_eq!(s.pop_char(), Some('\u{FFFD}'));
-    /// assert_eq!(s.pop_char(), Some('\u{FFFD}'));
-    /// assert_eq!(s.pop_char(), Some('f'));
-    /// assert_eq!(s.pop_char(), None);
-    /// ```
     #[inline]
     fn pop_char(&mut self) -> Option<char> {
         let (ch, size) = utf8::decode_last_lossy(self.as_vec());
@@ -710,37 +328,6 @@ pub trait ByteVec: private::Sealed {
 
     /// Removes a `char` from this `Vec<u8>` at the given byte position and
     /// returns it.
-    ///
-    /// If the bytes at the given position do not lead to a valid UTF-8 code
-    /// unit sequence, then a
-    /// [replacement codepoint is returned instead](index.html#handling-of-invalid-utf8-8).
-    ///
-    /// # Panics
-    ///
-    /// Panics if `at` is larger than or equal to this byte string's length.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let mut s = Vec::from("foo☃bar");
-    /// assert_eq!(s.remove_char(3), '☃');
-    /// assert_eq!(s, b"foobar");
-    /// ```
-    ///
-    /// This example shows how the Unicode replacement codepoint policy is
-    /// used:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let mut s = Vec::from_slice(b"foo\xFFbar");
-    /// assert_eq!(s.remove_char(3), '\u{FFFD}');
-    /// assert_eq!(s, b"foobar");
-    /// ```
     #[inline]
     fn remove_char(&mut self, at: usize) -> char {
         let (ch, size) = utf8::decode_lossy(&self.as_vec()[at..]);
@@ -756,25 +343,6 @@ pub trait ByteVec: private::Sealed {
 
     /// Inserts the given codepoint into this `Vec<u8>` at a particular byte
     /// position.
-    ///
-    /// This is an `O(n)` operation as it may copy a number of elements in this
-    /// byte string proportional to its length.
-    ///
-    /// # Panics
-    ///
-    /// Panics if `at` is larger than the byte string's length.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let mut s = Vec::from("foobar");
-    /// s.insert_char(3, '☃');
-    /// assert_eq!(s, "foo☃bar".as_bytes());
-    /// ```
     #[inline]
     fn insert_char(&mut self, at: usize, ch: char) {
         self.insert_str(at, ch.encode_utf8(&mut [0; 4]).as_bytes());
@@ -782,29 +350,6 @@ pub trait ByteVec: private::Sealed {
 
     /// Inserts the given byte string into this byte string at a particular
     /// byte position.
-    ///
-    /// This is an `O(n)` operation as it may copy a number of elements in this
-    /// byte string proportional to its length.
-    ///
-    /// The given byte string may be any type that can be cheaply converted
-    /// into a `&[u8]`. This includes, but is not limited to, `&str` and
-    /// `&[u8]`.
-    ///
-    /// # Panics
-    ///
-    /// Panics if `at` is larger than the byte string's length.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let mut s = Vec::from("foobar");
-    /// s.insert_str(3, "☃☃☃");
-    /// assert_eq!(s, "foo☃☃☃bar".as_bytes());
-    /// ```
     #[inline]
     fn insert_str<B: AsRef<[u8]>>(&mut self, at: usize, bytes: B) {
         let bytes = bytes.as_ref();
@@ -841,22 +386,6 @@ pub trait ByteVec: private::Sealed {
     /// Removes the specified range in this byte string and replaces it with
     /// the given bytes. The given bytes do not need to have the same length
     /// as the range provided.
-    ///
-    /// # Panics
-    ///
-    /// Panics if the given range is invalid.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let mut s = Vec::from("foobar");
-    /// s.replace_range(2..4, "xxxxx");
-    /// assert_eq!(s, "foxxxxxar".as_bytes());
-    /// ```
     #[inline]
     fn replace_range<R, B>(&mut self, range: R, replace_with: B)
     where
@@ -868,33 +397,6 @@ pub trait ByteVec: private::Sealed {
 
     /// Creates a draining iterator that removes the specified range in this
     /// `Vec<u8>` and yields each of the removed bytes.
-    ///
-    /// Note that the elements specified by the given range are removed
-    /// regardless of whether the returned iterator is fully exhausted.
-    ///
-    /// Also note that is is unspecified how many bytes are removed from the
-    /// `Vec<u8>` if the `DrainBytes` iterator is leaked.
-    ///
-    /// # Panics
-    ///
-    /// Panics if the given range is not valid.
-    ///
-    /// # Examples
-    ///
-    /// Basic usage:
-    ///
-    /// ```
-    /// use bstr::ByteVec;
-    ///
-    /// let mut s = Vec::from("foobar");
-    /// {
-    ///     let mut drainer = s.drain_bytes(2..4);
-    ///     assert_eq!(drainer.next(), Some(b'o'));
-    ///     assert_eq!(drainer.next(), Some(b'b'));
-    ///     assert_eq!(drainer.next(), None);
-    /// }
-    /// assert_eq!(s, "foar".as_bytes());
-    /// ```
     #[inline]
     fn drain_bytes<R>(&mut self, range: R) -> DrainBytes<'_>
     where
@@ -905,26 +407,6 @@ pub trait ByteVec: private::Sealed {
 }
 
 /// A draining byte oriented iterator for `Vec<u8>`.
-///
-/// This iterator is created by
-/// [`ByteVec::drain_bytes`](trait.ByteVec.html#method.drain_bytes).
-///
-/// # Examples
-///
-/// Basic usage:
-///
-/// ```
-/// use bstr::ByteVec;
-///
-/// let mut s = Vec::from("foobar");
-/// {
-///     let mut drainer = s.drain_bytes(2..4);
-///     assert_eq!(drainer.next(), Some(b'o'));
-///     assert_eq!(drainer.next(), Some(b'b'));
-///     assert_eq!(drainer.next(), None);
-/// }
-/// assert_eq!(s, "foar".as_bytes());
-/// ```
 #[derive(Debug)]
 pub struct DrainBytes<'a> {
     it: vec::Drain<'a, u8>,

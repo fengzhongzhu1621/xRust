@@ -84,24 +84,6 @@ impl<'a> Chars<'a> {
     }
 
     /// View the underlying data as a subslice of the original data.
-    ///
-    /// The slice returned has the same lifetime as the original slice, and so
-    /// the iterator can continue to be used while this exists.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use bstr::ByteSlice;
-    ///
-    /// let mut chars = b"abc".chars();
-    ///
-    /// assert_eq!(b"abc", chars.as_bytes());
-    /// chars.next();
-    /// assert_eq!(b"bc", chars.as_bytes());
-    /// chars.next();
-    /// chars.next();
-    /// assert_eq!(b"", chars.as_bytes());
-    /// ```
     #[inline]
     pub fn as_bytes(&self) -> &'a [u8] {
         self.bs
@@ -165,24 +147,6 @@ impl<'a> CharIndices<'a> {
     }
 
     /// View the underlying data as a subslice of the original data.
-    ///
-    /// The slice returned has the same lifetime as the original slice, and so
-    /// the iterator can continue to be used while this exists.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use bstr::ByteSlice;
-    ///
-    /// let mut it = b"abc".char_indices();
-    ///
-    /// assert_eq!(b"abc", it.as_bytes());
-    /// it.next();
-    /// assert_eq!(b"bc", it.as_bytes());
-    /// it.next();
-    /// it.next();
-    /// assert_eq!(b"", it.as_bytes());
-    /// ```
     #[inline]
     pub fn as_bytes(&self) -> &'a [u8] {
         self.bs
@@ -453,50 +417,6 @@ pub fn validate(slice: &[u8]) -> Result<(), Utf8Error> {
 }
 
 /// UTF-8 decode a single Unicode scalar value from the beginning of a slice.
-///
-/// When successful, the corresponding Unicode scalar value is returned along
-/// with the number of bytes it was encoded with. The number of bytes consumed
-/// for a successful decode is always between 1 and 4, inclusive.
-///
-/// When unsuccessful, `None` is returned along with the number of bytes that
-/// make up a maximal prefix of a valid UTF-8 code unit sequence. In this case,
-/// the number of bytes consumed is always between 0 and 3, inclusive, where
-/// 0 is only returned when `slice` is empty.
-///
-/// # Examples
-///
-/// Basic usage:
-///
-/// ```
-/// use bstr::decode_utf8;
-///
-/// // Decoding a valid codepoint.
-/// let (ch, size) = decode_utf8(b"\xE2\x98\x83");
-/// assert_eq!(Some('☃'), ch);
-/// assert_eq!(3, size);
-///
-/// // Decoding an incomplete codepoint.
-/// let (ch, size) = decode_utf8(b"\xE2\x98");
-/// assert_eq!(None, ch);
-/// assert_eq!(2, size);
-/// ```
-///
-/// This example shows how to iterate over all codepoints in UTF-8 encoded
-/// bytes, while replacing invalid UTF-8 sequences with the replacement
-/// codepoint:
-///
-/// ```
-/// use bstr::{B, decode_utf8};
-///
-/// let mut bytes = B(b"\xE2\x98\x83\xFF\xF0\x9D\x9E\x83\xE2\x98\x61");
-/// let mut chars = vec![];
-/// while !bytes.is_empty() {
-///     let (ch, size) = decode_utf8(bytes);
-///     bytes = &bytes[size..];
-///     chars.push(ch.unwrap_or('\u{FFFD}'));
-/// }
-/// assert_eq!(vec!['☃', '\u{FFFD}', '𝞃', '\u{FFFD}', 'a'], chars);
-/// ```
 #[inline]
 pub fn decode<B: AsRef<[u8]>>(slice: B) -> (Option<char>, usize) {
     let slice = slice.as_ref();
@@ -526,51 +446,6 @@ pub fn decode<B: AsRef<[u8]>>(slice: B) -> (Option<char>, usize) {
 
 /// Lossily UTF-8 decode a single Unicode scalar value from the beginning of a
 /// slice.
-///
-/// When successful, the corresponding Unicode scalar value is returned along
-/// with the number of bytes it was encoded with. The number of bytes consumed
-/// for a successful decode is always between 1 and 4, inclusive.
-///
-/// When unsuccessful, the Unicode replacement codepoint (`U+FFFD`) is returned
-/// along with the number of bytes that make up a maximal prefix of a valid
-/// UTF-8 code unit sequence. In this case, the number of bytes consumed is
-/// always between 0 and 3, inclusive, where 0 is only returned when `slice` is
-/// empty.
-///
-/// # Examples
-///
-/// Basic usage:
-///
-/// ```ignore
-/// use bstr::decode_utf8_lossy;
-///
-/// // Decoding a valid codepoint.
-/// let (ch, size) = decode_utf8_lossy(b"\xE2\x98\x83");
-/// assert_eq!('☃', ch);
-/// assert_eq!(3, size);
-///
-/// // Decoding an incomplete codepoint.
-/// let (ch, size) = decode_utf8_lossy(b"\xE2\x98");
-/// assert_eq!('\u{FFFD}', ch);
-/// assert_eq!(2, size);
-/// ```
-///
-/// This example shows how to iterate over all codepoints in UTF-8 encoded
-/// bytes, while replacing invalid UTF-8 sequences with the replacement
-/// codepoint:
-///
-/// ```ignore
-/// use bstr::{B, decode_utf8_lossy};
-///
-/// let mut bytes = B(b"\xE2\x98\x83\xFF\xF0\x9D\x9E\x83\xE2\x98\x61");
-/// let mut chars = vec![];
-/// while !bytes.is_empty() {
-///     let (ch, size) = decode_utf8_lossy(bytes);
-///     bytes = &bytes[size..];
-///     chars.push(ch);
-/// }
-/// assert_eq!(vec!['☃', '\u{FFFD}', '𝞃', '\u{FFFD}', 'a'], chars);
-/// ```
 #[inline]
 pub fn decode_lossy<B: AsRef<[u8]>>(slice: B) -> (char, usize) {
     match decode(slice) {
@@ -580,50 +455,6 @@ pub fn decode_lossy<B: AsRef<[u8]>>(slice: B) -> (char, usize) {
 }
 
 /// UTF-8 decode a single Unicode scalar value from the end of a slice.
-///
-/// When successful, the corresponding Unicode scalar value is returned along
-/// with the number of bytes it was encoded with. The number of bytes consumed
-/// for a successful decode is always between 1 and 4, inclusive.
-///
-/// When unsuccessful, `None` is returned along with the number of bytes that
-/// make up a maximal prefix of a valid UTF-8 code unit sequence. In this case,
-/// the number of bytes consumed is always between 0 and 3, inclusive, where
-/// 0 is only returned when `slice` is empty.
-///
-/// # Examples
-///
-/// Basic usage:
-///
-/// ```
-/// use bstr::decode_last_utf8;
-///
-/// // Decoding a valid codepoint.
-/// let (ch, size) = decode_last_utf8(b"\xE2\x98\x83");
-/// assert_eq!(Some('☃'), ch);
-/// assert_eq!(3, size);
-///
-/// // Decoding an incomplete codepoint.
-/// let (ch, size) = decode_last_utf8(b"\xE2\x98");
-/// assert_eq!(None, ch);
-/// assert_eq!(2, size);
-/// ```
-///
-/// This example shows how to iterate over all codepoints in UTF-8 encoded
-/// bytes in reverse, while replacing invalid UTF-8 sequences with the
-/// replacement codepoint:
-///
-/// ```
-/// use bstr::{B, decode_last_utf8};
-///
-/// let mut bytes = B(b"\xE2\x98\x83\xFF\xF0\x9D\x9E\x83\xE2\x98\x61");
-/// let mut chars = vec![];
-/// while !bytes.is_empty() {
-///     let (ch, size) = decode_last_utf8(bytes);
-///     bytes = &bytes[..bytes.len()-size];
-///     chars.push(ch.unwrap_or('\u{FFFD}'));
-/// }
-/// assert_eq!(vec!['a', '\u{FFFD}', '𝞃', '\u{FFFD}', '☃'], chars);
-/// ```
 #[inline]
 pub fn decode_last<B: AsRef<[u8]>>(slice: B) -> (Option<char>, usize) {
     // TODO: We could implement this by reversing the UTF-8 automaton, but for
@@ -650,51 +481,6 @@ pub fn decode_last<B: AsRef<[u8]>>(slice: B) -> (Option<char>, usize) {
 }
 
 /// Lossily UTF-8 decode a single Unicode scalar value from the end of a slice.
-///
-/// When successful, the corresponding Unicode scalar value is returned along
-/// with the number of bytes it was encoded with. The number of bytes consumed
-/// for a successful decode is always between 1 and 4, inclusive.
-///
-/// When unsuccessful, the Unicode replacement codepoint (`U+FFFD`) is returned
-/// along with the number of bytes that make up a maximal prefix of a valid
-/// UTF-8 code unit sequence. In this case, the number of bytes consumed is
-/// always between 0 and 3, inclusive, where 0 is only returned when `slice` is
-/// empty.
-///
-/// # Examples
-///
-/// Basic usage:
-///
-/// ```ignore
-/// use bstr::decode_last_utf8_lossy;
-///
-/// // Decoding a valid codepoint.
-/// let (ch, size) = decode_last_utf8_lossy(b"\xE2\x98\x83");
-/// assert_eq!('☃', ch);
-/// assert_eq!(3, size);
-///
-/// // Decoding an incomplete codepoint.
-/// let (ch, size) = decode_last_utf8_lossy(b"\xE2\x98");
-/// assert_eq!('\u{FFFD}', ch);
-/// assert_eq!(2, size);
-/// ```
-///
-/// This example shows how to iterate over all codepoints in UTF-8 encoded
-/// bytes in reverse, while replacing invalid UTF-8 sequences with the
-/// replacement codepoint:
-///
-/// ```ignore
-/// use bstr::decode_last_utf8_lossy;
-///
-/// let mut bytes = B(b"\xE2\x98\x83\xFF\xF0\x9D\x9E\x83\xE2\x98\x61");
-/// let mut chars = vec![];
-/// while !bytes.is_empty() {
-///     let (ch, size) = decode_last_utf8_lossy(bytes);
-///     bytes = &bytes[..bytes.len()-size];
-///     chars.push(ch);
-/// }
-/// assert_eq!(vec!['a', '\u{FFFD}', '𝞃', '\u{FFFD}', '☃'], chars);
-/// ```
 #[inline]
 pub fn decode_last_lossy<B: AsRef<[u8]>>(slice: B) -> (char, usize) {
     match decode_last(slice) {
