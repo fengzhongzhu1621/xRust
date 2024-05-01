@@ -33,3 +33,6 @@ members = [
     "design_patterns",
     "wasm",
 ]
+
+[dependencies]
+memchr = "2.7.2"

@@ -35,7 +35,7 @@ const ASCII_MASK_U64: u64 = 0x8080808080808080;
 #[cfg(any(test, miri, not(target_arch = "x86_64")))]
 const ASCII_MASK: usize = ASCII_MASK_U64 as usize;
 
-/// 计算切片中非 asic 字符的位置，如果没有找到，则返回切片的长度
+/// 计算切片中非 ascii 字符的位置，如果没有找到，则返回切片的长度
 /// Returns the index of the first non ASCII byte in the given slice.
 ///
 /// If slice only contains ASCII bytes, then the length of the slice is
