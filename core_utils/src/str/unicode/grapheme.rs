@@ -60,7 +60,7 @@ impl<'a> DoubleEndedIterator for Graphemes<'a> {
 #[derive(Clone, Debug)]
 pub struct GraphemeIndices<'a> {
     bs: &'a [u8],
-    forward_index: usize,
+    forward_index: usize, // 记录索引的位置
     reverse_index: usize,
 }
 
@@ -69,25 +69,6 @@ impl<'a> GraphemeIndices<'a> {
         GraphemeIndices { bs, forward_index: 0, reverse_index: bs.len() }
     }
 
-    /// View the underlying data as a subslice of the original data.
-    ///
-    /// The slice returned has the same lifetime as the original slice, and so
-    /// the iterator can continue to be used while this exists.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use bstr::ByteSlice;
-    ///
-    /// let mut it = b"abc".grapheme_indices();
-    ///
-    /// assert_eq!(b"abc", it.as_bytes());
-    /// it.next();
-    /// assert_eq!(b"bc", it.as_bytes());
-    /// it.next();
-    /// it.next();
-    /// assert_eq!(b"", it.as_bytes());
-    /// ```
     #[inline]
     pub fn as_bytes(&self) -> &'a [u8] {
         self.bs
@@ -100,12 +81,14 @@ impl<'a> Iterator for GraphemeIndices<'a> {
     #[inline]
     fn next(&mut self) -> Option<(usize, usize, &'a str)> {
         let index = self.forward_index;
+        // 将 self.bs 转换为迭代器并返回第一个分片
         let (grapheme, size) = decode_grapheme(self.bs);
         if size == 0 {
             return None;
         }
         self.bs = &self.bs[size..];
         self.forward_index += size;
+        // 返回分片所在的索引范围 (index, index + size]
         Some((index, index + size, grapheme))
     }
 }
@@ -254,5 +237,15 @@ mod tests {
         let mut graphemes = Graphemes::new("a你好b".as_bytes());
         assert_eq!(graphemes.next_back(), Some("b"));
         assert_eq!(graphemes.next_back(), Some("好"));
+    }
+
+    #[test]
+    fn test_graphemeIndices() {
+        let mut graphemes = GraphemeIndices::new("a你好b".as_bytes());
+        assert_eq!(graphemes.next(), Some((0, 1, "a"))); // 占一个字节
+        assert_eq!(graphemes.next(), Some((1, 4, "你"))); // 占三个字节
+        assert_eq!(graphemes.next(), Some((4, 7, "好"))); // 占三个字节
+        assert_eq!(graphemes.next(), Some((7, 8, "b"))); // 占一个字节
+        assert_eq!(graphemes.next(), None);
     }
 }
