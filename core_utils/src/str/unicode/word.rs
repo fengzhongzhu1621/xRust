@@ -325,3 +325,18 @@ fn decode_word(bs: &[u8]) -> (&str, usize) {
         (INVALID, size)
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_words() {
+        let it = b"foo bar baz";
+        let mut words = Words::new(it);
+        assert_eq!(words.next(), Some("foo"));
+        assert_eq!(words.next(), Some("bar"));
+        assert_eq!(words.next(), Some("baz"));
+    }
+}
