@@ -250,5 +250,9 @@ mod tests {
         assert_eq!(graphemes.next(), Some("好"));
         assert_eq!(graphemes.next(), Some("b"));
         assert_eq!(graphemes.next(), None);
+
+        let mut graphemes = Graphemes::new("a你好b".as_bytes());
+        assert_eq!(graphemes.next_back(), Some("b"));
+        assert_eq!(graphemes.next_back(), Some("好"));
     }
 }
