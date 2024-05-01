@@ -1,4 +1,3 @@
-use crate::iterator::{empty_shrinker, single_shrinker};
 use crate::random::{Arbitrary, Gen};
 
 impl<A: Arbitrary, B: Arbitrary> Arbitrary for Result<A, B> {

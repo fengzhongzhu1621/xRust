@@ -1,16 +1,13 @@
-use core::{fmt, iter, ops, ptr};
 use alloc::{borrow::Cow, string::String, vec, vec::Vec};
+use core::{iter, ops, ptr};
 use std::{
-    error,
     ffi::{OsStr, OsString},
     path::{Path, PathBuf},
 };
 
 use super::{
-    ext_slice::ByteSlice,
+    error::FromUtf8Error, escape_bytes::UnescapeBytes, ext_slice::ByteSlice,
     utf8,
-    error::{FromUtf8Error, Utf8Error},
-    escape_bytes::UnescapeBytes
 };
 
 /// Concatenate the elements given by the iterator together into a single

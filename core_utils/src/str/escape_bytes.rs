@@ -1,4 +1,4 @@
-use super::{hexdigit::*, utf8};
+use super::hexdigit::*;
 
 /// An iterator of `char` values that represent an escaping of arbitrary bytes.
 ///
@@ -333,7 +333,6 @@ impl UnescapeState {
         UnescapeState::Bytes { buf, cur: 0, len: prefix.len() + len1 + len2 }
     }
 }
-
 
 #[cfg(all(test, feature = "std"))]
 mod tests {

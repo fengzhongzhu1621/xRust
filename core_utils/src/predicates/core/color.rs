@@ -2,8 +2,8 @@ use anstyle;
 
 #[derive(Debug)]
 pub struct Styled<D> {
-    display: D, // 可显示的对象
-    style: anstyle::Style,
+    display: D,            // 可显示的对象
+    style: anstyle::Style, // 显示的样式
 }
 
 impl<D: std::fmt::Display> Styled<D> {

@@ -1,6 +1,6 @@
-use core::{iter, slice, str};
 use alloc::vec;
 use alloc::{borrow::Cow, string::String, vec::Vec};
+use core::{iter, slice, str};
 use std::{ffi::OsStr, path::Path};
 
 use memchr::{memchr, memmem, memrchr};
@@ -12,12 +12,13 @@ use super::unicode::{
     SentenceIndices, Sentences, WordIndices, Words, WordsWithBreakIndices,
     WordsWithBreaks,
 };
-use super::{helper::*,
+use super::{
     ascii,
     bstr::BStr,
     byteset,
+    error::Utf8Error,
+    helper::*,
     utf8::{self, CharIndices, Chars, Utf8Chunks},
-    error::Utf8Error
 };
 
 impl ByteSlice for [u8] {
@@ -368,7 +369,6 @@ pub trait ByteSlice: private::Sealed {
     /// Returns an iterator over the fields in a byte string, separated
     /// by contiguous whitespace (according to the Unicode property
     /// `White_Space`).
-    #[cfg(feature = "unicode")]
     #[inline]
     fn fields(&self) -> Fields<'_> {
         Fields::new(self.as_bytes())
@@ -554,7 +554,6 @@ pub trait ByteSlice: private::Sealed {
     /// Returns an iterator over the grapheme clusters in this byte string.
     /// If invalid UTF-8 is encountered, then the Unicode replacement codepoint
     /// is yielded instead.
-    #[cfg(feature = "unicode")]
     #[inline]
     fn graphemes(&self) -> Graphemes<'_> {
         Graphemes::new(self.as_bytes())
@@ -564,7 +563,6 @@ pub trait ByteSlice: private::Sealed {
     /// along with their starting and ending byte index positions. If invalid
     /// UTF-8 is encountered, then the Unicode replacement codepoint is yielded
     /// instead.
-    #[cfg(feature = "unicode")]
     #[inline]
     fn grapheme_indices(&self) -> GraphemeIndices<'_> {
         GraphemeIndices::new(self.as_bytes())
@@ -573,7 +571,6 @@ pub trait ByteSlice: private::Sealed {
     /// Returns an iterator over the words in this byte string. If invalid
     /// UTF-8 is encountered, then the Unicode replacement codepoint is yielded
     /// instead.
-    #[cfg(feature = "unicode")]
     #[inline]
     fn words(&self) -> Words<'_> {
         Words::new(self.as_bytes())
@@ -581,7 +578,6 @@ pub trait ByteSlice: private::Sealed {
 
     /// Returns an iterator over the words in this byte string along with
     /// their starting and ending byte index positions.
-    #[cfg(feature = "unicode")]
     #[inline]
     fn word_indices(&self) -> WordIndices<'_> {
         WordIndices::new(self.as_bytes())
@@ -591,7 +587,6 @@ pub trait ByteSlice: private::Sealed {
     /// all breaks between the words. Concatenating all elements yielded by
     /// the iterator results in the original string (modulo Unicode replacement
     /// codepoint substitutions if invalid UTF-8 is encountered).
-    #[cfg(feature = "unicode")]
     #[inline]
     fn words_with_breaks(&self) -> WordsWithBreaks<'_> {
         WordsWithBreaks::new(self.as_bytes())
@@ -602,14 +597,12 @@ pub trait ByteSlice: private::Sealed {
     /// all elements yielded by the iterator results in the original string
     /// (modulo Unicode replacement codepoint substitutions if invalid UTF-8 is
     /// encountered).
-    #[cfg(feature = "unicode")]
     #[inline]
     fn words_with_break_indices(&self) -> WordsWithBreakIndices<'_> {
         WordsWithBreakIndices::new(self.as_bytes())
     }
 
     /// Returns an iterator over the sentences in this byte string.
-    #[cfg(feature = "unicode")]
     #[inline]
     fn sentences(&self) -> Sentences<'_> {
         Sentences::new(self.as_bytes())
@@ -617,7 +610,6 @@ pub trait ByteSlice: private::Sealed {
 
     /// Returns an iterator over the sentences in this byte string along with
     /// their starting and ending byte index positions.
-    #[cfg(feature = "unicode")]
     #[inline]
     fn sentence_indices(&self) -> SentenceIndices<'_> {
         SentenceIndices::new(self.as_bytes())
@@ -639,14 +631,12 @@ pub trait ByteSlice: private::Sealed {
 
     /// Return a byte string slice with leading and trailing whitespace
     /// removed.
-    #[cfg(feature = "unicode")]
     #[inline]
     fn trim(&self) -> &[u8] {
         self.trim_start().trim_end()
     }
 
     /// Return a byte string slice with leading whitespace removed.
-    #[cfg(feature = "unicode")]
     #[inline]
     fn trim_start(&self) -> &[u8] {
         let start = whitespace_len_fwd(self.as_bytes());
@@ -654,7 +644,6 @@ pub trait ByteSlice: private::Sealed {
     }
 
     /// Return a byte string slice with trailing whitespace removed.
-    #[cfg(feature = "unicode")]
     #[inline]
     fn trim_end(&self) -> &[u8] {
         let end = whitespace_len_rev(self.as_bytes());
@@ -817,10 +806,9 @@ pub trait ByteSlice: private::Sealed {
     }
 
     /// Reverse the graphemes in this string, in place.
-    #[cfg(feature = "unicode")]
     #[inline]
     fn reverse_graphemes(&mut self) {
-        use crate::unicode::decode_grapheme;
+        use super::unicode::decode_grapheme;
 
         let mut i = 0;
         loop {
@@ -1084,20 +1072,17 @@ impl<'a> iter::FusedIterator for Bytes<'a> {}
 /// in `foo\t\t\n  \nbar` are `foo` and `bar`.
 ///
 /// `'a` is the lifetime of the byte string being split.
-#[cfg(feature = "unicode")]
 #[derive(Clone, Debug)]
 pub struct Fields<'a> {
     it: FieldsWith<'a, fn(char) -> bool>,
 }
 
-#[cfg(feature = "unicode")]
 impl<'a> Fields<'a> {
     fn new(bytes: &'a [u8]) -> Fields<'a> {
         Fields { it: bytes.fields_with(|ch| ch.is_whitespace()) }
     }
 }
 
-#[cfg(feature = "unicode")]
 impl<'a> Iterator for Fields<'a> {
     type Item = &'a [u8];
 
@@ -1431,7 +1416,7 @@ impl<'a> Iterator for LinesWithTerminator<'a> {
                 Some(line)
             }
             Some(end) => {
-                let line = &self.bytes[..end + 1];
+                let line = &self.bytes[..end + 1]; // 包含换行符
                 self.bytes = &self.bytes[end + 1..];
                 Some(line)
             }
@@ -1479,7 +1464,7 @@ mod tests {
 
     /// &OsStr -> Option<&[u8]>
     #[test]
-    fn test_from_os_str() {    
+    fn test_from_os_str() {
         let os_str = OsStr::new("foo");
         let bs = <[u8]>::from_os_str(os_str).expect("should be valid UTF-8");
         assert_eq!(bs, B("foo"));
@@ -1488,16 +1473,16 @@ mod tests {
     /// &Path -> Option<&[u8]>
     #[test]
     fn test_from_path() {
-     let path = Path::new("foo");
-     let bs = <[u8]>::from_path(path).expect("should be valid UTF-8");
-     assert_eq!(bs, B("foo"));
+        let path = Path::new("foo");
+        let bs = <[u8]>::from_path(path).expect("should be valid UTF-8");
+        assert_eq!(bs, B("foo"));
     }
 
     #[test]
     fn test_to_str() {
         let s = B("☃βツ").to_str().unwrap();
         assert_eq!("☃βツ", s);
-        
+
         let mut bstring = <Vec<u8>>::from("☃βツ");
         // 字节数组中添加一个字节
         bstring.push(b'\xFF');

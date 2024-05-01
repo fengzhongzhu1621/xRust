@@ -1,21 +1,12 @@
-use bstr::ByteSlice;
-use predicates::prelude::*;
+use super::color::Palette;
+use crate::str::DebugBytes;
 use std::error::Error;
-use std::fmt;
-use std::process;
-pub type OutputResult = Result<process::Output, OutputError>;
+use std::{fmt, process};
 
 #[derive(Debug)]
-pub struct OutputError {
-    cmd: Option<String>,
-    stdin: Option<bstr::BString>,
-    cause: OutputCause,
-}
-
-#[derive(Debug)]
-enum OutputCause {
-    Expected(Output),
-    Unexpected(Box<dyn Error + Send + Sync + 'static>),
+pub enum OutputCause {
+    Expected(Output), // 输出符合要求
+    Unexpected(Box<dyn Error + Send + Sync + 'static>), // 输出不符合要求
 }
 
 impl fmt::Display for OutputCause {
@@ -27,9 +18,10 @@ impl fmt::Display for OutputCause {
     }
 }
 
+/// 进程输出
 #[derive(Debug)]
-struct Output {
-    output: process::Output,
+pub struct Output {
+    pub(crate) output: process::Output,
 }
 
 impl fmt::Display for Output {
@@ -38,14 +30,19 @@ impl fmt::Display for Output {
     }
 }
 
+/// 打印进程输出的内容
 pub(crate) fn output_fmt(
     output: &process::Output,
     f: &mut fmt::Formatter<'_>,
 ) -> fmt::Result {
-    let palette = crate::Palette::color();
+    // 创建调色板
+    let palette = Palette::color();
+
     if let Some(code) = output.status.code() {
+        // 打印进程正常终止的错误码
         writeln!(f, "{:#}={:#}", palette.key("code"), palette.value(code))?;
     } else {
+        // 如果是通过信号终止，此时没有错误码，则打印 <interrupted>
         writeln!(
             f,
             "{:#}={:#}",
@@ -54,6 +51,7 @@ pub(crate) fn output_fmt(
         )?;
     }
 
+    // 打印标准输出和错误输出
     write!(
         f,
         "{:#}={:#}\n{:#}={:#}\n",
@@ -63,12 +61,4 @@ pub(crate) fn output_fmt(
         palette.value(DebugBytes::new(&output.stderr)),
     )?;
     Ok(())
-}
-
-/// Converts a type to an [`OutputResult`].
-pub trait OutputOkExt
-where
-    Self: ::std::marker::Sized,
-{
-    fn ok(self) -> OutputResult;
 }

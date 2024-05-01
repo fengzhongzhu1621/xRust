@@ -25,8 +25,6 @@ impl<A: Arbitrary> Arbitrary for Option<A> {
 
 #[cfg(test)]
 mod tests {
-
-    use super::*;
     use crate::random::arby;
 
     #[test]

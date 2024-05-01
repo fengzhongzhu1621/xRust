@@ -1,12 +1,11 @@
+use super::{error::Utf8Error, ext_slice::ByteSlice};
+use alloc::{borrow::Cow, boxed::Box, string::String, vec::Vec};
 use core::mem;
 use core::{
     borrow::{Borrow, BorrowMut},
     cmp::Ordering,
     fmt, ops,
 };
-use alloc::{borrow::Cow, boxed::Box, string::String, vec::Vec};
-use super::{ext_slice::ByteSlice, error::Utf8Error, bstring::BString};
-
 
 /// A wrapper for `&[u8]` that provides convenient string oriented trait impls.
 #[derive(Hash)]
@@ -74,10 +73,7 @@ impl fmt::Display for BStr {
         }
 
         /// Write 'num' fill characters to the given formatter.
-        fn write_pads(
-            f: &mut fmt::Formatter<'_>,
-            num: usize,
-        ) -> fmt::Result {
+        fn write_pads(f: &mut fmt::Formatter<'_>, num: usize) -> fmt::Result {
             let fill = f.fill();
             for _ in 0..num {
                 f.write_fmt(format_args!("{}", fill))?;
@@ -100,11 +96,8 @@ impl fmt::Display for BStr {
                 }
                 fmt::Alignment::Center => {
                     let half = remaining_pads / 2;
-                    let second_half = if remaining_pads % 2 == 0 {
-                        half
-                    } else {
-                        half + 1
-                    };
+                    let second_half =
+                        if remaining_pads % 2 == 0 { half } else { half + 1 };
                     write_pads(f, half)?;
                     write_bstr(f, self)?;
                     write_pads(f, second_half)?;
