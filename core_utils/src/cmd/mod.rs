@@ -1,3 +1,4 @@
+mod assert;
+mod color;
 mod outputs;
-
-pub use outputs::*;
+mod predicate;

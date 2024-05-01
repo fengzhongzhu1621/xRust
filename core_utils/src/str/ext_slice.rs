@@ -1,4 +1,3 @@
-use alloc::vec;
 use alloc::{borrow::Cow, string::String, vec::Vec};
 use core::{iter, slice, str};
 use std::{ffi::OsStr, path::Path};
@@ -17,7 +16,6 @@ use super::{
     bstr::BStr,
     byteset,
     error::Utf8Error,
-    helper::*,
     utf8::{self, CharIndices, Chars, Utf8Chunks},
 };
 

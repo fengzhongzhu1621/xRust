@@ -1,5 +1,5 @@
-use super::color::Palette;
 use super::output::{Output, OutputCause};
+use crate::cmd::color::Palette;
 use crate::str::DebugBytes;
 use bstr;
 use std::error::Error;
