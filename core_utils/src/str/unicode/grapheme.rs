@@ -223,3 +223,32 @@ fn adjust_rev_for_regional_indicator(mut bs: &[u8], i: usize) -> usize {
         i + 4
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_graphemes() {
+        let mut graphemes = Graphemes::new(b"abc");
+        assert_eq!(graphemes.next(), Some("a"));
+        assert_eq!(graphemes.next(), Some("b"));
+        assert_eq!(graphemes.next(), Some("c"));
+        assert_eq!(graphemes.next(), None);
+
+        let mut graphemes = Graphemes::new("a̐éö̲\r\n".as_bytes());
+        assert_eq!(graphemes.next(), Some("a̐"));
+        assert_eq!(graphemes.next(), Some("é"));
+        assert_eq!(graphemes.next(), Some("ö̲"));
+        assert_eq!(graphemes.next(), Some("\r\n"));
+        assert_eq!(graphemes.next(), None);
+
+        let mut graphemes = Graphemes::new("a你好b".as_bytes());
+        assert_eq!(graphemes.next(), Some("a"));
+        assert_eq!(graphemes.next(), Some("你"));
+        assert_eq!(graphemes.next(), Some("好"));
+        assert_eq!(graphemes.next(), Some("b"));
+        assert_eq!(graphemes.next(), None);
+    }
+}
