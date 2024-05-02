@@ -143,7 +143,6 @@ extern "system" {
         lpszFile: *mut u16,
         cch: c_uint,
     ) -> c_uint;
-
 }
 
 extern "system" {
@@ -184,4 +183,8 @@ extern "system" {
     pub fn GetLastError() -> DWORD;
     pub fn GetConsoleMode(hConsoleHandle: HANDLE, lpMode: LPDWORD) -> BOOL;
     pub fn SetConsoleMode(hConsoleHandle: HANDLE, dwMode: DWORD) -> BOOL;
+}
+
+extern "system" {
+    fn WaitForSingleObject(hHandle: HANDLE, dwMilliseconds: DWORD) -> DWORD;
 }

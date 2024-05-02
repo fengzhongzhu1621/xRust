@@ -11,3 +11,4 @@ pub use lib_c::file::{
 };
 pub use lib_c::os_str::OsStr;
 pub use lib_c::os_string::OsString;
+pub use lib_c::process::wait_timeout;

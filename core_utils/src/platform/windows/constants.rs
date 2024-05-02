@@ -13,3 +13,6 @@ pub const ERROR_INCORRECT_SIZE: DWORD = 1462;
 // According to https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-system_info
 // there is a variant for AMD64 CPUs, but it's not defined in generated bindings.
 pub const PROCESSOR_ARCHITECTURE_ARM64: u16 = 12;
+
+pub const WAIT_OBJECT_0: DWORD = 0x00000000;
+pub const WAIT_TIMEOUT: DWORD = 258;

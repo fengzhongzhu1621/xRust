@@ -26,6 +26,7 @@ pub mod panic;
 pub mod path;
 pub mod platform;
 pub mod predicates;
+pub mod process;
 pub mod random;
 pub mod signal;
 pub mod str;
