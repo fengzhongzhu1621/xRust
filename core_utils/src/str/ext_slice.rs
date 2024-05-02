@@ -1,8 +1,8 @@
+use crate::str::B;
 use alloc::{borrow::Cow, string::String, vec::Vec};
 use core::{iter, slice, str};
-use std::{ffi::OsStr, path::Path};
-
 use memchr::{memchr, memmem, memrchr};
+use std::{ffi::OsStr, path::Path};
 
 use super::escape_bytes::EscapeBytes;
 use super::ext_vec::ByteVec;

@@ -100,6 +100,15 @@ impl Command {
 }
 
 impl Command {
+    pub fn cargo_bin<S: AsRef<str>>(
+        name: S,
+    ) -> Result<Self, crate::cmd::cargo::CargoError> {
+        let cmd = crate::cmd::cargo::cargo_bin_cmd(name)?;
+        Ok(Self::from_std(cmd))
+    }
+}
+
+impl Command {
     /// Write `buffer` to `stdin` when the `Command` is run.
     pub fn write_stdin<S>(&mut self, buffer: S) -> &mut Self
     where

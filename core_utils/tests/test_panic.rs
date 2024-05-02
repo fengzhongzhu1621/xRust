@@ -5,6 +5,7 @@ use std::path::Path;
 use std::thread;
 use std::time::Duration;
 
+/// 当前二进制执行文件的路径
 const BIN_NAME: &str = env!("CARGO_BIN_EXE_human_panic");
 
 #[test]
