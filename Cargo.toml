@@ -31,7 +31,8 @@ members = [
     "crypto_examples",
     "terminal",
     "design_patterns",
-    "wasm",
+    "wasm", 
+    "macros",
 ]
 
 [dependencies]
