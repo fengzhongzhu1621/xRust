@@ -1,6 +1,4 @@
-use core_utils::predicates::{
-    self, core::Predicate, PredicateBooleanExt, PredicateNameExt,
-};
+use core_utils::predicates::{self, PredicateBooleanExt, PredicateNameExt};
 
 #[test]
 fn test_predicate_name() {
