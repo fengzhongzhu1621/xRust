@@ -1,4 +1,7 @@
-!/bin/sh
+#!/bin/sh
+
+# 安装命令
+# cargo install cargo-nextest
 
 # 查找所有测试
 # cargo nextest list
