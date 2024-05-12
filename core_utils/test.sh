@@ -28,3 +28,13 @@
 
 # 运行项目中的所有测试
 cargo nextest run
+
+# 安装 cargo-deny
+# cargo install --locked cargo-deny
+# cargo deny init
+
+cargo deny check
+# cargo deny check license
+# cargo deny check bans
+# cargo deny check advisories
+# cargo deny check sources
