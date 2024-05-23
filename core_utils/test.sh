@@ -21,12 +21,17 @@
 # cargo nextest run -- test_random_string
 # cargo nextest run -E 'test(test_random_string_2)'
 # cargo nextest run -E 'test(test_random)'
-
 # 精确匹配函数名
 # cargo nextest run -E 'test(=test_random_string)'
-
 # 测试库中的 指定函数
+# cargo nextest run --lib random::arbitrary::option::tests::test_option
 # cargo nextest run random::arbitrary::option::tests::test_option
+# cargo nextest run random::arbitrary::option::tests
+# cargo nextest run random::arbitrary::option::
+# cargo nextest run random::arbitrary:
+# cargo nextest run random::
+# 测试 tests 的一个文件
+# cargo nextest run --test test_random
 
 # 运行上次失败的测试
 # cargo nextest run -- --failed
