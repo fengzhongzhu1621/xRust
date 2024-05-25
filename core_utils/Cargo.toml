@@ -37,6 +37,7 @@ pretty_assertions = "1.4.0"
 quickcheck = "1.0.3"
 rand = { version = "0.8.5", features = ["small_rng"] }
 rand_core = "0.6.4"
+redis = "0.25.3"
 regex = "1.10.2"
 regex-automata = "0.4.6"
 rust-crypto = "0.2.36"
