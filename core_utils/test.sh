@@ -32,6 +32,8 @@
 # cargo nextest run random::
 # 测试 tests 的一个文件
 # cargo nextest run --test test_random
+# 测试所有单测
+# cargo nextest run
 
 # 运行上次失败的测试
 # cargo nextest run -- --failed

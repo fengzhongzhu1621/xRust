@@ -1,4 +1,4 @@
-use rayon_examples::*;
+use iter_examples::*;
 
 fn main() {
     rayon_par_iter();

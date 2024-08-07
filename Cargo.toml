@@ -20,7 +20,7 @@ members = [
     "xtool",
     "parking_lot_examples",
     "crossbeam_examples",
-    "rayon_examples",
+    "iter_examples",
     "tokio_examples",
     "hello-wasm",
     "wechat",
@@ -35,5 +35,3 @@ members = [
     "macros",
 ]
 
-[dependencies]
-memchr = "2.7.2"
