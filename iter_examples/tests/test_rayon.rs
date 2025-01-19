@@ -1,8 +1,7 @@
 use rayon::prelude::*;
 
-
-
-pub fn rayon_par_iter() {
+#[test]
+fn test_rayon_par_iter() {
     // 计算平方和
     let v = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     let sum = v.par_iter().map(|x| x * x).sum::<i32>();
@@ -20,7 +19,8 @@ pub fn rayon_par_iter() {
     assert_eq!(right, [10, 11, 12, 13, 14]);
 }
 
-pub fn rayon_scope_example() {
+#[test]
+fn test_rayon_scope_example() {
     rayon::scope(|s| {
         s.spawn(|_| {
             println!("Hello from a thread!");
@@ -28,7 +28,8 @@ pub fn rayon_scope_example() {
     });
 }
 
-pub fn rayon_scope_example2() {
+#[test]
+fn test_rayon_scope_example2() {
     let mut value_a = None;
     let mut value_b = None;
     let mut value_c = None;
@@ -50,7 +51,8 @@ pub fn rayon_scope_example2() {
     assert_eq!(value_c, Some(66));
 }
 
-pub fn rayon_scopefifo_example() {
+#[test]
+fn test_rayon_scopefifo_example() {
     rayon::scope_fifo(|s| {
         s.spawn_fifo(|s| {
             // task s.1
@@ -72,7 +74,8 @@ pub fn rayon_scopefifo_example() {
     });
 }
 
-pub fn rayon_threadpool_example() {
+#[test]
+fn test_rayon_threadpool_example() {
     fn fib(n: usize) -> usize {
         if n == 0 || n == 1 {
             return n;
@@ -81,10 +84,7 @@ pub fn rayon_threadpool_example() {
         return a + b;
     }
 
-    let pool = rayon::ThreadPoolBuilder::new()
-        .num_threads(4)
-        .build()
-        .unwrap();
+    let pool = rayon::ThreadPoolBuilder::new().num_threads(4).build().unwrap();
 
     let n = pool.install(|| fib(20));
 

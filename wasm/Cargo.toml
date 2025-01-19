@@ -1,8 +1,9 @@
 [package]
 name = "wasm"
-version = "0.1.0"
 authors = ["fengzhongzhu1621 <jinyinqiao@gmail.com>"]
-edition = "2018"
+version = "0.1.0"
+edition = "2021"
+publish = false
 
 # 需要指定crate-type = ["rlib"]才可以确保我们的库进行单元测试。
 [lib]
