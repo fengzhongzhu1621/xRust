@@ -28,6 +28,7 @@ pub mod platform;
 pub mod predicates;
 pub mod process;
 pub mod random;
+pub mod regex;
 pub mod signal;
 pub mod str;
 pub mod time;

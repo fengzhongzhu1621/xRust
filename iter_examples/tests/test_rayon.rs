@@ -4,6 +4,7 @@ use rayon::prelude::*;
 fn test_rayon_par_iter() {
     // 计算平方和
     let v = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    // 只需要将普通的迭代器 .iter() 替换为并行迭代器 .par_iter()
     let sum = v.par_iter().map(|x| x * x).sum::<i32>();
     println!("sum: {}", sum);
 
