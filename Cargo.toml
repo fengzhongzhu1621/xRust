@@ -34,4 +34,6 @@ members = [
     "wasm", 
     "macros",
     "unittest",
+    "axum_utils",
+    "file_utils",
 ]

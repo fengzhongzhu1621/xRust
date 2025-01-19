@@ -29,3 +29,9 @@ rm ~/.cargo/.package-cache
 ```sh
 cargo update
 ```
+
+## 初始化项目
+```
+cargo new --bin hello
+cargo new --lib hello
+```
