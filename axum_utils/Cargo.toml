@@ -6,9 +6,12 @@ publish = false
 
 [dependencies]
 anyhow = "1.0.95"
-axum = "0.8.1"
+axum = { version = "0.8.1", features = ["ws"] }
+futures = "0.3.31"
 listenfd = "1.0.1"
 tokio = { version = "1.0", features = ["full"] }
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 
 [[bin]]
 name = "anyhow-error-response"
@@ -18,3 +21,6 @@ path = "src/bin/anyhow_error_response.rs"
 name = "auto-reload"
 path = "src/bin/auto_reload.rs"
 
+[[bin]]
+name = "chat"
+path = "src/bin/chat.rs"
