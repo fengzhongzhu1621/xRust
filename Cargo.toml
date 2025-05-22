@@ -31,9 +31,10 @@ members = [
     "crypto_examples",
     "terminal",
     "design_patterns",
-    "wasm", 
+    "wasm",
     "macros",
     "unittest",
     "axum_utils",
     "file_utils",
+    "pingora",
 ]

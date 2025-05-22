@@ -9,6 +9,7 @@ Rust Study Notes
 rustup target remove wasm32-wasi
 rustup update stable
 rustup --version
+# 查看rust版本
 rustc --version
 
 cargo update
